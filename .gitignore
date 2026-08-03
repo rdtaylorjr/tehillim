@@ -1,0 +1,4 @@
+# Built output of app/ (run: cd app && npm run build)
+compare/
+
+.DS_Store

@@ -1,4 +1,7 @@
-# Built output of app/ (run: cd app && npm run build)
-compare/
+# Built output of app/ (run: cd app && npm run build), shipped straight to
+# the repo root so the domain root serves the app directly.
+/index.html
+/assets/
+/data/
 
 .DS_Store

@@ -1,6 +1,6 @@
-# TehillimAI: Computational Approaches to the Hebrew Psalter
+# tehillim.dev: Computational Approaches to the Hebrew Psalter
 
-TehillimAI investigates how the Psalter's internal similarities — verbatim
+tehillim.dev investigates how the Psalter's internal similarities — verbatim
 duplicates, formulaic genre patterns, poetic parallelism, editorial
 groupings — can be recovered computationally from the Masoretic Text, and
 what each representation (lexical, morphosyntactic, embedding-based,
@@ -13,9 +13,14 @@ literature, each validated against known scholarly landmarks before the
 next is attempted, and each expressed as running, tested code rather than
 only as a proposal.
 
-Two methods are implemented, tested, and live in the interactive app today
-(see below); a further ten are planned, in order, each tied to a specific
-methodological question raised by the literature reviewed here.
+Three methods are implemented, tested, and live in the interactive app today
+(see below). The remaining work splits into two independent tracks — a
+**genre track** (can these psalms' internal formal patterns be clustered by
+genre, unsupervised, and can a shift in genre *within* a single psalm be
+located computationally?) and a **textual & structural track** (verbatim
+reuse, poetic parallelism, chiastic structure) — each tied to a specific
+methodological question raised by the literature reviewed here, and each
+described in full below.
 
 ## Research context
 
@@ -123,36 +128,79 @@ cosine similarity) — a problem the papers reviewed above only ever address
 by fine-tuning, never by directly correcting the embedding geometry itself.
 
 That gap — poetic-genre failure driven by pooling granularity, and
-anisotropy left uncorrected — is what phases 3 through 6 of this project's
-roadmap are built to close, and phase 1 (implemented) is a direct,
-independent test of whether a *non*-lexical, non-embedding signal (verb
-morphology) can do useful work in the meantime.
+anisotropy left uncorrected — is what the textual & structural track below
+is built to close. It is a distinct question from the genre track: none of
+the literature surveyed above attempts unsupervised genre discovery, let
+alone locating a genre shift *within* a single psalm (the well-attested
+lament-to-praise turn in psalms like 13 and 22). Phase 1 (implemented) is
+the genre track's first result — a direct, independent test of whether a
+*non*-lexical, non-embedding signal (verb morphology) can do real
+form-critical work.
 
 ## Method roadmap
 
-Each method reuses the same evaluation discipline: implement it, then
+Every method reuses the same evaluation discipline: implement it, then
 check it against the scholarly ground truth in `pipeline/ground_truth.py`
 (twin psalms, the Elohistic Psalter boundary, the Songs of Ascent, the
 Egyptian and Final Hallel, refrain psalms, acrostics, Wilson's five-book
 editorial frames, and a deliberately hedged set of Gunkel's form-critical
-genre exemplars) *before* moving to the next phase — the same discipline
-Smiley's and Naaijer & Roorda's papers use when they validate against
-known Samuel–Kings/Chronicles parallels.
+genre exemplars) *before* moving on — the same discipline Smiley's and
+Naaijer & Roorda's papers use when they validate against known
+Samuel–Kings/Chronicles parallels.
 
-| # | Method | Status | Motivation |
-|---|---|---|---|
-| 0 | **Lexical similarity** — TF-IDF weighted cosine similarity over content-word lexemes | **Implemented, validated** | Standard IR baseline; the interpretable floor every later method is compared against |
-| 1 | **Verb-morphology similarity** — TF-IDF cosine over verb stem/mood tag profiles, a Gunkel-style form-critical genre fingerprint | **Implemented, validated** | Tests a signal orthogonal to vocabulary; explicitly *not* aimed at parallel-passage detection (see "What's implemented" below) |
-| 2 | Classical distance ensemble — character n-gram edit distance + root-level Dice/Jaccard, combined via logistic regression | Planned | A stronger, still fully interpretable classical baseline before any neural method is introduced |
-| 3 | Sub-psalm segmentation via Masoretic disjunctive accents (verse, colon, and one strophic scheme as competing granularities) | Planned (infrastructure) | Everything downstream depends on this: MiqraBERT's own poetic-recall failure is attributed to verse-level pooling |
-| 4 | Transformer embeddings (E5, AlephBERT, MiqraBERT) at psalm *and* colon level | Planned | A direct, testable extension of MiqraBERT's diagnosed weakness — does colon-level embedding close the recall gap? |
-| 5 | Anisotropy correction (whitening / top-PC removal / kernel PCA) before cosine comparison | Planned | Both papers above diagnose this geometric flaw but only ever address it via fine-tuning |
-| 6 | Optimal transport (Word-Mover's-Distance-style) between token embedding sets, replacing mean-pooling | Planned | The highest-leverage step: directly targets the "heaven/earth, day/night" pooling-erasure failure; both papers already use Wasserstein distance for *evaluation* but never as the similarity metric itself |
-| 7 | Alignment kernels (Smith–Waterman / Needleman–Wunsch) at colon level for chiasmus, tricolon, and refrain detection | Planned | A direct benchmark comparison against the chiasmus paper's embedding-only approach |
-| 8 | Frequent-itemset mining over root-pairs to build a data-driven fixed-word-pair lexicon | Planned | An interpretable structural-parallelism feature, addressing the "black box" critique the NLP papers raise about themselves |
-| 9 | Multi-relational graph fusion (lexical + syntactic + distance + embedding/OT + alignment + word-pair) with spectral / Louvain–Leiden community detection | Planned | The actual clustering step, once enough independent signals exist to fuse |
-| 10 | Shrinkage / regularized covariance estimation for any model fit on small labeled ground truth | Planned (cross-cutting) | The same small-n, high-dimensional problem MiqraBERT's 1,650-pair training set faces |
-| 11 | Continuous validation against scholarly ground truth, every phase | **Ongoing since phase 0** | Modeled directly on how the cited papers validate against Samuel–Kings/Chronicles |
+Several of the later methods draw on techniques from two Georgia Tech
+OMSA courses — ISYE 6740 *Computational Data Analysis* (clustering,
+dimensionality reduction, density estimation, regularized/ensemble
+classifiers) and ISYE 6525/8803 *Topics on High-Dimensional Data
+Analytics* (functional data analysis, robust PCA, tensor decomposition,
+sparse/structured regularization) — chosen because they fill specific,
+identifiable gaps in the literature above, not as a matter of course. In
+particular: nothing in the literature surveyed attempts *unsupervised*
+genre discovery (every paper does supervised or algorithmic pairwise
+parallel detection), and nothing attempts to locate a genre shift *within*
+a single psalm at all.
+
+### Genre track
+
+Can the Psalter's genres (Gunkel's hymn, individual lament, communal
+lament, thanksgiving, royal, wisdom) be recovered by unsupervised
+clustering rather than assumed from hand-labeled exemplars — and can a
+shift between genres *within* one psalm (the well-documented lament-to-
+praise turn in psalms like 13 and 22) be located computationally?
+
+| Method | Status | Fills |
+|---|---|---|
+| **Verb-morphology genre fingerprint** — TF-IDF cosine over verb stem/mood tag profiles | **Implemented, validated** | Gunkel operationalized directly from BHSA's own morphology, tested independently of vocabulary |
+| **Grammatical-person profile** — TF-IDF cosine over word-level and pronominal-suffix person/number tag profiles | **Implemented, validated** | A second, independent form-critical marker (individual vs. communal address) — separates even more cleanly than verb morphology |
+| Clause type and text type (`typ`, `txt`) as further genre-diagnostic signals, same TF-IDF-cosine pattern | Next | Completes what the verb-morphology method's own original motivation named (clause type) and adds one more classical form-critical marker (text type flags historical-recital psalms) |
+| **Unsupervised genre clustering** — spectral clustering and Gaussian-mixture soft clustering over the signals above, plus density estimation to check whether the data actually supports Gunkel's ~6 categories, and Random Forest proximity as an independent cross-check | Planned | The literature gap named above, directly |
+| Sub-psalm segmentation via BHSA's half-verse (`label`) division | Planned (infrastructure) | Already-annotated in BHSA — no need to derive Masoretic colometry from scratch to get sub-verse units |
+| **Intra-psalm genre trajectory and shift detection** — smoothing splines → functional PCA to find trajectory shapes across the corpus; robust PCA (smooth low-rank "steady genre" + sparse "shift") and derivative-based edge detection to locate the shift point itself | Planned | The specific, most novel deliverable: mapping *where* a psalm moves from one genre to another |
+| Tensor decomposition (CP/Tucker/HOSVD) combining verb-morphology, clause-type, person, and text-type jointly rather than one signal at a time, feeding richer factors back into the clustering step | Planned | A principled way to combine independently-validated signals, rather than an ad hoc weighted average |
+| Multi-relational graph fusion with spectral/Louvain–Leiden community detection, over sub-psalm nodes | Planned (capstone) | Unifies clustering and shift detection into one computation: which community a psalm's own ordered nodes fall into, and where that community changes, *is* the shift map |
+
+### Textual & structural track
+
+A separate, independently-motivated line of work on verbatim reuse and
+poetic structure — the direct continuation of phase 0 and of the
+literature review above.
+
+| Method | Status | Fills |
+|---|---|---|
+| **Lexical similarity** — TF-IDF weighted cosine similarity over content-word lexemes | **Implemented, validated** | Standard IR baseline; the most legible sanity check in the whole project (Psalm 14/53, Psalm 108/57/60) |
+| Classical distance ensemble — character n-gram edit distance + root-level Dice/Jaccard, combined via logistic regression | Planned | A stronger, still fully interpretable classical baseline for near-verbatim reuse, in the same territory as Naaijer & Roorda and the *Religions* 2026 paper |
+| Transformer embeddings (E5, AlephBERT, MiqraBERT) at psalm *and* half-verse level | Planned | A direct, testable extension of MiqraBERT's own diagnosed weakness — does finer-grained pooling close its poetic-recall gap? |
+| Anisotropy correction (whitening / top-PC removal / kernel PCA) before cosine comparison | Planned | Both transformer papers diagnose this geometric flaw but only ever address it via fine-tuning |
+| Optimal transport (Word-Mover's-Distance-style) between token embedding sets, replacing mean-pooling | Planned | The highest-leverage fix for the pooling-erasure failure — both papers already use Wasserstein distance for *evaluation* but never as the similarity metric itself |
+| Alignment kernels (Smith–Waterman / Needleman–Wunsch) at half-verse level, for chiasmus and refrain detection | Planned | A direct benchmark against the chiasmus paper's embedding-only approach |
+| Frequent-itemset mining over root-pairs, building a data-driven fixed-word-pair lexicon | Planned | Computationally operationalizes a tradition Hebrew poetics scholarship has catalogued by hand for decades; addresses the "black box" critique the NLP papers raise about themselves |
+
+### Cross-cutting
+
+- **Group LASSO / Elastic Net** (HDDA) — explainability: which *family* of features (not just which single tag) actually drives a proposed cluster or shift.
+- **Matrix completion / compressive sensing** (HDDA) — recovering full similarity structure from a reliable subset of sub-psalm comparisons, rather than computing every sparse, noisy short-unit pair directly.
+- **Shrinkage / regularized covariance estimation** — the same small-*n*, high-dimensional problem MiqraBERT's 1,650-pair training set faces, relevant anywhere a model gets fit against `ground_truth.py`'s necessarily small labeled sets.
+- **Continuous validation against scholarly ground truth** — ongoing since phase 0, the same discipline the cited papers use when validating against Samuel–Kings/Chronicles.
 
 ## What's implemented and validated now
 
@@ -189,12 +237,28 @@ this is a genuinely independent signal rather than lexical similarity in
 disguise: Pearson correlation between the two methods' full similarity
 matrices is 0.19.
 
-Both methods, and the interactive heatmap / network-graph / ranked-match
-visualization built on top of them, are live in the app — see
-`app/README.md`. 112 pipeline tests and 60 frontend tests currently pass;
-`pipeline/ground_truth.py` and its integration tests are the executable
-form of the "validate every phase against known scholarship" discipline
-above.
+**Grammatical-person profile.** TF-IDF cosine similarity over word-level
+and pronominal-suffix person/number tag profiles ("I" vs. "we" vs. "you"
+vs. "he/she/it"), extracted from BHSA's `ps`/`nu`/`prs_ps`/`prs_nu`
+features — a second, independent form-critical marker distinguishing
+individual from communal address. This separates even more cleanly than
+verb morphology: individual laments (Psalms 3, 22, 38, 51, 88) average
+0.87 similarity with each other, communal laments (44, 74, 79, 80, 137)
+average 0.73, and the two groups average only 0.41 with *each other* —
+below the 0.51 corpus-wide baseline, meaning an individual and a communal
+lament are measurably *less* alike on this dimension than two random
+psalms. Psalm 22 ("My God, my God, why have you forsaken me") scores
+above 0.92 with fellow individual laments Psalm 38 and Psalm 88, and below
+0.45 with communal laments Psalm 44 and Psalm 137. Confirmed independent
+of both other methods: correlation with lexical similarity and with
+verb-morphology similarity are each below 0.5.
+
+All three methods, and the interactive heatmap / network-graph /
+ranked-match visualization built on top of them, are live in the app —
+see `app/README.md`. 138 pipeline tests and 60 frontend tests currently
+pass; `pipeline/ground_truth.py` and its integration tests are the
+executable form of the "validate every phase against known scholarship"
+discipline above.
 
 ## Built on ETCBC's own tools
 
@@ -208,6 +272,29 @@ retains each word's Text-Fabric node id specifically so later phases
 (clause and phrase structure, disjunctive accents for phase 3's
 segmentation) can re-query the corpus directly rather than re-deriving
 structure from scratch.
+
+## Application architecture
+
+Every method in the *textual & structural* track (and phase 1's family in
+the *genre* track) produces the same shape of result — an N×N similarity
+matrix plus a ranked-neighbors list per psalm — which is exactly what the
+current app's method selector, heatmap, and network graph already handle
+generically; each new method of that kind drops in without changing any
+existing code, as it has twice already. Unsupervised clustering and
+intra-psalm shift detection produce a genuinely different shape (a
+partition of the whole corpus; a sequence within one psalm) that doesn't
+fit that UI at all, so once the clustering phase lands the app splits into
+two pages — a **Compare** page (today's app, extended with more pairwise
+methods over time) and a **Genre** page (cluster view, and eventually the
+per-psalm trajectory chart) — sharing the same psalm picker and detail
+components rather than duplicating them.
+
+On the pipeline side, the same pattern extends the same way: a `Protocol`
+(`SimilarityMethod` today; a `ClusteringMethod` once phase 2 needs one) and
+a generic result type, composed in `methods.py` without either the
+extractor or the metric knowing about the other. New capability is added
+by introducing a new Protocol exactly when its first concrete method needs
+it - not before.
 
 ## Repository structure
 

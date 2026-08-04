@@ -24,7 +24,8 @@ DEFAULT_BHSA_TF_PATH = Path.home() / "Developer" / "hebrew" / "bhsa" / "tf" / "2
 #: Text-Fabric features required for extraction.
 _REQUIRED_FEATURES = (
     "otype book chapter verse "
-    "lex voc_lex_utf8 g_word_utf8 sp gloss vs vt"
+    "lex voc_lex_utf8 g_word_utf8 sp gloss vs vt ps nu prs_ps prs_nu "
+    "gn prs_gn st ls pdp nametype root"
 )
 
 _PSALMS_BOOK_NAME = "Psalmi"
@@ -62,6 +63,55 @@ class PsalmWord:
     verb_mood: str
     """BHSA verb conjugation/mood code (e.g. ``impv``, ``impf``), or "" if
     this word is not a verb."""
+
+    person: str
+    """BHSA grammatical person of the word itself (``p1``/``p2``/``p3``, or
+    ``unknown`` if marked but ambiguous), or "" if not person-marked."""
+
+    number: str
+    """BHSA grammatical number of the word itself (``sg``/``pl``/``du``, or
+    ``unknown``), or "" if not number-marked. General word-level feature,
+    not exclusive to person-marked words - e.g. plain plural nouns have a
+    number but no person."""
+
+    suffix_person: str
+    """Person of the word's pronominal suffix (e.g. the "my" in "my God"),
+    or "" if the word has no pronominal suffix."""
+
+    suffix_number: str
+    """Number of the word's pronominal suffix, or "" if none."""
+
+    gender: str
+    """BHSA grammatical gender of the word itself (``m``/``f``, or
+    ``unknown``), or "" if not gender-marked."""
+
+    suffix_gender: str
+    """Gender of the word's pronominal suffix, or "" if none."""
+
+    state: str
+    """BHSA nominal state (``c`` construct / ``a`` absolute), or "" if not
+    applicable (verbs, particles, ...). Construct-chain density is a
+    register marker independent of person/verb morphology."""
+
+    lexical_set: str
+    """BHSA lexical set - a finer subcategory than part-of-speech (e.g.
+    ``nmdi`` demonstrative, ``ppre`` preposition-as-noun, ``padv`` adverbial
+    particle), or "" if the word has no lexical-set subcategory."""
+
+    phrase_dependent_pos: str
+    """BHSA part-of-speech as used in this word's specific phrase context
+    (e.g. an adjective substantivized to function as a noun). Differs from
+    ``part_of_speech`` for about 5.6% of Psalter words - a real, distinct
+    syntactic-function signal, not a duplicate of ``sp``."""
+
+    name_type: str
+    """BHSA named-entity type (``pers``, ``topo``, ``gens``, or comma-joined
+    combinations), or "" if the word is not a proper name."""
+
+    root: str
+    """BHSA triliteral consonantal root, collapsing derivationally related
+    lexemes (e.g. a verb and its cognate noun) that ``lexeme`` keeps
+    distinct. Only populated for a subset of content words; "" otherwise."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -145,10 +195,23 @@ class Corpus:
             gloss=gloss or "",
             verb_stem=_na_to_empty(F.vs.v(node)),
             verb_mood=_na_to_empty(F.vt.v(node)),
+            person=_na_to_empty(F.ps.v(node)),
+            number=_na_to_empty(F.nu.v(node)),
+            suffix_person=_na_to_empty(F.prs_ps.v(node)),
+            suffix_number=_na_to_empty(F.prs_nu.v(node)),
+            gender=_na_to_empty(F.gn.v(node)),
+            suffix_gender=_na_to_empty(F.prs_gn.v(node)),
+            state=_na_to_empty(F.st.v(node)),
+            lexical_set=_na_to_empty(F.ls.v(node), sentinel="none"),
+            phrase_dependent_pos=F.pdp.v(node) or "",
+            name_type=_na_to_empty(F.nametype.v(node)),
+            root=_na_to_empty(F.root.v(node)),
         )
 
 
-def _na_to_empty(value: str | None) -> str:
-    """BHSA uses the literal string "NA" (not None) for inapplicable
-    word-level features like verb stem/mood on non-verbs."""
-    return "" if value is None or value == "NA" else value
+def _na_to_empty(value: str | None, *, sentinel: str = "NA") -> str:
+    """BHSA uses a literal sentinel string - usually "NA", but "none" for
+    `ls` - rather than None, to mark word-level features as inapplicable.
+    Some features (`nametype`, `root`) use actual None instead; that's
+    always treated as empty regardless of `sentinel`."""
+    return "" if value is None or value == sentinel else value

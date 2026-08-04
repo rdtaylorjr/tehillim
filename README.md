@@ -1,6 +1,6 @@
-# tehillim.dev: Computational Approaches to the Hebrew Psalter
+# Computational Approaches to the Hebrew Psalter (tehillim.dev)
 
-tehillim.dev investigates how the Psalter's internal similarities — verbatim
+This repo investigates how the Psalter's internal similarities — verbatim
 duplicates, formulaic genre patterns, poetic parallelism, editorial
 groupings — can be recovered computationally from the Masoretic Text, and
 what each representation (lexical, morphosyntactic, embedding-based,

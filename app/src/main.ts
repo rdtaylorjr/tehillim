@@ -22,7 +22,14 @@ const DEFAULT_THRESHOLD_PERCENTILE = 98;
 //: so a new method still shows up (just less prettily) rather than breaking.
 const METHOD_LABELS: Record<string, string> = {
   "lexical-tfidf-cosine": "Lexical Similarity",
-  "verb-morphology-tfidf-cosine": "Verb Morphology (Genre)",
+  "root-tfidf-cosine": "Lexical Similarity (Root)",
+  "verb-morphology-tfidf-cosine": "Syntactic Similarity (Verb Morphology)",
+  "person-profile-tfidf-cosine": "Syntactic Similarity (Person)",
+  "gender-profile-tfidf-cosine": "Syntactic Similarity (Gender)",
+  "nominal-state-tfidf-cosine": "Syntactic Similarity (Nominal State)",
+  "lexical-set-tfidf-cosine": "Syntactic Similarity (Lexical Set)",
+  "phrase-dependent-pos-tfidf-cosine": "Syntactic Similarity (Phrase-Dependent POS)",
+  "named-entity-tfidf-cosine": "Syntactic Similarity (Named Entity)",
 };
 
 function methodLabel(id: string): string {
@@ -46,9 +53,9 @@ async function main(): Promise<void> {
   const methodOf = (methodId: string): MethodPayload =>
     data.methods.find((m) => m.id === methodId) ?? data.methods[0];
 
-  const methodBadge = requireEl("#method-badge");
+  const methodDescription = requireEl("#method-description");
   const corpusCredit = requireEl("#corpus-credit");
-  corpusCredit.textContent = `${data.corpus.name} ${data.corpus.version} · ${data.psalms.length} psalms · via Text-Fabric`;
+  corpusCredit.textContent = `${data.corpus.name} ${data.corpus.version} · via Text-Fabric`;
 
   const detailPanel = requireEl("#detail-panel");
   const psalmSearch = requireEl<HTMLInputElement>("#psalm-search");
@@ -89,7 +96,7 @@ async function main(): Promise<void> {
   };
 
   setupViewTabs(store);
-  setupMethodSelect(store, data, methodBadge);
+  setupMethodSelect(store, data, methodDescription);
   mountVisualizations(methodOf(store.getState().selectedMethodId));
 
   psalmSearch.addEventListener("change", () => {
@@ -161,21 +168,22 @@ function setupViewTabs(store: Store): void {
   applyView(store.getState().view);
 }
 
-function setupMethodSelect(store: Store, data: SimilarityPayload, badge: HTMLElement): void {
+function setupMethodSelect(store: Store, data: SimilarityPayload, description: HTMLElement): void {
   const select = requireEl<HTMLSelectElement>("#method-select");
   select.innerHTML = "";
   for (const method of data.methods) {
     const option = document.createElement("option");
     option.value = method.id;
     option.textContent = methodLabel(method.id);
+    option.title = method.description;
     select.append(option);
   }
 
   const applyMethod = (methodId: string): void => {
     const method = data.methods.find((m) => m.id === methodId) ?? data.methods[0];
     select.value = method.id;
-    badge.textContent = methodLabel(method.id);
-    badge.title = method.description;
+    select.title = method.description;
+    description.textContent = method.description;
   };
 
   select.addEventListener("change", () => {

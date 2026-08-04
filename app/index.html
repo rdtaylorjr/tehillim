@@ -8,7 +8,7 @@
       name="description"
       content="Compare the Psalms by lexical and syntactic similarity, computed from the ETCBC Hebrew Bible database via Text-Fabric."
     />
-    <title>Compare the Psalms | TehillimAI</title>
+    <title>Compare the Psalms</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,9 +19,14 @@
   <body>
     <div id="app">
       <header class="app-header">
-        <a class="brand" href="../index.html">
+        <a
+          class="brand"
+          href="https://github.com/rdtaylorjr/tehillim"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View source on GitHub"
+        >
           <span class="brand-mark">ת</span>
-          <span class="brand-text">TehillimAI</span>
         </a>
         <div class="title-block">
           <h1>Compare the Psalms</h1>
@@ -30,7 +35,6 @@
         <div class="method-picker">
           <label class="visually-hidden" for="method-select">Comparison method</label>
           <select id="method-select"></select>
-          <div class="method-badge" id="method-badge" aria-live="polite"></div>
         </div>
       </header>
 
@@ -57,6 +61,7 @@
         </section>
 
         <section class="viz-panel" aria-label="Visualization">
+          <p class="view-hint" id="method-description"></p>
           <div class="view-tabs" role="tablist">
             <button
               class="view-tab is-active"
@@ -79,10 +84,6 @@
           </div>
 
           <div class="view" id="matrix-view" role="tabpanel">
-            <p class="view-hint">
-              Each cell is a psalm pair, colored by shared vocabulary. Hover to inspect, click to
-              select a psalm.
-            </p>
             <div class="heatmap-container" id="heatmap-container"></div>
           </div>
 

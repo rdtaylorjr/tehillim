@@ -63,27 +63,20 @@ button {
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  font-weight: 700;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .brand-mark {
-  width: 32px;
-  height: 32px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   display: grid;
   place-items: center;
   background: var(--accent);
   color: white;
   font-family: Cardo, serif;
-  font-size: 1.15rem;
-}
-
-.brand-text {
-  font-size: 0.92rem;
-  color: var(--muted);
+  font-size: 1.9rem;
 }
 
 .title-block {
@@ -138,17 +131,6 @@ button {
 #method-select:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
-}
-
-.method-badge {
-  font-size: 0.78rem;
-  color: var(--accent);
-  border: 1px solid var(--line);
-  background: white;
-  padding: 6px 12px;
-  border-radius: 999px;
-  white-space: nowrap;
-  flex-shrink: 0;
 }
 
 /* Layout */

@@ -24,6 +24,17 @@ def _word(
         gloss=gloss,
         verb_stem="",
         verb_mood="",
+        person="",
+        number="",
+        suffix_person="",
+        suffix_number="",
+        gender="",
+        suffix_gender="",
+        state="",
+        lexical_set="",
+        phrase_dependent_pos=pos,
+        name_type="",
+        root="",
     )
 
 

@@ -28,6 +28,17 @@ def test_lexical_set_scores_are_bounded(lexical_set_result):
     assert lexical_set_result.matrix.max() <= 1.0 + 1e-9
 
 
-def test_lexical_set_scores_are_not_degenerate(lexical_set_result):
+def test_lexical_set_scores_are_genuinely_discriminative(lexical_set_result):
+    # A meaningful bar, not just "not literally constant": checked
+    # empirically at 59.8% of pairs below 0.5.
     off_diagonal = lexical_set_result.matrix[~np.eye(150, dtype=bool)]
-    assert off_diagonal.std() > 0.01
+    assert (off_diagonal < 0.5).mean() > 0.15
+
+
+def test_lexical_set_is_not_a_relabeling_of_lexical_similarity(
+    similarity_result, lexical_set_result
+):
+    n = len(lexical_set_result.psalm_numbers)
+    iu = np.triu_indices(n, k=1)
+    correlation = np.corrcoef(similarity_result.matrix[iu], lexical_set_result.matrix[iu])[0, 1]
+    assert correlation < 0.5

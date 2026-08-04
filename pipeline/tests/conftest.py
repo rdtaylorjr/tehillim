@@ -20,6 +20,7 @@ from tehillim_pipeline.methods import (
     GENDER_PROFILE_SIMILARITY,
     LEXICAL_SET_SIMILARITY,
     LEXICAL_SIMILARITY,
+    NAMED_ENTITY_IDENTITY_SIMILARITY,
     NAMED_ENTITY_SIMILARITY,
     NOMINAL_STATE_SIMILARITY,
     PERSON_PROFILE_SIMILARITY,
@@ -27,6 +28,7 @@ from tehillim_pipeline.methods import (
     ROOT_SIMILARITY,
     VERB_MORPHOLOGY_SIMILARITY,
 )
+from tehillim_pipeline.named_entity_identity import build_named_entity_identity_feature_matrix
 from tehillim_pipeline.named_entity_profile import build_named_entity_profile_feature_matrix
 from tehillim_pipeline.nominal_state import build_nominal_state_feature_matrix
 from tehillim_pipeline.person_profile import build_person_profile_feature_matrix
@@ -153,3 +155,13 @@ def root_features(psalms):
 @pytest.fixture(scope="session")
 def root_result(root_features):
     return ROOT_SIMILARITY.compute(root_features)
+
+
+@pytest.fixture(scope="session")
+def named_entity_identity_features(psalms):
+    return build_named_entity_identity_feature_matrix(psalms)
+
+
+@pytest.fixture(scope="session")
+def named_entity_identity_result(named_entity_identity_features):
+    return NAMED_ENTITY_IDENTITY_SIMILARITY.compute(named_entity_identity_features)

@@ -4,10 +4,14 @@ Computes similarity between the 150 Psalms from ETCBC/BHSA data via
 [Text-Fabric](https://annotation.github.io/text-fabric/), and exports the
 result as the JSON payload consumed by the `app/` frontend.
 
-Implements nine comparison methods so far, all built on the same generic
+Implements seven shipped comparison methods, all built on the same generic
 `TfidfCosineSimilarity` metric (similarity.py) applied to different
 vocabularies (features.py), extracted from BHSA's word-level annotations
-(corpus.py):
+(corpus.py). Grouped into two families: lexical/vocabulary-based (compare
+which specific words appear) and syntactic/grammatical-profile (compare how
+words are used, independent of vocabulary).
+
+**Lexical family:**
 
 - **Lexical similarity** — TF-IDF weighted cosine similarity over shared
   Biblical Hebrew content-word lexemes (nouns, verbs, adjectives, adverbs,
@@ -17,6 +21,15 @@ vocabularies (features.py), extracted from BHSA's word-level annotations
   a verb and its cognate noun (e.g. "to meditate" / "meditation") count as
   shared vocabulary even though they're distinct lexemes. Experimental,
   sparsely-annotated BHSA feature (~20% of Psalter word occurrences).
+- **Named-entity-identity similarity** (named_entity_identity.py) — lexical
+  similarity restricted to proper nouns, isolating *which specific* names
+  (Zion, Jacob, David, ...) two psalms share, rather than just their type.
+  The most discriminative of the newer methods (std 0.326, 60% of pairs
+  below 0.5) - the earlier type-only version diluted this into one dominant
+  category.
+
+**Syntactic family:**
+
 - **Verb-morphology similarity** (verb_morphology.py) — TF-IDF weighted
   cosine similarity over verb stem (binyan) and mood/conjugation tag
   frequency profiles. This is a form-critical *genre* fingerprint (Gunkel),
@@ -33,23 +46,30 @@ vocabularies (features.py), extracted from BHSA's word-level annotations
   laments score 0.87 with each other on average, communal laments 0.73,
   and the two groups only 0.41 with *each other* - below the corpus-wide
   baseline. See `tests/test_person_profile_integration.py`.
-- **Grammatical-gender similarity** (gender_profile.py) — the same
-  word/suffix split as person, but for masculine/feminine marking.
-- **Nominal-state similarity** (nominal_state.py) — construct vs. absolute
-  state tag profiles; construct-chain density as a register marker of
-  elevated poetic diction.
 - **Lexical-set similarity** (lexical_set.py) — BHSA's finer subclassification
   of part-of-speech (numerals, focus particles, words grammaticalized into
   prepositions/adverbs/copulas, ...).
-- **Phrase-dependent-part-of-speech similarity** (phrase_dependent_pos.py) —
-  a word's syntactic function in its specific phrase, which differs from its
-  lexeme's default part-of-speech for about 5.6% of Psalter words (checked
-  empirically) - e.g. a substantivized adjective.
-- **Named-entity similarity** (named_entity_profile.py) — an onomastic
-  profile over named-entity type (person, place, people/nation, deity, ...),
-  distinguishing psalms dense with place names from those dense with
-  personal or divine names. BHSA flags this feature as incompletely and not
-  always correctly assigned.
+- **Named-entity-type similarity** (named_entity_profile.py) — an onomastic
+  *register* (person, place, people/nation, deity, ...), not which specific
+  names appear - see named-entity-identity above for that. The weakest of
+  the shipped methods (75% of tagged words fall into one category), kept
+  because it still clears a real discriminative bar (20.9% of pairs below
+  0.5) and answers a different question than the identity version.
+
+**Extracted but not shipped:** `gender_profile.py`, `nominal_state.py`, and
+`phrase_dependent_pos.py` build correct FeatureMatrix data and are fully
+tested, but a real analysis run found TF-IDF-cosine over their tag profiles
+is structurally near-degenerate (>=99% of pairs score above 0.8) - each has
+few tags with one dominant category (masculine gender ~70%, absolute state
+~82%, and coarse POS proportions in general) that varies little across the
+whole Psalter, so cosine similarity is mechanically pinned near 1.0
+regardless of whether the category is linguistically meaningful. Their
+integration tests document this finding directly (`test_*_scores_are_
+highly_compressed`) rather than asserting a "not degenerate" bar weak
+enough that they'd pass it anyway. See `methods.py`'s docstring for the
+full rationale and `pdp`'s note there on a promising alternative:
+intra-psalm windowed/sequential analysis (a real, local shift was found at
+Psalm 13's lament-to-praise turn) instead of whole-psalm averaging.
 
 The architecture is layered (`corpus` → per-feature extractor modules →
 `similarity` → `methods` → `export`) so additional comparison methods —
@@ -61,11 +81,12 @@ landmarks (twin psalms, Elohistic Psalter, Songs of Ascent, Hallel,
 refrains, acrostics, Wilson's book frames, and a deliberately hedged set of
 Gunkel genre exemplars) that the verb-morphology and person-profile
 integration tests validate against - see that module's docstring for
-sourcing and caveats. The remaining six methods use lighter, purely
-structural integration tests (real corpus, real value distributions, bounded
-and non-degenerate scores) rather than that same scholarly-hypothesis depth.
+sourcing and caveats. The other shipped methods use lighter, purely
+structural integration tests (real corpus, real value distributions,
+boundedness, and an empirically-grounded discriminativeness bar) rather
+than that same scholarly-hypothesis depth.
 
-All methods are exported together into one JSON payload (`cli.py`'s
+All shipped methods are exported together into one JSON payload (`cli.py`'s
 `_METHODS` list), with a frontend dropdown (`app/src/main.ts`) to switch
 between them. Adding a new TF-IDF-cosine-style method is a one-line addition
 to `_METHODS` plus an entry in `app/src/main.ts`'s `METHOD_LABELS` map.

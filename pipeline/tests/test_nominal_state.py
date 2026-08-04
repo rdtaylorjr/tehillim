@@ -54,6 +54,12 @@ def test_term_info_has_human_readable_labels():
     assert fm.term_info["c"].label == "Construct"
 
 
+def test_unknown_state_code_falls_back_to_the_raw_code():
+    psalms = [Psalm(number=1, verse_count=1, incipit="", words=(_word(state="zzzz"),))]
+    fm = build_nominal_state_feature_matrix(psalms)
+    assert fm.term_info["zzzz"].label == "zzzz"
+
+
 def test_build_matrix_handles_psalm_with_no_stated_words():
     psalms = [Psalm(number=1, verse_count=1, incipit="", words=(_word(),))]
     fm = build_nominal_state_feature_matrix(psalms)

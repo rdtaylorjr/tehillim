@@ -29,6 +29,20 @@ def test_named_entity_scores_are_bounded(named_entity_result):
     assert named_entity_result.matrix.max() <= 1.0 + 1e-9
 
 
-def test_named_entity_scores_are_not_degenerate(named_entity_result):
+def test_named_entity_scores_are_genuinely_discriminative(named_entity_result):
+    # A meaningful bar, not just "not literally constant": checked
+    # empirically at 20.9% of pairs below 0.5 - the weakest-but-still-real
+    # signal of the shipped methods, since 75% of tagged words fall into a
+    # single category (`pers`). See named_entity_identity for the sharper,
+    # lexeme-based version of this same idea.
     off_diagonal = named_entity_result.matrix[~np.eye(150, dtype=bool)]
-    assert off_diagonal.std() > 0.01
+    assert (off_diagonal < 0.5).mean() > 0.1
+
+
+def test_named_entity_is_not_a_relabeling_of_lexical_similarity(
+    similarity_result, named_entity_result
+):
+    n = len(named_entity_result.psalm_numbers)
+    iu = np.triu_indices(n, k=1)
+    correlation = np.corrcoef(similarity_result.matrix[iu], named_entity_result.matrix[iu])[0, 1]
+    assert correlation < 0.5

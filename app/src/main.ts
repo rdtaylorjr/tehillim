@@ -23,13 +23,11 @@ const DEFAULT_THRESHOLD_PERCENTILE = 98;
 const METHOD_LABELS: Record<string, string> = {
   "lexical-tfidf-cosine": "Lexical Similarity",
   "root-tfidf-cosine": "Lexical Similarity (Root)",
+  "named-entity-identity-tfidf-cosine": "Lexical Similarity (Named Entities)",
   "verb-morphology-tfidf-cosine": "Syntactic Similarity (Verb Morphology)",
   "person-profile-tfidf-cosine": "Syntactic Similarity (Person)",
-  "gender-profile-tfidf-cosine": "Syntactic Similarity (Gender)",
-  "nominal-state-tfidf-cosine": "Syntactic Similarity (Nominal State)",
   "lexical-set-tfidf-cosine": "Syntactic Similarity (Lexical Set)",
-  "phrase-dependent-pos-tfidf-cosine": "Syntactic Similarity (Phrase-Dependent POS)",
-  "named-entity-tfidf-cosine": "Syntactic Similarity (Named Entity)",
+  "named-entity-tfidf-cosine": "Syntactic Similarity (Named Entity Type)",
 };
 
 function methodLabel(id: string): string {

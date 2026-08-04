@@ -62,6 +62,12 @@ def test_term_info_has_human_readable_labels():
     assert fm.term_info["nmpr"].label == "Proper Noun"
 
 
+def test_unknown_pdp_code_falls_back_to_the_raw_code():
+    psalms = [Psalm(number=1, verse_count=1, incipit="", words=(_word(pdp="zzzz"),))]
+    fm = build_phrase_dependent_pos_feature_matrix(psalms)
+    assert fm.term_info["zzzz"].label == "zzzz"
+
+
 def test_every_word_contributes_a_tag_no_filter_function():
     # Unlike other extractors, pdp is always populated - no words are
     # excluded, so a single word always produces exactly one term.

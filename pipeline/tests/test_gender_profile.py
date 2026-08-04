@@ -99,6 +99,12 @@ def test_term_info_gives_distinct_human_readable_labels_for_word_vs_suffix():
     assert "Suffix" in suffix_label
 
 
+def test_unknown_gender_code_falls_back_to_the_raw_code():
+    psalms = [Psalm(number=1, verse_count=1, incipit="", words=(_word(gender="zzzz"),))]
+    fm = build_gender_profile_feature_matrix(psalms)
+    assert fm.term_info["word.zzzz"].label == "zzzz"
+
+
 def test_build_matrix_handles_psalm_with_no_gender_marked_words():
     psalms = [Psalm(number=1, verse_count=1, incipit="", words=(_word(),))]
     fm = build_gender_profile_feature_matrix(psalms)

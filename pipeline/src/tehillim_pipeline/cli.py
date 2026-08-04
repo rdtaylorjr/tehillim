@@ -14,23 +14,19 @@ from pathlib import Path
 from tehillim_pipeline.corpus import DEFAULT_BHSA_TF_PATH, Corpus, Psalm
 from tehillim_pipeline.export import MethodComputation, build_similarity_payload
 from tehillim_pipeline.features import FeatureMatrix, build_lexical_feature_matrix
-from tehillim_pipeline.gender_profile import build_gender_profile_feature_matrix
 from tehillim_pipeline.lexical_set import build_lexical_set_feature_matrix
 from tehillim_pipeline.methods import (
-    GENDER_PROFILE_SIMILARITY,
     LEXICAL_SET_SIMILARITY,
     LEXICAL_SIMILARITY,
+    NAMED_ENTITY_IDENTITY_SIMILARITY,
     NAMED_ENTITY_SIMILARITY,
-    NOMINAL_STATE_SIMILARITY,
     PERSON_PROFILE_SIMILARITY,
-    PHRASE_DEPENDENT_POS_SIMILARITY,
     ROOT_SIMILARITY,
     VERB_MORPHOLOGY_SIMILARITY,
 )
+from tehillim_pipeline.named_entity_identity import build_named_entity_identity_feature_matrix
 from tehillim_pipeline.named_entity_profile import build_named_entity_profile_feature_matrix
-from tehillim_pipeline.nominal_state import build_nominal_state_feature_matrix
 from tehillim_pipeline.person_profile import build_person_profile_feature_matrix
-from tehillim_pipeline.phrase_dependent_pos import build_phrase_dependent_pos_feature_matrix
 from tehillim_pipeline.root_similarity import build_root_feature_matrix
 from tehillim_pipeline.similarity import SimilarityMethod, tfidf_weights
 from tehillim_pipeline.verb_morphology import build_verb_morphology_feature_matrix
@@ -41,17 +37,18 @@ DEFAULT_OUTPUT = Path(__file__).resolve().parents[3] / "app" / "public" / "data"
 #: Every similarity method exported to the frontend, in display order. The
 #: first is used as the frontend's default. Adding a new TF-IDF-cosine-style
 #: method (a new feature extractor paired with a `methods.py` instance) is a
-#: one-line addition here.
+#: one-line addition here. Grouped lexical/vocabulary-based methods first,
+#: then syntactic/grammatical-profile methods - see methods.py's docstring
+#: for why GENDER_PROFILE_SIMILARITY, NOMINAL_STATE_SIMILARITY, and
+#: PHRASE_DEPENDENT_POS_SIMILARITY are configured there but not listed here.
 _METHODS: tuple[tuple[Callable[[list[Psalm]], FeatureMatrix], SimilarityMethod], ...] = (
     (build_lexical_feature_matrix, LEXICAL_SIMILARITY),
+    (build_root_feature_matrix, ROOT_SIMILARITY),
+    (build_named_entity_identity_feature_matrix, NAMED_ENTITY_IDENTITY_SIMILARITY),
     (build_verb_morphology_feature_matrix, VERB_MORPHOLOGY_SIMILARITY),
     (build_person_profile_feature_matrix, PERSON_PROFILE_SIMILARITY),
-    (build_gender_profile_feature_matrix, GENDER_PROFILE_SIMILARITY),
-    (build_nominal_state_feature_matrix, NOMINAL_STATE_SIMILARITY),
     (build_lexical_set_feature_matrix, LEXICAL_SET_SIMILARITY),
-    (build_phrase_dependent_pos_feature_matrix, PHRASE_DEPENDENT_POS_SIMILARITY),
     (build_named_entity_profile_feature_matrix, NAMED_ENTITY_SIMILARITY),
-    (build_root_feature_matrix, ROOT_SIMILARITY),
 )
 
 

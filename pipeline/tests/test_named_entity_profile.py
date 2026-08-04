@@ -64,6 +64,12 @@ def test_comma_joined_name_type_gets_a_combined_label():
     assert fm.term_info["pers,gens"].label == "Person / People"
 
 
+def test_unknown_name_type_code_falls_back_to_the_raw_code():
+    psalms = [Psalm(number=1, verse_count=1, incipit="", words=(_word(name_type="zzzz"),))]
+    fm = build_named_entity_profile_feature_matrix(psalms)
+    assert fm.term_info["zzzz"].label == "zzzz"
+
+
 def test_build_matrix_handles_psalm_with_no_named_words():
     psalms = [Psalm(number=1, verse_count=1, incipit="", words=(_word(),))]
     fm = build_named_entity_profile_feature_matrix(psalms)

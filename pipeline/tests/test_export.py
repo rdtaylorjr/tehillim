@@ -3,25 +3,28 @@ from __future__ import annotations
 import numpy as np
 
 from tehillim_pipeline.corpus import Psalm
-from tehillim_pipeline.export import build_payload
-from tehillim_pipeline.features import FeatureMatrix, LexemeInfo
+from tehillim_pipeline.export import MethodComputation, build_similarity_payload
+from tehillim_pipeline.features import FeatureInfo, FeatureMatrix
 from tehillim_pipeline.similarity import SimilarityResult
 
 
-def _payload_inputs():
-    psalms = [
+def _psalms() -> list[Psalm]:
+    return [
         Psalm(number=1, verse_count=2, incipit="אשרי", words=()),
         Psalm(number=2, verse_count=3, incipit="למה", words=()),
         Psalm(number=3, verse_count=1, incipit="יהוה", words=()),
     ]
-    lexemes = ("MLK/", "YD/")
-    lexeme_info = {
-        "MLK/": LexemeInfo(lemma="מֶלֶךְ", gloss="king", part_of_speech="subs"),
-        "YD/": LexemeInfo(lemma="יָד", gloss="hand", part_of_speech="subs"),
+
+
+def _lexical_computation() -> MethodComputation:
+    terms = ("MLK/", "YD/")
+    term_info = {
+        "MLK/": FeatureInfo(label="מֶלֶךְ", description="king", category="subs"),
+        "YD/": FeatureInfo(label="יָד", description="hand", category="subs"),
     }
     counts = np.array([[2, 1], [1, 0], [0, 3]], dtype=np.int32)
     features = FeatureMatrix(
-        psalm_numbers=(1, 2, 3), lexemes=lexemes, counts=counts, lexeme_info=lexeme_info
+        psalm_numbers=(1, 2, 3), terms=terms, counts=counts, term_info=term_info
     )
     weights = counts.astype(float)
     matrix = np.array(
@@ -33,71 +36,144 @@ def _payload_inputs():
     )
     result = SimilarityResult(
         method="lexical-tfidf-cosine",
-        description="test method",
+        description="lexical test method",
         psalm_numbers=(1, 2, 3),
         matrix=matrix,
     )
-    return psalms, features, weights, result
+    return MethodComputation(features=features, weights=weights, result=result)
+
+
+def _verb_morphology_computation() -> MethodComputation:
+    terms = ("piel.impv",)
+    term_info = {
+        "piel.impv": FeatureInfo(
+            label="Piel Imperative",
+            description="Piel Imperative verb form",
+            category="verb-morphology",
+        ),
+    }
+    counts = np.array([[0], [1], [1]], dtype=np.int32)
+    features = FeatureMatrix(
+        psalm_numbers=(1, 2, 3), terms=terms, counts=counts, term_info=term_info
+    )
+    weights = counts.astype(float)
+    matrix = np.array(
+        [
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 1.0],
+            [0.0, 1.0, 1.0],
+        ]
+    )
+    result = SimilarityResult(
+        method="verb-morphology-tfidf-cosine",
+        description="verb morphology test method",
+        psalm_numbers=(1, 2, 3),
+        matrix=matrix,
+    )
+    return MethodComputation(features=features, weights=weights, result=result)
+
+
+def _payload():
+    return build_similarity_payload(
+        psalms=_psalms(),
+        computations=[_lexical_computation(), _verb_morphology_computation()],
+        default_method="lexical-tfidf-cosine",
+    )
 
 
 def test_payload_has_expected_top_level_keys():
-    payload = build_payload(*_payload_inputs())
-    assert set(payload) == {"meta", "psalmNumbers", "psalms", "similar", "matrix"}
+    payload = _payload()
+    assert set(payload) == {"generatedAt", "corpus", "psalms", "methods", "defaultMethod"}
 
 
-def test_payload_meta_reflects_method_and_psalm_count():
-    payload = build_payload(*_payload_inputs())
-    assert payload["meta"]["method"] == "lexical-tfidf-cosine"
-    assert payload["meta"]["psalmCount"] == 3
-    assert payload["meta"]["corpus"] == {"name": "ETCBC/BHSA", "version": "2021"}
+def test_corpus_and_default_method_are_recorded():
+    payload = _payload()
+    assert payload["corpus"] == {"name": "ETCBC/BHSA", "version": "2021"}
+    assert payload["defaultMethod"] == "lexical-tfidf-cosine"
 
 
-def test_similar_psalms_exclude_self():
-    payload = build_payload(*_payload_inputs())
-    entries = payload["similar"]["1"]
-    assert all(entry["psalm"] != 1 for entry in entries)
+def test_psalms_are_method_independent_and_shared_across_methods():
+    payload = _payload()
+    assert len(payload["psalms"]) == 3
+    p1 = payload["psalms"][0]
+    assert p1 == {"number": 1, "verseCount": 2, "wordCount": 0, "incipit": "אשרי"}
+
+
+def test_both_methods_are_present_with_correct_ids():
+    payload = _payload()
+    ids = [m["id"] for m in payload["methods"]]
+    assert ids == ["lexical-tfidf-cosine", "verb-morphology-tfidf-cosine"]
+
+
+def test_each_method_carries_its_own_description():
+    payload = _payload()
+    lexical = next(m for m in payload["methods"] if m["id"] == "lexical-tfidf-cosine")
+    verb = next(m for m in payload["methods"] if m["id"] == "verb-morphology-tfidf-cosine")
+    assert lexical["description"] == "lexical test method"
+    assert verb["description"] == "verb morphology test method"
+
+
+def test_each_method_has_its_own_square_matrix():
+    payload = _payload()
+    for method in payload["methods"]:
+        assert len(method["matrix"]) == 3
+        assert all(len(row) == 3 for row in method["matrix"])
+
+
+def test_similar_psalms_exclude_self_within_each_method():
+    payload = _payload()
+    for method in payload["methods"]:
+        entries = method["similar"]["1"]
+        assert all(entry["psalm"] != 1 for entry in entries)
 
 
 def test_similar_psalms_are_ranked_descending_by_score():
-    payload = build_payload(*_payload_inputs())
-    entries = payload["similar"]["1"]
+    payload = _payload()
+    lexical = next(m for m in payload["methods"] if m["id"] == "lexical-tfidf-cosine")
+    entries = lexical["similar"]["1"]
     scores = [entry["score"] for entry in entries]
     assert scores == sorted(scores, reverse=True)
     assert entries[0]["psalm"] == 2
 
 
-def test_matrix_is_square_and_matches_psalm_count():
-    payload = build_payload(*_payload_inputs())
-    assert len(payload["matrix"]) == 3
-    assert all(len(row) == 3 for row in payload["matrix"])
-
-
-def test_shared_lexemes_only_include_lexemes_present_in_both_psalms():
-    payload = build_payload(*_payload_inputs())
+def test_shared_terms_only_include_terms_present_in_both_psalms():
+    payload = _payload()
+    lexical = next(m for m in payload["methods"] if m["id"] == "lexical-tfidf-cosine")
     # Psalm 1 has MLK/+YD/; Psalm 3 (weakest match) has only YD/.
-    weakest_match = payload["similar"]["1"][-1]
+    weakest_match = lexical["similar"]["1"][-1]
     assert weakest_match["psalm"] == 3
-    assert all(lex["lemma"] == "יָד" for lex in weakest_match["sharedLexemes"])
+    assert all(term["label"] == "יָד" for term in weakest_match["sharedTerms"])
 
 
-def test_psalm_payload_includes_expected_display_fields():
-    payload = build_payload(*_payload_inputs())
-    p1 = payload["psalms"][0]
-    assert p1["number"] == 1
-    assert p1["verseCount"] == 2
-    assert p1["incipit"] == "אשרי"
-    assert p1["uniqueLexemeCount"] == 2
-    assert p1["contentWordCount"] == 3
+def test_psalm_stats_include_expected_fields_per_method():
+    payload = _payload()
+    lexical = next(m for m in payload["methods"] if m["id"] == "lexical-tfidf-cosine")
+    stats = lexical["psalmStats"][0]
+    assert stats["number"] == 1
+    assert stats["uniqueTermCount"] == 2
+    assert stats["termCount"] == 3
 
 
-def test_top_lexemes_exclude_zero_score_lexemes():
-    payload = build_payload(*_payload_inputs())
-    p2 = payload["psalms"][1]  # counts [1, 0] -> only MLK/ has weight
-    assert len(p2["topLexemes"]) == 1
-    assert p2["topLexemes"][0]["lemma"] == "מֶלֶךְ"
+def test_top_terms_exclude_zero_score_terms():
+    payload = _payload()
+    lexical = next(m for m in payload["methods"] if m["id"] == "lexical-tfidf-cosine")
+    p2_stats = lexical["psalmStats"][1]  # counts [1, 0] -> only MLK/ has weight
+    assert len(p2_stats["topTerms"]) == 1
+    assert p2_stats["topTerms"][0]["label"] == "מֶלֶךְ"
 
 
 def test_scores_are_rounded_floats():
-    payload = build_payload(*_payload_inputs())
-    for entry in payload["similar"]["1"]:
-        assert isinstance(entry["score"], float)
+    payload = _payload()
+    for method in payload["methods"]:
+        for entry in method["similar"]["1"]:
+            assert isinstance(entry["score"], float)
+
+
+def test_different_methods_can_disagree_on_ranking():
+    # Sanity: the two methods in this fixture are deliberately built to
+    # disagree (lexical favors psalm 2, verb-morphology favors psalm 3 for
+    # psalm 2) so a bug that collapsed methods into one shared computation
+    # would be caught here.
+    payload = _payload()
+    verb = next(m for m in payload["methods"] if m["id"] == "verb-morphology-tfidf-cosine")
+    assert verb["similar"]["2"][0]["psalm"] == 3

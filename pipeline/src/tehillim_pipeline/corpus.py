@@ -24,7 +24,7 @@ DEFAULT_BHSA_TF_PATH = Path.home() / "Developer" / "hebrew" / "bhsa" / "tf" / "2
 #: Text-Fabric features required for extraction.
 _REQUIRED_FEATURES = (
     "otype book chapter verse "
-    "lex voc_lex_utf8 g_word_utf8 sp gloss"
+    "lex voc_lex_utf8 g_word_utf8 sp gloss vs vt"
 )
 
 _PSALMS_BOOK_NAME = "Psalmi"
@@ -33,6 +33,11 @@ _PSALMS_BOOK_NAME = "Psalmi"
 @dataclass(frozen=True, slots=True)
 class PsalmWord:
     """A single word occurrence within a psalm."""
+
+    node: int
+    """Text-Fabric word node id. Kept so later phases (clause/phrase
+    structure, disjunctive accents, ...) can re-query the corpus for a word
+    without re-running extraction from scratch."""
 
     lexeme: str
     """Stable ETCBC lexeme identifier (e.g. ``JHWH/``). Used as the unit of
@@ -49,6 +54,14 @@ class PsalmWord:
 
     gloss: str
     """Short English gloss of the lexeme."""
+
+    verb_stem: str
+    """BHSA verb stem/binyan code (e.g. ``piel``, ``hif``), or "" if this
+    word is not a verb."""
+
+    verb_mood: str
+    """BHSA verb conjugation/mood code (e.g. ``impv``, ``impf``), or "" if
+    this word is not a verb."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -124,9 +137,18 @@ class Corpus:
         lex_node = self._api.L.u(node, otype="lex")
         gloss = F.gloss.v(lex_node[0]) if lex_node else ""
         return PsalmWord(
+            node=node,
             lexeme=F.lex.v(node),
             lemma=F.voc_lex_utf8.v(node),
             surface=F.g_word_utf8.v(node),
             part_of_speech=F.sp.v(node),
             gloss=gloss or "",
+            verb_stem=_na_to_empty(F.vs.v(node)),
+            verb_mood=_na_to_empty(F.vt.v(node)),
         )
+
+
+def _na_to_empty(value: str | None) -> str:
+    """BHSA uses the literal string "NA" (not None) for inapplicable
+    word-level features like verb stem/mood on non-verbs."""
+    return "" if value is None or value == "NA" else value

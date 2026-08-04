@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { maxOffDiagonal } from "./matrix";
+import { maxOffDiagonal, percentileOffDiagonal } from "./matrix";
 
 describe("maxOffDiagonal", () => {
   it("ignores the diagonal even when it holds the largest values", () => {
@@ -26,5 +26,47 @@ describe("maxOffDiagonal", () => {
 
   it("returns 0 for an empty matrix", () => {
     expect(maxOffDiagonal([])).toBe(0);
+  });
+});
+
+describe("percentileOffDiagonal", () => {
+  // Off-diagonal values, sorted: 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 (6 pairs from a 4x4 matrix)
+  const matrix = [
+    [1, 0.1, 0.2, 0.3],
+    [0.1, 1, 0.4, 0.5],
+    [0.2, 0.4, 1, 0.6],
+    [0.3, 0.5, 0.6, 1],
+  ];
+
+  it("returns the minimum off-diagonal value at the 0th percentile", () => {
+    expect(percentileOffDiagonal(matrix, 0)).toBeCloseTo(0.1);
+  });
+
+  it("returns the maximum off-diagonal value at the 100th percentile", () => {
+    expect(percentileOffDiagonal(matrix, 100)).toBeCloseTo(0.6);
+  });
+
+  it("returns a value near the middle at the 50th percentile", () => {
+    const median = percentileOffDiagonal(matrix, 50);
+    expect(median).toBeGreaterThanOrEqual(0.3);
+    expect(median).toBeLessThanOrEqual(0.4);
+  });
+
+  it("returns a higher threshold for a higher percentile", () => {
+    expect(percentileOffDiagonal(matrix, 90)).toBeGreaterThan(
+      percentileOffDiagonal(matrix, 10),
+    );
+  });
+
+  it("handles a matrix with a single off-diagonal pair", () => {
+    expect(percentileOffDiagonal([[1, 0.7], [0.7, 1]], 98)).toBeCloseTo(0.7);
+  });
+
+  it("returns 0 for a matrix with no off-diagonal cells", () => {
+    expect(percentileOffDiagonal([[1]], 50)).toBe(0);
+  });
+
+  it("returns 0 for an empty matrix", () => {
+    expect(percentileOffDiagonal([], 50)).toBe(0);
   });
 });

@@ -1,19 +1,19 @@
 import { createSimilarityColorScale } from "../lib/colorScale";
 import { topMatches } from "../lib/ranking";
-import type { LexemeScore, SimilarityPayload } from "../types";
+import type { FeatureScore, MethodPayload, PsalmCore } from "../types";
 
-function lexemeChip(lex: LexemeScore): HTMLElement {
+function featureChip(feature: FeatureScore): HTMLElement {
   const chip = document.createElement("span");
   chip.className = "lexeme-chip";
 
-  const lemma = document.createElement("span");
-  lemma.className = "lemma";
-  lemma.textContent = lex.lemma;
+  const label = document.createElement("span");
+  label.className = "lemma";
+  label.textContent = feature.label;
 
-  const gloss = document.createElement("span");
-  gloss.textContent = lex.gloss || lex.pos;
+  const description = document.createElement("span");
+  description.textContent = feature.description || feature.category;
 
-  chip.append(lemma, gloss);
+  chip.append(label, description);
   return chip;
 }
 
@@ -22,20 +22,21 @@ export function renderEmptyDetail(container: HTMLElement): void {
   const empty = document.createElement("div");
   empty.className = "detail-empty";
   const p = document.createElement("p");
-  p.textContent =
-    "Select a psalm from the grid or the visualization to see its closest lexical matches.";
+  p.textContent = "Select a psalm from the grid or the visualization to see its closest matches.";
   empty.append(p);
   container.append(empty);
 }
 
 export function renderDetailPanel(
   container: HTMLElement,
-  data: SimilarityPayload,
+  psalms: PsalmCore[],
+  method: MethodPayload,
   psalmNumber: number,
   onSelectPsalm: (psalm: number) => void,
 ): void {
-  const psalm = data.psalms.find((p) => p.number === psalmNumber);
-  if (!psalm) {
+  const psalm = psalms.find((p) => p.number === psalmNumber);
+  const stats = method.psalmStats.find((s) => s.number === psalmNumber);
+  if (!psalm || !stats) {
     renderEmptyDetail(container);
     return;
   }
@@ -53,24 +54,24 @@ export function renderDetailPanel(
   incipit.className = "detail-incipit";
   incipit.textContent = psalm.incipit;
 
-  const stats = document.createElement("div");
-  stats.className = "detail-stats";
-  stats.append(
+  const statsRow = document.createElement("div");
+  statsRow.className = "detail-stats";
+  statsRow.append(
     statItem(`${psalm.verseCount}`, "verses"),
     statItem(`${psalm.wordCount}`, "words"),
-    statItem(`${psalm.uniqueLexemeCount}`, "distinct lexemes"),
+    statItem(`${stats.uniqueTermCount}`, "distinct terms"),
   );
 
-  header.append(number, incipit, stats);
+  header.append(number, incipit, statsRow);
   container.append(header);
 
-  if (psalm.topLexemes.length > 0) {
-    const lexemes = document.createElement("div");
-    lexemes.className = "detail-lexemes";
-    for (const lex of psalm.topLexemes.slice(0, 6)) {
-      lexemes.append(lexemeChip(lex));
+  if (stats.topTerms.length > 0) {
+    const terms = document.createElement("div");
+    terms.className = "detail-lexemes";
+    for (const term of stats.topTerms.slice(0, 6)) {
+      terms.append(featureChip(term));
     }
-    container.append(lexemes);
+    container.append(terms);
   }
 
   const heading = document.createElement("h2");
@@ -78,13 +79,11 @@ export function renderDetailPanel(
   heading.textContent = "Most similar psalms";
   container.append(heading);
 
-  const matches = topMatches(data, psalmNumber, 10);
+  const matches = topMatches(method, psalmNumber, 10);
   const list = document.createElement("ul");
   list.className = "similar-list";
 
-  const barColor = createSimilarityColorScale(
-    Math.max(matches[0]?.score ?? 0.01, 0.01),
-  );
+  const barColor = createSimilarityColorScale(Math.max(matches[0]?.score ?? 0.01, 0.01));
 
   for (const match of matches) {
     const item = document.createElement("li");
@@ -110,15 +109,15 @@ export function renderDetailPanel(
     barFill.style.background = barColor(match.score);
     barTrack.append(barFill);
 
-    const matchPsalm = data.psalms.find((p) => p.number === match.psalm);
+    const matchPsalm = psalms.find((p) => p.number === match.psalm);
     const incipitLine = document.createElement("p");
     incipitLine.className = "similar-item-incipit";
     incipitLine.textContent = matchPsalm?.incipit ?? "";
 
     const shared = document.createElement("div");
     shared.className = "similar-item-shared";
-    for (const lex of match.sharedLexemes.slice(0, 4)) {
-      shared.append(lexemeChip(lex));
+    for (const term of match.sharedTerms.slice(0, 4)) {
+      shared.append(featureChip(term));
     }
 
     item.append(top, barTrack, incipitLine, shared);

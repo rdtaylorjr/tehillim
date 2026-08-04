@@ -1,4 +1,6 @@
-"""Command-line entrypoint: extract psalms, compute similarity, write JSON."""
+"""Command-line entrypoint: extract psalms, compute every similarity
+method, and write the combined JSON payload.
+"""
 
 from __future__ import annotations
 
@@ -6,15 +8,27 @@ import argparse
 import json
 import os
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
-from tehillim_pipeline.corpus import DEFAULT_BHSA_TF_PATH, Corpus
-from tehillim_pipeline.export import build_payload
-from tehillim_pipeline.features import build_feature_matrix
-from tehillim_pipeline.similarity import LexicalTfidfCosine, tfidf_weights
+from tehillim_pipeline.corpus import DEFAULT_BHSA_TF_PATH, Corpus, Psalm
+from tehillim_pipeline.export import MethodComputation, build_similarity_payload
+from tehillim_pipeline.features import FeatureMatrix, build_lexical_feature_matrix
+from tehillim_pipeline.methods import LEXICAL_SIMILARITY, VERB_MORPHOLOGY_SIMILARITY
+from tehillim_pipeline.similarity import SimilarityMethod, tfidf_weights
+from tehillim_pipeline.verb_morphology import build_verb_morphology_feature_matrix
 
 #: repo_root/app/public/data/similarity.json
 DEFAULT_OUTPUT = Path(__file__).resolve().parents[3] / "app" / "public" / "data" / "similarity.json"
+
+#: Every similarity method exported to the frontend, in display order. The
+#: first is used as the frontend's default. Adding a new TF-IDF-cosine-style
+#: method (a new feature extractor paired with a `methods.py` instance) is a
+#: one-line addition here.
+_METHODS: tuple[tuple[Callable[[list[Psalm]], FeatureMatrix], SimilarityMethod], ...] = (
+    (build_lexical_feature_matrix, LEXICAL_SIMILARITY),
+    (build_verb_morphology_feature_matrix, VERB_MORPHOLOGY_SIMILARITY),
+)
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -44,15 +58,18 @@ def run(bhsa_path: Path | None, output: Path) -> None:
     if len(psalms) != 150:
         print(f"warning: expected 150 psalms, found {len(psalms)}", file=sys.stderr)
 
-    print("Building feature matrix...", file=sys.stderr)
-    features = build_feature_matrix(psalms)
-
-    print("Computing lexical similarity...", file=sys.stderr)
-    weights = tfidf_weights(features)
-    result = LexicalTfidfCosine().compute(features)
+    computations = []
+    for build_features, method in _METHODS:
+        print(f"Computing {method.name}...", file=sys.stderr)
+        features = build_features(psalms)
+        weights = tfidf_weights(features)
+        result = method.compute(features)
+        computations.append(MethodComputation(features=features, weights=weights, result=result))
 
     print("Building export payload...", file=sys.stderr)
-    payload = build_payload(psalms, features, weights, result)
+    payload = build_similarity_payload(
+        psalms=psalms, computations=computations, default_method=_METHODS[0][1].name
+    )
 
     output.parent.mkdir(parents=True, exist_ok=True)
     serialized = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))

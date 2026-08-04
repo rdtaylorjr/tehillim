@@ -33,6 +33,14 @@ describe("reduce", () => {
     expect(next.networkThreshold).toBe(0);
   });
 
+  it("switches the selected method", () => {
+    const next = reduce(initialState, {
+      type: "SET_METHOD",
+      methodId: "verb-morphology-tfidf-cosine",
+    });
+    expect(next.selectedMethodId).toBe("verb-morphology-tfidf-cosine");
+  });
+
   it("does not mutate the input state", () => {
     const before = { ...initialState };
     reduce(initialState, { type: "SELECT_PSALM", psalm: 5 });

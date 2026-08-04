@@ -1,11 +1,11 @@
-import type { SimilarEntry, SimilarityPayload } from "../types";
+import type { MethodPayload, SimilarEntry } from "../types";
 
 /** The precomputed, descending-ranked list of psalms most similar to `psalmNumber`. */
 export function topMatches(
-  data: SimilarityPayload,
+  method: MethodPayload,
   psalmNumber: number,
   limit = 12,
 ): SimilarEntry[] {
-  const entries = data.similar[String(psalmNumber)] ?? [];
+  const entries = method.similar[String(psalmNumber)] ?? [];
   return entries.slice(0, limit);
 }

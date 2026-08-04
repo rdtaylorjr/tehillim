@@ -1,40 +1,47 @@
 /** Mirrors the JSON payload written by pipeline/src/tehillim_pipeline/export.py */
 
-export interface LexemeScore {
-  lemma: string;
-  gloss: string;
-  pos: string;
+export interface FeatureScore {
+  label: string;
+  description: string;
+  category: string;
   score: number;
 }
 
-export interface PsalmSummary {
+/** Psalm facts that don't depend on the comparison method. */
+export interface PsalmCore {
   number: number;
   verseCount: number;
   wordCount: number;
-  contentWordCount: number;
-  uniqueLexemeCount: number;
   incipit: string;
-  topLexemes: LexemeScore[];
+}
+
+/** Per-method, per-psalm stats (what counts as a "term" varies by method). */
+export interface MethodPsalmStats {
+  number: number;
+  termCount: number;
+  uniqueTermCount: number;
+  topTerms: FeatureScore[];
 }
 
 export interface SimilarEntry {
   psalm: number;
   score: number;
-  sharedLexemes: LexemeScore[];
+  sharedTerms: FeatureScore[];
 }
 
-export interface SimilarityMeta {
-  method: string;
+export interface MethodPayload {
+  id: string;
   description: string;
-  corpus: { name: string; version: string };
-  generatedAt: string;
-  psalmCount: number;
+  psalmNumbers: number[];
+  psalmStats: MethodPsalmStats[];
+  similar: Record<string, SimilarEntry[]>;
+  matrix: number[][];
 }
 
 export interface SimilarityPayload {
-  meta: SimilarityMeta;
-  psalmNumbers: number[];
-  psalms: PsalmSummary[];
-  similar: Record<string, SimilarEntry[]>;
-  matrix: number[][];
+  generatedAt: string;
+  corpus: { name: string; version: string };
+  psalms: PsalmCore[];
+  methods: MethodPayload[];
+  defaultMethod: string;
 }

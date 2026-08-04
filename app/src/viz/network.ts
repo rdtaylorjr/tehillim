@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { createBookColorScale } from "../lib/colorScale";
 import { bookOfPsalm } from "../lib/books";
 import { buildNetworkGraph, type NetworkEdge, type NetworkNode } from "../lib/network";
-import type { SimilarityPayload } from "../types";
+import type { MethodPayload } from "../types";
 
 interface SimNode extends NetworkNode, d3.SimulationNodeDatum {}
 interface SimEdge extends d3.SimulationLinkDatum<SimNode> {
@@ -11,7 +11,7 @@ interface SimEdge extends d3.SimulationLinkDatum<SimNode> {
 
 export interface NetworkOptions {
   container: HTMLElement;
-  data: SimilarityPayload;
+  data: MethodPayload;
   onSelect: (psalm: number) => void;
   onEdgeCountChange?: (count: number) => void;
 }

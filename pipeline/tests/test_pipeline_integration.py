@@ -12,7 +12,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from tehillim_pipeline.export import build_payload
+from tehillim_pipeline.export import MethodComputation, build_similarity_payload
 
 pytestmark = pytest.mark.integration
 
@@ -53,18 +53,26 @@ def test_psalm_108_shares_high_similarity_with_its_source_psalms(similarity_resu
     assert _score(similarity_result, 108, 60) > 0.3
 
 
+def _lexical_payload(psalms, features, weights, similarity_result):
+    computation = MethodComputation(features=features, weights=weights, result=similarity_result)
+    return build_similarity_payload(
+        psalms=psalms, computations=[computation], default_method=similarity_result.method
+    )
+
+
 def test_export_payload_surfaces_known_duplicate_pair_with_explanation(
     psalms, features, weights, similarity_result
 ):
-    payload = build_payload(psalms, features, weights, similarity_result)
-    top_match = payload["similar"]["14"][0]
+    payload = _lexical_payload(psalms, features, weights, similarity_result)
+    lexical = payload["methods"][0]
+    top_match = lexical["similar"]["14"][0]
     assert top_match["psalm"] == 53
-    assert top_match["sharedLexemes"]
+    assert top_match["sharedTerms"]
 
 
 def test_export_payload_is_json_serializable(psalms, features, weights, similarity_result):
     import json
 
-    payload = build_payload(psalms, features, weights, similarity_result)
+    payload = _lexical_payload(psalms, features, weights, similarity_result)
     serialized = json.dumps(payload, ensure_ascii=False)
     assert len(serialized) > 0

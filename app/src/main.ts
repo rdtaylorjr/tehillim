@@ -2,12 +2,32 @@ import "./style.css";
 import { renderDetailPanel, renderEmptyDetail } from "./components/detailPanel";
 import { createPsalmPicker } from "./components/psalmPicker";
 import { loadSimilarityData } from "./data/loadSimilarityData";
+import { percentileOffDiagonal } from "./lib/matrix";
 import { initialState, Store, type ViewMode } from "./state/store";
-import type { SimilarityPayload } from "./types";
+import type { MethodPayload, SimilarityPayload } from "./types";
 import { Heatmap } from "./viz/heatmap";
 import { NetworkGraph } from "./viz/network";
 
 const DATA_URL = `${import.meta.env.BASE_URL}data/similarity.json`;
+
+//: Default network threshold picked per-method as this percentile of that
+//: method's own off-diagonal score distribution, rather than a fixed
+//: absolute value - methods can have very different baseline similarity
+//: (verb-morphology's is far higher than lexical's), so a fixed threshold
+//: gives a readable graph for one and an unreadable hairball for another.
+const DEFAULT_THRESHOLD_PERCENTILE = 98;
+
+//: Human-readable display names for known method ids. Falls back to the
+//: raw id for any method added to the pipeline before this map is updated,
+//: so a new method still shows up (just less prettily) rather than breaking.
+const METHOD_LABELS: Record<string, string> = {
+  "lexical-tfidf-cosine": "Lexical Similarity",
+  "verb-morphology-tfidf-cosine": "Verb Morphology (Genre)",
+};
+
+function methodLabel(id: string): string {
+  return METHOD_LABELS[id] ?? id;
+}
 
 async function main(): Promise<void> {
   const app = document.getElementById("app");
@@ -21,14 +41,14 @@ async function main(): Promise<void> {
     return;
   }
 
-  const store = new Store(initialState);
+  const store = new Store({ ...initialState, selectedMethodId: data.defaultMethod });
+
+  const methodOf = (methodId: string): MethodPayload =>
+    data.methods.find((m) => m.id === methodId) ?? data.methods[0];
 
   const methodBadge = requireEl("#method-badge");
-  methodBadge.textContent = "Lexical similarity · TF-IDF cosine";
-  methodBadge.title = data.meta.description;
-
   const corpusCredit = requireEl("#corpus-credit");
-  corpusCredit.textContent = `${data.meta.corpus.name} ${data.meta.corpus.version} · ${data.meta.psalmCount} psalms · via Text-Fabric`;
+  corpusCredit.textContent = `${data.corpus.name} ${data.corpus.version} · ${data.psalms.length} psalms · via Text-Fabric`;
 
   const detailPanel = requireEl("#detail-panel");
   const psalmSearch = requireEl<HTMLInputElement>("#psalm-search");
@@ -40,37 +60,57 @@ async function main(): Promise<void> {
   const picker = createPsalmPicker(
     requireEl("#psalm-grid"),
     requireEl("#book-legend"),
-    data,
+    data.psalms,
     selectPsalm,
   );
 
-  const heatmap = new Heatmap({
-    container: requireEl("#heatmap-container"),
-    data,
-    onSelect: selectPsalm,
-  });
-
+  const heatmapContainer = requireEl("#heatmap-container");
+  const networkContainer = requireEl("#network-container");
   const edgeCountEl = requireEl("#edge-count");
-  const network = new NetworkGraph({
-    container: requireEl("#network-container"),
-    data,
-    onSelect: selectPsalm,
-    onEdgeCountChange: (count) => {
-      edgeCountEl.textContent = `${count.toLocaleString()} connections shown`;
-    },
-  });
+
+  let heatmap: Heatmap;
+  let network: NetworkGraph;
+
+  const mountVisualizations = (method: MethodPayload): void => {
+    heatmap?.destroy();
+    network?.destroy();
+
+    heatmap = new Heatmap({ container: heatmapContainer, data: method, onSelect: selectPsalm });
+    network = new NetworkGraph({
+      container: networkContainer,
+      data: method,
+      onSelect: selectPsalm,
+      onEdgeCountChange: (count) => {
+        edgeCountEl.textContent = `${count.toLocaleString()} connections shown`;
+      },
+    });
+    const defaultThreshold = percentileOffDiagonal(method.matrix, DEFAULT_THRESHOLD_PERCENTILE);
+    setupThresholdSlider(network, defaultThreshold);
+  };
 
   setupViewTabs(store);
-  setupThresholdSlider(network);
+  setupMethodSelect(store, data, methodBadge);
+  mountVisualizations(methodOf(store.getState().selectedMethodId));
 
   psalmSearch.addEventListener("change", () => {
     const value = Number(psalmSearch.value);
-    if (Number.isInteger(value) && value >= 1 && value <= data.psalmNumbers.length) {
+    if (Number.isInteger(value) && value >= 1 && value <= data.psalms.length) {
       selectPsalm(value);
     }
   });
 
+  let mountedMethodId = store.getState().selectedMethodId;
+
   store.subscribe((state) => {
+    // The similarity matrix is entirely different per method, so a method
+    // change remounts the heatmap/network rather than trying to patch them
+    // in place - simpler and less error-prone than tracking every piece of
+    // per-method internal state (color scale domain, force layout, ...).
+    if (state.selectedMethodId !== mountedMethodId) {
+      mountedMethodId = state.selectedMethodId;
+      mountVisualizations(methodOf(state.selectedMethodId));
+    }
+
     picker.setSelected(state.selectedPsalm);
     heatmap.setSelected(state.selectedPsalm);
     network.setSelected(state.selectedPsalm);
@@ -78,7 +118,13 @@ async function main(): Promise<void> {
     if (state.selectedPsalm === null) {
       renderEmptyDetail(detailPanel);
     } else {
-      renderDetailPanel(detailPanel, data, state.selectedPsalm, selectPsalm);
+      renderDetailPanel(
+        detailPanel,
+        data.psalms,
+        methodOf(state.selectedMethodId),
+        state.selectedPsalm,
+        selectPsalm,
+      );
       if (psalmSearch !== document.activeElement) {
         psalmSearch.value = String(state.selectedPsalm);
       }
@@ -115,20 +161,44 @@ function setupViewTabs(store: Store): void {
   applyView(store.getState().view);
 }
 
-function setupThresholdSlider(network: NetworkGraph): void {
+function setupMethodSelect(store: Store, data: SimilarityPayload, badge: HTMLElement): void {
+  const select = requireEl<HTMLSelectElement>("#method-select");
+  select.innerHTML = "";
+  for (const method of data.methods) {
+    const option = document.createElement("option");
+    option.value = method.id;
+    option.textContent = methodLabel(method.id);
+    select.append(option);
+  }
+
+  const applyMethod = (methodId: string): void => {
+    const method = data.methods.find((m) => m.id === methodId) ?? data.methods[0];
+    select.value = method.id;
+    badge.textContent = methodLabel(method.id);
+    badge.title = method.description;
+  };
+
+  select.addEventListener("change", () => {
+    store.dispatch({ type: "SET_METHOD", methodId: select.value });
+  });
+
+  store.subscribe((state) => applyMethod(state.selectedMethodId));
+  applyMethod(store.getState().selectedMethodId);
+}
+
+function setupThresholdSlider(network: NetworkGraph, defaultThreshold: number): void {
   const slider = requireEl<HTMLInputElement>("#threshold-slider");
   const valueOutput = requireEl("#threshold-value");
 
-  const defaultThreshold = 0.3;
   slider.value = String(defaultThreshold);
   valueOutput.textContent = defaultThreshold.toFixed(2);
   network.setThreshold(defaultThreshold);
 
-  slider.addEventListener("input", () => {
+  slider.oninput = () => {
     const threshold = Number(slider.value);
     valueOutput.textContent = threshold.toFixed(2);
     network.setThreshold(threshold);
-  });
+  };
 }
 
 function renderLoadError(app: HTMLElement, error: unknown): void {

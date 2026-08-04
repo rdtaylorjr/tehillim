@@ -1,4 +1,4 @@
-# Computational Approaches to the Hebrew Psalter (tehillim.dev)
+# Computational Analysis of the Psalms (tehillim.dev)
 
 This repo investigates how the Psalter's internal similarities — verbatim
 duplicates, formulaic genre patterns, poetic parallelism, editorial

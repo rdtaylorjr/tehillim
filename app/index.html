@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:,">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Compare the Psalms by lexical similarity, computed from the ETCBC Hebrew Bible database via Text-Fabric."
+    />
+    <title>Compare the Psalms | TehillimAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <a class="brand" href="../index.html">
+          <span class="brand-mark">ת</span>
+          <span class="brand-text">TehillimAI</span>
+        </a>
+        <div class="title-block">
+          <h1>Compare the Psalms</h1>
+          <p class="subtitle">Lexical similarity across the Hebrew Psalter</p>
+        </div>
+        <div class="method-badge" id="method-badge" aria-live="polite"></div>
+      </header>
+
+      <main class="layout">
+        <section class="picker-panel" aria-label="Psalm picker">
+          <div class="picker-header">
+            <label for="psalm-search">Jump to Psalm</label>
+            <input
+              id="psalm-search"
+              type="number"
+              min="1"
+              max="150"
+              placeholder="1&ndash;150"
+              autocomplete="off"
+            />
+          </div>
+          <div
+            class="psalm-grid"
+            id="psalm-grid"
+            role="listbox"
+            aria-label="Select a psalm"
+          ></div>
+          <ul class="book-legend" id="book-legend" aria-label="Books of the Psalter"></ul>
+        </section>
+
+        <section class="viz-panel" aria-label="Visualization">
+          <div class="view-tabs" role="tablist">
+            <button
+              class="view-tab is-active"
+              type="button"
+              data-view="matrix"
+              role="tab"
+              aria-selected="true"
+            >
+              Similarity Matrix
+            </button>
+            <button
+              class="view-tab"
+              type="button"
+              data-view="network"
+              role="tab"
+              aria-selected="false"
+            >
+              Network Graph
+            </button>
+          </div>
+
+          <div class="view" id="matrix-view" role="tabpanel">
+            <p class="view-hint">
+              Each cell is a psalm pair, colored by shared vocabulary. Hover to inspect, click to
+              select a psalm.
+            </p>
+            <div class="heatmap-container" id="heatmap-container"></div>
+          </div>
+
+          <div class="view" id="network-view" role="tabpanel" hidden>
+            <div class="network-controls">
+              <label for="threshold-slider">Similarity threshold</label>
+              <input id="threshold-slider" type="range" min="0" max="1" step="0.01" />
+              <output id="threshold-value" for="threshold-slider"></output>
+              <span class="edge-count" id="edge-count"></span>
+            </div>
+            <div class="network-container" id="network-container"></div>
+          </div>
+        </section>
+
+        <aside class="detail-panel" id="detail-panel" aria-label="Psalm detail">
+          <div class="detail-empty">
+            <p>Select a psalm from the grid or the visualization to see its closest lexical matches.</p>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="app-footer">
+        <span id="corpus-credit"></span>
+        <span class="footer-sep">&middot;</span>
+        <span>TF&ndash;IDF weighted cosine similarity over content-word lexemes</span>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

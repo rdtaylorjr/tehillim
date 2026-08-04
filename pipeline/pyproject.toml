@@ -1,0 +1,49 @@
+[project]
+name = "tehillim-pipeline"
+version = "0.1.0"
+description = "Computes similarity between the Psalms from ETCBC/BHSA data via Text-Fabric."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "text-fabric>=13.1.0",
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+]
+
+[project.scripts]
+tehillim-build = "tehillim_pipeline.cli:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+# Kept >= the numpy stubs' own minimum (they use PEP 695 syntax); our code
+# itself still targets py310 per requires-python.
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: requires a local BHSA Text-Fabric dataset (see TEHILLIM_BHSA_PATH)",
+]

@@ -1,22 +1,17 @@
 import { describe, expect, it } from "vitest";
-import type { SimilarityPayload } from "../types";
+import type { MethodPayload } from "../types";
 import { topMatches } from "./ranking";
 
-function makePayload(): SimilarityPayload {
+function makeMethod(): MethodPayload {
   return {
-    meta: {
-      method: "lexical-tfidf-cosine",
-      description: "",
-      corpus: { name: "ETCBC/BHSA", version: "2021" },
-      generatedAt: "2026-01-01T00:00:00Z",
-      psalmCount: 3,
-    },
+    id: "lexical-tfidf-cosine",
+    description: "",
     psalmNumbers: [1, 2, 3],
-    psalms: [],
+    psalmStats: [],
     similar: {
       "1": [
-        { psalm: 2, score: 0.8, sharedLexemes: [] },
-        { psalm: 3, score: 0.1, sharedLexemes: [] },
+        { psalm: 2, score: 0.8, sharedTerms: [] },
+        { psalm: 3, score: 0.1, sharedTerms: [] },
       ],
       "2": [],
     },
@@ -30,28 +25,28 @@ function makePayload(): SimilarityPayload {
 
 describe("topMatches", () => {
   it("returns the precomputed ranked list for a psalm", () => {
-    const result = topMatches(makePayload(), 1);
+    const result = topMatches(makeMethod(), 1);
     expect(result.map((e) => e.psalm)).toEqual([2, 3]);
   });
 
   it("respects the limit parameter", () => {
-    const result = topMatches(makePayload(), 1, 1);
+    const result = topMatches(makeMethod(), 1, 1);
     expect(result).toHaveLength(1);
     expect(result[0].psalm).toBe(2);
   });
 
   it("returns an empty array for a psalm with no similar entries", () => {
-    expect(topMatches(makePayload(), 2)).toEqual([]);
+    expect(topMatches(makeMethod(), 2)).toEqual([]);
   });
 
   it("returns an empty array for an unknown psalm number", () => {
-    expect(topMatches(makePayload(), 999)).toEqual([]);
+    expect(topMatches(makeMethod(), 999)).toEqual([]);
   });
 
   it("does not mutate the underlying payload", () => {
-    const payload = makePayload();
-    const original = payload.similar["1"];
-    topMatches(payload, 1, 1);
-    expect(payload.similar["1"]).toHaveLength(original.length);
+    const method = makeMethod();
+    const original = method.similar["1"];
+    topMatches(method, 1, 1);
+    expect(method.similar["1"]).toHaveLength(original.length);
   });
 });

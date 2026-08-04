@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Compare the Psalms by lexical similarity, computed from the ETCBC Hebrew Bible database via Text-Fabric."
+      content="Compare the Psalms by lexical and syntactic similarity, computed from the ETCBC Hebrew Bible database via Text-Fabric."
     />
     <title>Compare the Psalms | TehillimAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,9 +25,13 @@
         </a>
         <div class="title-block">
           <h1>Compare the Psalms</h1>
-          <p class="subtitle">Lexical similarity across the Hebrew Psalter</p>
+          <p class="subtitle">Psalm-to-psalm similarity across the Hebrew Psalter</p>
         </div>
-        <div class="method-badge" id="method-badge" aria-live="polite"></div>
+        <div class="method-picker">
+          <label class="visually-hidden" for="method-select">Comparison method</label>
+          <select id="method-select"></select>
+          <div class="method-badge" id="method-badge" aria-live="polite"></div>
+        </div>
       </header>
 
       <main class="layout">
@@ -95,15 +99,13 @@
 
         <aside class="detail-panel" id="detail-panel" aria-label="Psalm detail">
           <div class="detail-empty">
-            <p>Select a psalm from the grid or the visualization to see its closest lexical matches.</p>
+            <p>Select a psalm from the grid or the visualization to see its closest matches.</p>
           </div>
         </aside>
       </main>
 
       <footer class="app-footer">
         <span id="corpus-credit"></span>
-        <span class="footer-sep">&middot;</span>
-        <span>TF&ndash;IDF weighted cosine similarity over content-word lexemes</span>
       </footer>
     </div>
     <script type="module" src="/src/main.ts"></script>

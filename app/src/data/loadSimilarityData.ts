@@ -21,14 +21,24 @@ export async function loadSimilarityData(
 function validatePayload(
   payload: SimilarityPayload,
 ): asserts payload is SimilarityPayload {
-  if (!payload || !Array.isArray(payload.psalms) || !Array.isArray(payload.matrix)) {
+  if (!payload || !Array.isArray(payload.psalms) || !Array.isArray(payload.methods)) {
     throw new DataLoadError(
-      "Malformed similarity payload: missing psalms or matrix",
+      "Malformed similarity payload: missing psalms or methods",
     );
   }
-  if (payload.matrix.length !== payload.psalms.length) {
+  if (payload.methods.length === 0) {
+    throw new DataLoadError("Malformed similarity payload: methods is empty");
+  }
+  for (const method of payload.methods) {
+    if (method.matrix.length !== payload.psalms.length) {
+      throw new DataLoadError(
+        `Malformed similarity payload: method "${method.id}" matrix/psalms size mismatch`,
+      );
+    }
+  }
+  if (!payload.methods.some((m) => m.id === payload.defaultMethod)) {
     throw new DataLoadError(
-      "Malformed similarity payload: matrix/psalms size mismatch",
+      `Malformed similarity payload: defaultMethod "${payload.defaultMethod}" matches no method`,
     );
   }
 }

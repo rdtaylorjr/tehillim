@@ -2,18 +2,23 @@ export type ViewMode = "matrix" | "network";
 
 export interface AppState {
   selectedPsalm: number | null;
+  selectedMethodId: string;
   view: ViewMode;
   networkThreshold: number;
 }
 
 export const initialState: AppState = {
   selectedPsalm: null,
+  // Set for real once data loads (see main.ts) - the true default comes
+  // from the fetched payload's `defaultMethod`, not a hardcoded guess.
+  selectedMethodId: "",
   view: "matrix",
   networkThreshold: 0.35,
 };
 
 export type Action =
   | { type: "SELECT_PSALM"; psalm: number | null }
+  | { type: "SET_METHOD"; methodId: string }
   | { type: "SET_VIEW"; view: ViewMode }
   | { type: "SET_THRESHOLD"; threshold: number };
 
@@ -21,6 +26,8 @@ export function reduce(state: AppState, action: Action): AppState {
   switch (action.type) {
     case "SELECT_PSALM":
       return { ...state, selectedPsalm: action.psalm };
+    case "SET_METHOD":
+      return { ...state, selectedMethodId: action.methodId };
     case "SET_VIEW":
       return { ...state, view: action.view };
     case "SET_THRESHOLD":

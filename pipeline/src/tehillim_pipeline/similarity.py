@@ -1,10 +1,15 @@
 """Similarity metrics over psalm feature matrices.
 
 Each similarity method takes a FeatureMatrix and produces a symmetric
-similarity matrix. The Protocol below defines the shape a method must have;
-today only lexical TF-IDF cosine similarity is implemented, but future
-representation-learning or discriminant-analysis-based methods can be added
-as additional classes without changing any calling code.
+similarity matrix. The `SimilarityMethod` Protocol defines the shape a
+method must have. `TfidfCosineSimilarity` implements the one metric used so
+far - TF-IDF weight each psalm's term-count vector, then cosine-compare -
+which underlies every "shared vocabulary" style method regardless of what
+vocabulary populates the FeatureMatrix (lexemes, verb-morphology tags, ...).
+Each concrete method is this class configured with a name/description and
+paired with a feature extractor (see features.py, verb_morphology.py).
+Future non-vocabulary-based methods (embeddings, alignment kernels, ...)
+implement the same Protocol without necessarily using this class.
 """
 
 from __future__ import annotations
@@ -20,11 +25,11 @@ from tehillim_pipeline.features import FeatureMatrix
 
 
 def tfidf_weights(features: FeatureMatrix) -> np.ndarray:
-    """TF-IDF weight each psalm's lexeme counts.
+    """TF-IDF weight each psalm's term counts.
 
-    Exposed separately from `LexicalTfidfCosine` because the export step
+    Exposed separately from `TfidfCosineSimilarity` because the export step
     also needs these weights to explain *why* two psalms are similar (their
-    top shared, distinctively-weighted lexemes).
+    top shared, distinctively-weighted terms).
     """
     dense: np.ndarray = TfidfTransformer().fit_transform(features.counts).toarray()
     return dense
@@ -47,21 +52,18 @@ class SimilarityMethod(Protocol):
     def compute(self, features: FeatureMatrix) -> SimilarityResult: ...
 
 
-class LexicalTfidfCosine:
-    """Cosine similarity between TF-IDF-weighted content-word vectors.
+class TfidfCosineSimilarity:
+    """Cosine similarity between TF-IDF-weighted term vectors.
 
-    Each psalm becomes a vector over the shared lexeme vocabulary, weighted
-    so that lexemes common across most psalms (still meaningful words, but
-    low in distinguishing power - e.g. "God", "say") count for less than
-    lexemes concentrated in a few psalms.
+    Each psalm becomes a vector over the shared term vocabulary, weighted so
+    that terms common across most psalms (low distinguishing power) count
+    for less than terms concentrated in a few psalms. What the terms *are*
+    is entirely up to the FeatureMatrix passed in.
     """
 
-    name = "lexical-tfidf-cosine"
-    description = (
-        "TF-IDF weighted cosine similarity over shared Biblical Hebrew "
-        "content-word lexemes (nouns, verbs, adjectives, adverbs, proper "
-        "nouns, interjections)."
-    )
+    def __init__(self, name: str, description: str) -> None:
+        self.name = name
+        self.description = description
 
     def compute(self, features: FeatureMatrix) -> SimilarityResult:
         weights = tfidf_weights(features)

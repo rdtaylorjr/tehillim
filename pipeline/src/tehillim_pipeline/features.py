@@ -1,8 +1,12 @@
 """Turn extracted psalms into numeric feature matrices for comparison.
 
-Kept independent of Text-Fabric and of any particular similarity metric, so
-it can be unit tested with plain data and reused by future comparison
-methods (morphological, syntactic, ...).
+`FeatureMatrix` is a generic psalm x vocabulary count matrix - it does not
+care whether the vocabulary is lexemes, verb-morphology tags, or something
+else entirely, which is what lets every "shared vocabulary" style
+similarity method (see similarity.py) share one computation. Each concrete
+vocabulary gets its own `build_*_feature_matrix` function; this module holds
+the first one (lexical, phase 0). Kept independent of Text-Fabric and of any
+particular similarity metric, so it can be unit tested with plain data.
 """
 
 from __future__ import annotations
@@ -21,22 +25,27 @@ CONTENT_POS = frozenset({"subs", "verb", "nmpr", "adjv", "advb", "intj"})
 
 
 @dataclass(frozen=True, slots=True)
-class LexemeInfo:
-    """Display metadata for a lexeme, used to label visualizations."""
+class FeatureInfo:
+    """Display metadata for one column of a FeatureMatrix."""
 
-    lemma: str
-    gloss: str
-    part_of_speech: str
+    label: str
+    """Short display form (a Hebrew lemma, a human-readable tag name, ...)."""
+
+    description: str
+    """Longer explanation (an English gloss, a tag's full meaning, ...)."""
+
+    category: str
+    """Grouping tag (part of speech, feature family, ...)."""
 
 
 @dataclass(frozen=True, slots=True)
 class FeatureMatrix:
-    """A dense psalm x lexeme term-count matrix plus supporting metadata."""
+    """A dense psalm x term count matrix plus display metadata for each term."""
 
     psalm_numbers: tuple[int, ...]
-    lexemes: tuple[str, ...]
-    counts: np.ndarray  # shape (n_psalms, n_lexemes), dtype int32
-    lexeme_info: dict[str, LexemeInfo]
+    terms: tuple[str, ...]
+    counts: np.ndarray  # shape (n_psalms, n_terms), dtype int32
+    term_info: dict[str, FeatureInfo]
 
 
 def content_words(words: tuple[PsalmWord, ...]) -> list[PsalmWord]:
@@ -44,36 +53,48 @@ def content_words(words: tuple[PsalmWord, ...]) -> list[PsalmWord]:
     return [w for w in words if w.part_of_speech in CONTENT_POS]
 
 
-def build_feature_matrix(psalms: list[Psalm]) -> FeatureMatrix:
+def build_lexical_feature_matrix(psalms: list[Psalm]) -> FeatureMatrix:
     """Build a psalm x lexeme term-count matrix over content-word lexemes."""
-    lexeme_info: dict[str, LexemeInfo] = {}
+    term_info: dict[str, FeatureInfo] = {}
     per_psalm_counts: list[dict[str, int]] = []
 
     for psalm in psalms:
         counts: dict[str, int] = {}
         for word in content_words(psalm.words):
             counts[word.lexeme] = counts.get(word.lexeme, 0) + 1
-            lexeme_info.setdefault(
+            term_info.setdefault(
                 word.lexeme,
-                LexemeInfo(
-                    lemma=word.lemma,
-                    gloss=word.gloss,
-                    part_of_speech=word.part_of_speech,
+                FeatureInfo(
+                    label=word.lemma,
+                    description=word.gloss,
+                    category=word.part_of_speech,
                 ),
             )
         per_psalm_counts.append(counts)
 
-    lexemes = tuple(sorted(lexeme_info))
-    lexeme_column = {lex: i for i, lex in enumerate(lexemes)}
+    return assemble_feature_matrix(psalms, per_psalm_counts, term_info)
 
-    matrix = np.zeros((len(psalms), len(lexemes)), dtype=np.int32)
+
+def assemble_feature_matrix(
+    psalms: list[Psalm],
+    per_psalm_counts: list[dict[str, int]],
+    term_info: dict[str, FeatureInfo],
+) -> FeatureMatrix:
+    """Assemble a FeatureMatrix from per-psalm term counts. Shared by every
+    `build_*_feature_matrix` function (see also verb_morphology.py) so the
+    matrix-shaping logic (sorting, indexing, dense-array construction) lives
+    in exactly one place."""
+    terms = tuple(sorted(term_info))
+    term_column = {term: i for i, term in enumerate(terms)}
+
+    matrix = np.zeros((len(psalms), len(terms)), dtype=np.int32)
     for row, counts in enumerate(per_psalm_counts):
-        for lex, count in counts.items():
-            matrix[row, lexeme_column[lex]] = count
+        for term, count in counts.items():
+            matrix[row, term_column[term]] = count
 
     return FeatureMatrix(
         psalm_numbers=tuple(p.number for p in psalms),
-        lexemes=lexemes,
+        terms=terms,
         counts=matrix,
-        lexeme_info=lexeme_info,
+        term_info=term_info,
     )

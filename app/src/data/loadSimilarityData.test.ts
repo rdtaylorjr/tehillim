@@ -11,27 +11,34 @@ function jsonResponse(body: unknown, ok = true, status = 200): Response {
 }
 
 const validPayload = {
-  meta: {
-    method: "lexical-tfidf-cosine",
-    description: "",
-    corpus: { name: "ETCBC/BHSA", version: "2021" },
-    generatedAt: "2026-01-01T00:00:00Z",
-    psalmCount: 2,
-  },
-  psalmNumbers: [1, 2],
-  psalms: [{ number: 1 }, { number: 2 }],
-  similar: {},
-  matrix: [
-    [1, 0.5],
-    [0.5, 1],
+  generatedAt: "2026-01-01T00:00:00Z",
+  corpus: { name: "ETCBC/BHSA", version: "2021" },
+  psalms: [
+    { number: 1, verseCount: 6, wordCount: 90, incipit: "..." },
+    { number: 2, verseCount: 12, wordCount: 100, incipit: "..." },
   ],
+  methods: [
+    {
+      id: "lexical-tfidf-cosine",
+      description: "test method",
+      psalmNumbers: [1, 2],
+      psalmStats: [],
+      similar: {},
+      matrix: [
+        [1, 0.5],
+        [0.5, 1],
+      ],
+    },
+  ],
+  defaultMethod: "lexical-tfidf-cosine",
 };
 
 describe("loadSimilarityData", () => {
   it("resolves with the parsed payload on success", async () => {
     const fetcher = vi.fn().mockResolvedValue(jsonResponse(validPayload));
     const data = await loadSimilarityData("/data/similarity.json", fetcher);
-    expect(data.meta.psalmCount).toBe(2);
+    expect(data.psalms).toHaveLength(2);
+    expect(data.defaultMethod).toBe("lexical-tfidf-cosine");
   });
 
   it("requests the given url", async () => {
@@ -48,14 +55,41 @@ describe("loadSimilarityData", () => {
   });
 
   it("throws DataLoadError when psalms is missing", async () => {
-    const fetcher = vi.fn().mockResolvedValue(jsonResponse({ matrix: [] }));
+    const fetcher = vi.fn().mockResolvedValue(jsonResponse({ methods: [] }));
     await expect(loadSimilarityData("/bad.json", fetcher)).rejects.toThrow(
       DataLoadError,
     );
   });
 
-  it("throws DataLoadError when matrix/psalms sizes mismatch", async () => {
-    const malformed = { ...validPayload, matrix: [[1]] };
+  it("throws DataLoadError when methods is missing", async () => {
+    const malformed = { ...validPayload, methods: undefined };
+    const fetcher = vi.fn().mockResolvedValue(jsonResponse(malformed));
+    await expect(loadSimilarityData("/bad.json", fetcher)).rejects.toThrow(
+      DataLoadError,
+    );
+  });
+
+  it("throws DataLoadError when methods is empty", async () => {
+    const malformed = { ...validPayload, methods: [] };
+    const fetcher = vi.fn().mockResolvedValue(jsonResponse(malformed));
+    await expect(loadSimilarityData("/bad.json", fetcher)).rejects.toThrow(
+      DataLoadError,
+    );
+  });
+
+  it("throws DataLoadError when a method's matrix/psalms sizes mismatch", async () => {
+    const malformed = {
+      ...validPayload,
+      methods: [{ ...validPayload.methods[0], matrix: [[1]] }],
+    };
+    const fetcher = vi.fn().mockResolvedValue(jsonResponse(malformed));
+    await expect(loadSimilarityData("/bad.json", fetcher)).rejects.toThrow(
+      DataLoadError,
+    );
+  });
+
+  it("throws DataLoadError when defaultMethod does not match any method id", async () => {
+    const malformed = { ...validPayload, defaultMethod: "does-not-exist" };
     const fetcher = vi.fn().mockResolvedValue(jsonResponse(malformed));
     await expect(loadSimilarityData("/bad.json", fetcher)).rejects.toThrow(
       DataLoadError,

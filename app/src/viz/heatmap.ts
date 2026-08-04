@@ -1,6 +1,6 @@
 import { createSimilarityColorScale } from "../lib/colorScale";
 import { maxOffDiagonal } from "../lib/matrix";
-import type { SimilarityPayload } from "../types";
+import type { MethodPayload } from "../types";
 
 export interface HeatmapHoverInfo {
   psalmA: number;
@@ -10,7 +10,7 @@ export interface HeatmapHoverInfo {
 
 export interface HeatmapOptions {
   container: HTMLElement;
-  data: SimilarityPayload;
+  data: MethodPayload;
   onSelect: (psalm: number) => void;
   onHover?: (info: HeatmapHoverInfo | null) => void;
 }
@@ -22,7 +22,7 @@ const GRID_LINE_COLOR = "rgba(255, 255, 255, 0.4)";
 /** Canvas-rendered 150x150 psalm similarity heatmap with hover/click interaction. */
 export class Heatmap {
   private readonly container: HTMLElement;
-  private readonly data: SimilarityPayload;
+  private readonly data: MethodPayload;
   private readonly onSelect: (psalm: number) => void;
   private readonly onHover?: (info: HeatmapHoverInfo | null) => void;
 

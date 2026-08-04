@@ -1,6 +1,6 @@
 import { allBooks, bookOfPsalm } from "../lib/books";
 import { createBookColorScale } from "../lib/colorScale";
-import type { SimilarityPayload } from "../types";
+import type { PsalmCore } from "../types";
 
 export interface PsalmPicker {
   setSelected(psalm: number | null): void;
@@ -10,14 +10,14 @@ export interface PsalmPicker {
 export function createPsalmPicker(
   gridEl: HTMLElement,
   legendEl: HTMLElement,
-  data: SimilarityPayload,
+  psalms: PsalmCore[],
   onSelect: (psalm: number) => void,
 ): PsalmPicker {
   const colorScale = createBookColorScale();
   const cells = new Map<number, HTMLButtonElement>();
 
   gridEl.innerHTML = "";
-  for (const psalm of data.psalmNumbers) {
+  for (const { number: psalm } of psalms) {
     const cell = document.createElement("button");
     cell.type = "button";
     cell.className = "psalm-cell";

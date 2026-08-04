@@ -13,8 +13,10 @@ from pathlib import Path
 import pytest
 
 from tehillim_pipeline.corpus import DEFAULT_BHSA_TF_PATH, Corpus
-from tehillim_pipeline.features import build_feature_matrix
-from tehillim_pipeline.similarity import LexicalTfidfCosine, tfidf_weights
+from tehillim_pipeline.features import build_lexical_feature_matrix
+from tehillim_pipeline.methods import LEXICAL_SIMILARITY, VERB_MORPHOLOGY_SIMILARITY
+from tehillim_pipeline.similarity import tfidf_weights
+from tehillim_pipeline.verb_morphology import build_verb_morphology_feature_matrix
 
 
 def _bhsa_path() -> Path:
@@ -43,7 +45,7 @@ def psalms():
 
 @pytest.fixture(scope="session")
 def features(psalms):
-    return build_feature_matrix(psalms)
+    return build_lexical_feature_matrix(psalms)
 
 
 @pytest.fixture(scope="session")
@@ -53,4 +55,14 @@ def weights(features):
 
 @pytest.fixture(scope="session")
 def similarity_result(features):
-    return LexicalTfidfCosine().compute(features)
+    return LEXICAL_SIMILARITY.compute(features)
+
+
+@pytest.fixture(scope="session")
+def verb_morphology_features(psalms):
+    return build_verb_morphology_feature_matrix(psalms)
+
+
+@pytest.fixture(scope="session")
+def verb_morphology_result(verb_morphology_features):
+    return VERB_MORPHOLOGY_SIMILARITY.compute(verb_morphology_features)

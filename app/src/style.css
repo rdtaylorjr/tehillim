@@ -108,6 +108,38 @@ button {
   text-overflow: ellipsis;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.method-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+#method-select {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  background: white;
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#method-select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .method-badge {
   font-size: 0.78rem;
   color: var(--accent);

@@ -240,3 +240,81 @@ def test_root_collapses_a_verb_and_its_cognate_noun(psalms):
     all_words = [w for p in psalms for w in p.words]
     roots = {w.root for w in all_words if w.lexeme in ("HGH/", "HGH[")}
     assert roots == {"HGH"}
+
+
+def test_clause_type_is_always_populated_with_a_rich_vocabulary(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    assert all(w.clause_type != "" for w in all_words)
+    assert len({w.clause_type for w in all_words}) >= 30
+
+
+def test_text_type_marks_quotation_narrative_and_discursive(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    text_types = {w.text_type for w in all_words}
+    assert any(t.startswith("Q") for t in text_types)
+    assert any(t.startswith("N") for t in text_types)
+    assert any(t.startswith("D") for t in text_types)
+
+
+def test_clause_relation_is_populated_for_a_minority_of_words(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    with_relation = [w for w in all_words if w.clause_relation]
+    without = [w for w in all_words if w.clause_relation == ""]
+    assert with_relation
+    assert without
+    assert "Coor" in {w.clause_relation for w in with_relation}
+
+
+def test_clause_kind_has_exactly_the_three_documented_values(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    assert {w.clause_kind for w in all_words} == {"VC", "NC", "WP"}
+
+
+def test_psalm_150_clauses_are_entirely_verbal(psalms):
+    # A pure imperative "praise the LORD" hymn - every clause should be
+    # kind VC (verbal), none nominal or predication-less.
+    psalm_150 = next(p for p in psalms if p.number == 150)
+    kinds = {w.clause_kind for w in psalm_150.words if w.clause_kind}
+    assert kinds == {"VC"}
+
+
+def test_phrase_function_is_always_populated_with_a_rich_vocabulary(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    assert all(w.phrase_function != "" for w in all_words)
+    assert len({w.phrase_function for w in all_words}) >= 20
+
+
+def test_phrase_determination_has_only_det_and_und_values(psalms):
+    # "NA" (not applicable) normalizes to "" like every other field; the
+    # remaining real values are just det/und.
+    all_words = [w for p in psalms for w in p.words]
+    non_empty = {w.phrase_determination for w in all_words if w.phrase_determination}
+    assert non_empty == {"det", "und"}
+
+
+def test_phrase_type_covers_verbal_nominal_and_prepositional_phrases(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    phrase_types = {w.phrase_type for w in all_words}
+    assert {"VP", "NP", "PP"} <= phrase_types
+
+
+def test_phrase_valence_distinguishes_core_complement_and_adjunct(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    valences = {w.phrase_valence for w in all_words if w.phrase_valence}
+    assert valences == {"core", "complement", "adjunct"}
+
+
+def test_phrase_grammatical_role_is_populated_for_a_minority_of_words(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    with_role = [w for w in all_words if w.phrase_grammatical_role]
+    without = [w for w in all_words if w.phrase_grammatical_role == ""]
+    assert with_role
+    assert without
+    assert "direct_object" in {w.phrase_grammatical_role for w in with_role}
+
+
+def test_verb_sense_is_only_populated_on_verb_occurrences(psalms):
+    all_words = [w for p in psalms for w in p.words]
+    with_sense = [w for w in all_words if w.verb_sense]
+    assert with_sense
+    assert all(w.part_of_speech == "verb" for w in with_sense)

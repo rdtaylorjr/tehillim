@@ -4,12 +4,14 @@ Computes similarity between the 150 Psalms from ETCBC/BHSA data via
 [Text-Fabric](https://annotation.github.io/text-fabric/), and exports the
 result as the JSON payload consumed by the `app/` frontend.
 
-Implements seven shipped comparison methods, all built on the same generic
+Implements eleven shipped comparison methods, all built on the same generic
 `TfidfCosineSimilarity` metric (similarity.py) applied to different
-vocabularies (features.py), extracted from BHSA's word-level annotations
-(corpus.py). Grouped into two families: lexical/vocabulary-based (compare
-which specific words appear) and syntactic/grammatical-profile (compare how
-words are used, independent of vocabulary).
+vocabularies (features.py), extracted from BHSA's word/clause/phrase-level
+annotations plus the companion ETCBC/valence module (corpus.py). Grouped
+into three families: lexical/vocabulary-based (compare which specific words
+appear), syntactic/grammatical-profile (compare how words are used,
+independent of vocabulary), and clause/phrase-structure (compare
+higher-level syntactic and discourse patterning).
 
 **Lexical family:**
 
@@ -56,20 +58,47 @@ words are used, independent of vocabulary).
   because it still clears a real discriminative bar (20.9% of pairs below
   0.5) and answers a different question than the identity version.
 
-**Extracted but not shipped:** `gender_profile.py`, `nominal_state.py`, and
-`phrase_dependent_pos.py` build correct FeatureMatrix data and are fully
-tested, but a real analysis run found TF-IDF-cosine over their tag profiles
-is structurally near-degenerate (>=99% of pairs score above 0.8) - each has
-few tags with one dominant category (masculine gender ~70%, absolute state
-~82%, and coarse POS proportions in general) that varies little across the
-whole Psalter, so cosine similarity is mechanically pinned near 1.0
-regardless of whether the category is linguistically meaningful. Their
-integration tests document this finding directly (`test_*_scores_are_
-highly_compressed`) rather than asserting a "not degenerate" bar weak
-enough that they'd pass it anyway. See `methods.py`'s docstring for the
-full rationale and `pdp`'s note there on a promising alternative:
-intra-psalm windowed/sequential analysis (a real, local shift was found at
-Psalm 13's lament-to-praise turn) instead of whole-psalm averaging.
+**Clause / phrase structure family:**
+
+- **Clause-type similarity** (clause_type_profile.py) — 40 constituent-
+  order/verb-form patterns (e.g. wayyiqtol-null vs. nominal clause). The
+  single most discriminative method of any tried (66.7% of pairs score
+  below 0.5) - high cardinality is the likely reason.
+- **Text-type similarity** (text_type_profile.py) — narrative/discursive/
+  quotation, with embedding shown by repetition (e.g. `QND`). BHSA's
+  closest analogue to a discourse-register feature; there is no separate
+  "discourse" object type in the corpus (checked directly - `sentence`,
+  `sentence_atom`, and `half_verse` carry no independent content tags).
+- **Clause-relation similarity** (clause_relation_profile.py) — coordinated,
+  attributive, object-clause, etc. Sparse (22.5% of words) but real signal.
+- **Verb-sense similarity** (verb_sense_profile.py) — from the ETCBC/valence
+  companion module (Janet Dyk, VU/ETCBC, part of the SYNVAR project):
+  whether a verb occurrence takes a direct object, a prepositional
+  complement, or neither - complementation pattern, distinct from verb
+  morphology's stem/mood. Covers 60.6% of Psalter verb occurrences (a
+  documented subset of verbs, not all of them).
+
+**Extracted but not shipped:** `gender_profile.py`, `nominal_state.py`,
+`phrase_dependent_pos.py`, `clause_kind_profile.py`, `phrase_function_
+profile.py`, `phrase_determination_profile.py`, `phrase_type_profile.py`,
+`phrase_valence_profile.py`, and `phrase_grammatical_role_profile.py` all
+build correct FeatureMatrix data and are fully tested, but a real analysis
+run found TF-IDF-cosine over their tag profiles is structurally
+near-degenerate (0-4.9% of pairs score below 0.5, vs. 15%+ for every
+shipped method). The pattern that emerged across both the word-level and
+clause/phrase-level passes: TF-IDF-cosine is only discriminative when a tag
+is either high-cardinality or genuinely *sparse* (fires on a minority of
+words) - dense features, even with good category balance (`phrase_function`
+has 27 well-balanced codes and still only clears 2.8%), produce nearly
+identical profile shapes across the whole Psalter, and TF-IDF's rarity
+weighting can't rescue that since a tag present in ~100% of documents gets
+an idf near zero regardless of the metric. Their integration tests document
+this finding directly (`test_*_scores_are_highly_compressed`) rather than
+asserting a weak bar they'd pass anyway. See `methods.py`'s docstring for
+the full rationale and `phrase_dependent_pos`'s note there on a promising
+alternative: intra-psalm windowed/sequential analysis (a real, local shift
+was found at Psalm 13's lament-to-praise turn) instead of whole-psalm
+averaging.
 
 The architecture is layered (`corpus` → per-feature extractor modules →
 `similarity` → `methods` → `export`) so additional comparison methods —
@@ -93,10 +122,13 @@ to `_METHODS` plus an entry in `app/src/main.ts`'s `METHOD_LABELS` map.
 
 ## Setup
 
-Requires a local clone of [ETCBC/bhsa](https://github.com/ETCBC/bhsa) with
-its Text-Fabric data (the `tf/2021` directory). By default the pipeline
-looks for it at `~/Developer/hebrew/bhsa/tf/2021`; override with
-`--bhsa-path` or the `TEHILLIM_BHSA_PATH` environment variable.
+Requires local clones of [ETCBC/bhsa](https://github.com/ETCBC/bhsa) and
+[ETCBC/valence](https://github.com/ETCBC/valence) with their Text-Fabric
+data (each repo's `tf/2021` directory - valence uses the same node
+numbering as BHSA and is loaded alongside it). By default the pipeline
+looks for them at `~/Developer/hebrew/bhsa/tf/2021` and
+`~/Developer/hebrew/etcbc/valence/tf/2021`; override with `--bhsa-path` /
+`TEHILLIM_BHSA_PATH` and `--valence-path` / `TEHILLIM_VALENCE_PATH`.
 
 ```bash
 cd pipeline

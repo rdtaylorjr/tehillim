@@ -13,14 +13,18 @@ literature, each validated against known scholarly landmarks before the
 next is attempted, and each expressed as running, tested code rather than
 only as a proposal.
 
-Three methods are implemented, tested, and live in the interactive app today
-(see below). The remaining work splits into two independent tracks — a
-**genre track** (can these psalms' internal formal patterns be clustered by
-genre, unsupervised, and can a shift in genre *within* a single psalm be
-located computationally?) and a **textual & structural track** (verbatim
-reuse, poetic parallelism, chiastic structure) — each tied to a specific
-methodological question raised by the literature reviewed here, and each
-described in full below.
+Eleven comparison methods are implemented, tested, and live in the
+interactive app today (see below) — including a full sweep of BHSA's
+word-level grammatical annotations plus clause/phrase-level structure and
+the ETCBC/valence module's verbal-argument data, each kept only where it
+measurably clears a real discriminativeness bar rather than assumed useful
+(see "What's implemented and validated now"). The remaining work splits
+into two independent tracks — a **genre track** (can these psalms' internal
+formal patterns be clustered by genre, unsupervised, and can a shift in
+genre *within* a single psalm be located computationally?) and a
+**textual & structural track** (verbatim reuse, poetic parallelism,
+chiastic structure) — each tied to a specific methodological question
+raised by the literature reviewed here, and each described in full below.
 
 ## Research context
 
@@ -172,8 +176,9 @@ praise turn in psalms like 13 and 22) be located computationally?
 |---|---|---|
 | **Verb-morphology genre fingerprint** — TF-IDF cosine over verb stem/mood tag profiles | **Implemented, validated** | Gunkel operationalized directly from BHSA's own morphology, tested independently of vocabulary |
 | **Grammatical-person profile** — TF-IDF cosine over word-level and pronominal-suffix person/number tag profiles | **Implemented, validated** | A second, independent form-critical marker (individual vs. communal address) — separates even more cleanly than verb morphology |
-| Clause type and text type (`typ`, `txt`) as further genre-diagnostic signals, same TF-IDF-cosine pattern | Next | Completes what the verb-morphology method's own original motivation named (clause type) and adds one more classical form-critical marker (text type flags historical-recital psalms) |
-| **Unsupervised genre clustering** — spectral clustering and Gaussian-mixture soft clustering over the signals above, plus density estimation to check whether the data actually supports Gunkel's ~6 categories, and Random Forest proximity as an independent cross-check | Planned | The literature gap named above, directly |
+| **Clause type and text type (`typ`, `txt`)** — TF-IDF cosine over clause-atom-type and narrative/discursive/quotation tag profiles | **Implemented, validated** | Completes what the verb-morphology method's own original motivation named (clause type, 40 constituent-order/verb-form patterns) and adds text type as a classical discourse-register marker — clause-type turned out to be the single most discriminative method of any tried (66.7% of psalm pairs score below 0.5) |
+| **Clause relation and verb sense** — TF-IDF cosine over clause-relation tags (`rela`) and ETCBC/valence verb argument-realization codes | **Implemented, validated** | Two further independent syntactic/semantic signals (sparse but real: 22.5% and 12.6% word coverage respectively) that survived the same discriminativeness screening six other clause/phrase-level candidates failed |
+| **Unsupervised genre clustering** — spectral clustering and Gaussian-mixture soft clustering over the signals above, plus density estimation to check whether the data actually supports Gunkel's ~6 categories, and Random Forest proximity as an independent cross-check | **Next** | The literature gap named above, directly — now backed by six independently-validated, non-redundant signals (verb morphology, person, clause type, text type, clause relation, verb sense) instead of two |
 | Sub-psalm segmentation via BHSA's half-verse (`label`) division | Planned (infrastructure) | Already-annotated in BHSA — no need to derive Masoretic colometry from scratch to get sub-verse units |
 | **Intra-psalm genre trajectory and shift detection** — smoothing splines → functional PCA to find trajectory shapes across the corpus; robust PCA (smooth low-rank "steady genre" + sparse "shift") and derivative-based edge detection to locate the shift point itself | Planned | The specific, most novel deliverable: mapping *where* a psalm moves from one genre to another |
 | Tensor decomposition (CP/Tucker/HOSVD) combining verb-morphology, clause-type, person, and text-type jointly rather than one signal at a time, feeding richer factors back into the clustering step | Planned | A principled way to combine independently-validated signals, rather than an ad hoc weighted average |
@@ -188,6 +193,7 @@ literature review above.
 | Method | Status | Fills |
 |---|---|---|
 | **Lexical similarity** — TF-IDF weighted cosine similarity over content-word lexemes | **Implemented, validated** | Standard IR baseline; the most legible sanity check in the whole project (Psalm 14/53, Psalm 108/57/60) |
+| **Root similarity and named-entity identity** — TF-IDF cosine over triliteral roots, and over proper-noun lexemes only | **Implemented, validated** | Root similarity credits shared thematic vocabulary across derivationally related words that plain lexeme-matching misses; named-entity identity isolates *which* names two psalms share (e.g. both naming Zion) — a sharper, more discriminative version of the type-only onomastic signal below |
 | Classical distance ensemble — character n-gram edit distance + root-level Dice/Jaccard, combined via logistic regression | Planned | A stronger, still fully interpretable classical baseline for near-verbatim reuse, in the same territory as Naaijer & Roorda and the *Religions* 2026 paper |
 | Transformer embeddings (E5, AlephBERT, MiqraBERT) at psalm *and* half-verse level | Planned | A direct, testable extension of MiqraBERT's own diagnosed weakness — does finer-grained pooling close its poetic-recall gap? |
 | Anisotropy correction (whitening / top-PC removal / kernel PCA) before cosine comparison | Planned | Both transformer papers diagnose this geometric flaw but only ever address it via fine-tuning |
@@ -204,7 +210,18 @@ literature review above.
 
 ## What's implemented and validated now
 
-**Phase 0 — lexical similarity.** TF-IDF weighted cosine similarity over
+Eleven methods ship in the live app today, organized into three families —
+**lexical** (which specific words a pair of psalms share), **syntactic**
+(how words are used, independent of vocabulary), and **clause structure**
+(higher-level syntactic and discourse patterning, including one signal
+from the ETCBC/valence companion module rather than core BHSA). Every
+method here earned its place by clearing a real, measured
+discriminativeness bar against the actual similarity-score distribution it
+produces across all 150 psalms — not by assumption. Six further candidates
+were built, tested, and deliberately *not* shipped because they measured
+near-degenerate; that negative result is documented below too.
+
+**Lexical similarity** (phase 0). TF-IDF weighted cosine similarity over
 BHSA content-word lexemes (nouns, verbs, adjectives, adverbs, proper
 nouns, interjections; closed-class grammatical words excluded).
 Integration-tested against the textual-duplicate ground truth above: Psalm
@@ -213,7 +230,18 @@ pairwise lexical similarity anywhere in the Psalter), and Psalm 108 shows
 strong, correctly-attributed similarity to both of its literal sources,
 Psalm 57 and Psalm 60.
 
-**Phase 1 — verb-morphology similarity.** TF-IDF cosine similarity over
+**Root similarity and named-entity identity.** Two coarser/narrower
+cousins of lexical similarity, both keyed on `lexeme` variants rather than
+grammatical tags. Root similarity collapses derivationally related words
+(a verb and its cognate noun) that lexical similarity keeps distinct.
+Named-entity identity restricts the same TF-IDF-cosine machinery to
+proper nouns only, isolating which specific names (Zion, Jacob, David, …)
+two psalms share — it turned out to be the most discriminative of the
+newer lexical-family methods (60% of pairs score below 0.5), because the
+signal was already present but diluted across ~2,100 other terms inside
+plain lexical similarity.
+
+**Verb-morphology similarity** (phase 1). TF-IDF cosine similarity over
 verb stem (binyan) and mood/conjugation tag frequency profiles, extracted
 directly from BHSA's `vs`/`vt` features — a computational operationalization
 of Gunkel's form-critical claim that genres like the hymn are constituted
@@ -253,9 +281,50 @@ above 0.92 with fellow individual laments Psalm 38 and Psalm 88, and below
 of both other methods: correlation with lexical similarity and with
 verb-morphology similarity are each below 0.5.
 
-All three methods, and the interactive heatmap / network-graph /
+**Lexical-set and named-entity-type profiles.** Two further syntactic
+signals: lexical set is BHSA's finer subclassification of part-of-speech
+(numerals, focus particles, prepositional/adverbial/copular uses of
+otherwise-nominal or verbal words); named-entity type is an onomastic
+*register* (person- vs. place- vs. deity-name-dense), the coarser sibling
+of the identity-based method above.
+
+**Clause type, text type, clause relation, and verb sense.** Four
+clause/phrase-structure signals, added in the most recent extraction pass
+and screened against the same discriminativeness bar as everything else.
+Clause type (`typ`, 40 constituent-order/verb-form patterns like
+wayyiqtol-null vs. nominal clause) turned out to be the single most
+discriminative method of any tried — 66.7% of psalm pairs score below 0.5,
+ahead of even lexical similarity's own spread. Text type (`txt`,
+narrative/discursive/quotation with embedding) is BHSA's closest analogue
+to a discourse-register feature — there is no separate "discourse" object
+type in the corpus; `sentence`, `sentence_atom`, and `half_verse` carry no
+independent content tags at all, checked directly against every feature in
+the dataset. Clause relation (`rela`) and verb sense (from the
+ETCBC/valence module — Janet Dyk's verbal-valence research at VU/ETCBC,
+part of the SYNVAR project, giving whether a verb occurrence takes a
+direct object, a prepositional complement, or neither) both survived as
+sparse-but-real signals (22.5% and 12.6% word coverage respectively).
+
+**Nine methods built and deliberately not shipped.** Grammatical gender,
+nominal state, phrase-dependent part-of-speech, clause kind, phrase
+function, phrase determination, phrase type, verbal valence, and
+grammatical role were all extracted, tested, and measured — and all
+turned out structurally near-degenerate under TF-IDF-cosine (0–4.9% of
+pairs score below 0.5, versus 15%+ for every shipped method). The pattern
+that emerged, and now documents itself in `pipeline/methods.py`:
+TF-IDF-cosine over a tag-frequency profile is only discriminative when a
+tag is either high-cardinality or genuinely *sparse* (fires on a minority
+of words) — dense features, even with good category balance (phrase
+function has 27 well-balanced codes and still only clears 2.8%), produce
+nearly identical profile shapes across the whole Psalter, since every
+psalm needs verbs, nouns, determined phrases, and core arguments
+regardless of genre. Their integration tests document the finding
+directly rather than pretending it's a usable comparison method — a
+negative result treated with the same rigor as a positive one.
+
+All eleven shipped methods, and the interactive heatmap / network-graph /
 ranked-match visualization built on top of them, are live in the app —
-see `app/README.md`. 138 pipeline tests and 60 frontend tests currently
+see `app/README.md`. 372 pipeline tests and 60 frontend tests currently
 pass; `pipeline/ground_truth.py` and its integration tests are the
 executable form of the "validate every phase against known scholarship"
 discipline above.
@@ -267,11 +336,14 @@ directly on Text-Fabric against the BHSA database, using the same
 form-to-function methodology the ETCBC's own database is built on
 (register the surface-level annotation first — `sp`, `vs`, `vt`, `lex` —
 then derive functional/interpretive labels on top of it, rather than
-baking interpretation into extraction). The `pipeline/corpus.py` module
-retains each word's Text-Fabric node id specifically so later phases
-(clause and phrase structure, disjunctive accents for phase 3's
-segmentation) can re-query the corpus directly rather than re-deriving
-structure from scratch.
+baking interpretation into extraction). It also draws on the companion
+[ETCBC/valence](https://github.com/ETCBC/valence) module (Janet Dyk,
+VU/ETCBC), loaded alongside BHSA via Text-Fabric's multi-location support
+since it shares the same node numbering — verbal-argument annotation BHSA
+itself doesn't carry. The `pipeline/corpus.py` module retains each word's
+Text-Fabric node id specifically so later phases (disjunctive accents for
+the segmentation phase below) can re-query the corpus directly rather than
+re-deriving structure from scratch.
 
 ## Application architecture
 
@@ -280,7 +352,7 @@ the *genre* track) produces the same shape of result — an N×N similarity
 matrix plus a ranked-neighbors list per psalm — which is exactly what the
 current app's method selector, heatmap, and network graph already handle
 generically; each new method of that kind drops in without changing any
-existing code, as it has twice already. Unsupervised clustering and
+existing code, as it now has ten times over. Unsupervised clustering and
 intra-psalm shift detection produce a genuinely different shape (a
 partition of the whole corpus; a sequence within one psalm) that doesn't
 fit that UI at all, so once the clustering phase lands the app splits into
@@ -298,41 +370,45 @@ it - not before.
 
 ## Repository structure
 
-- **`index.html` / `styles.css`** — the static project website. Links to the
-  comparison tool at `compare/index.html` (see below).
 - **`pipeline/`** — the Python package described above (`corpus.py` →
-  `features.py`/`verb_morphology.py` → `similarity.py` → `methods.py` →
+  per-feature extractor modules → `similarity.py` → `methods.py` →
   `export.py`), plus `ground_truth.py` and its integration tests. See
   `pipeline/README.md`.
 - **`app/`** — "Compare the Psalms", an interactive Vite + TypeScript + D3
   visualization: a similarity heatmap, a force-directed similarity network,
-  a method selector, and a ranked most-similar-psalms panel. This is a
-  *source* project — `app/index.html` only runs under the Vite dev server,
-  it is not a page you can link to or deploy directly. See `app/README.md`.
-- **`compare/`** — gitignored build output of `app/`, produced by
-  `npm run build`. This is the real, self-contained static page that
-  `index.html` links to, and what actually gets deployed.
+  a method selector, and a ranked most-similar-psalms panel. This *is* the
+  site: `npm run build` writes straight to the repo root (`index.html`,
+  `assets/`, `data/`), so `tehillim.dev` serves the comparison tool
+  directly rather than a marketing page linking out to it. See
+  `app/README.md`.
+- **`about/`** — the earlier static marketing page (unchanged content),
+  kept but no longer the site root; reachable at `/about/`.
+- Root-level `index.html`, `assets/`, and `data/` are gitignored build
+  output of `app/`, not committed source.
 
 ## Quickstart
 
 ```bash
-# 1. Generate the similarity data (requires a local ETCBC/bhsa clone)
+# 1. Generate the similarity data (requires local ETCBC/bhsa and
+#    ETCBC/valence clones)
 cd pipeline && python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]" && python -m tehillim_pipeline.cli
 
 # 2a. Iterate on the app with hot reload
 cd ../app && npm install && npm run dev
 
-# 2b. ...or build it so the main site's "Compare Psalms" link works
-cd ../app && npm install && npm run build   # writes ../compare/
+# 2b. ...or build the real site (writes straight to the repo root)
+cd ../app && npm install && npm run build
 ```
 
 ## Deployment
 
-Deploy the whole repo root (`index.html`, `styles.css`, `compare/`) as one
-static site — Cloudflare Pages, GitHub Pages, Netlify, etc. Run
-`npm run build` in `app/` first (or as a build step in CI) so `compare/`
-exists; it's gitignored as a build artifact, not committed.
+`npm run build` in `app/` writes the site directly to the repo root
+(`index.html`, `assets/`, `data/`) alongside the untouched `about/`
+folder; deploy that root as one static site. A `wrangler.jsonc` at the
+repo root configures Cloudflare Workers static-asset deployment
+(`assets.directory: "."`, `npx wrangler deploy`); Cloudflare Pages,
+GitHub Pages, or Netlify work the same way pointed at the repo root.
 
 ## References
 

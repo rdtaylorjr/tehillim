@@ -21,11 +21,19 @@ from tf.fabric import Fabric
 #: --bhsa-path CLI flag.
 DEFAULT_BHSA_TF_PATH = Path.home() / "Developer" / "hebrew" / "bhsa" / "tf" / "2021"
 
+#: Default location of a locally cloned ETCBC/valence Text-Fabric dataset -
+#: a companion module (same node numbering as BHSA) adding verbal-valence
+#: and argument-role annotation not present in core BHSA. Override with the
+#: TEHILLIM_VALENCE_PATH environment variable or the --valence-path CLI flag.
+DEFAULT_VALENCE_TF_PATH = Path.home() / "Developer" / "hebrew" / "etcbc" / "valence" / "tf" / "2021"
+
 #: Text-Fabric features required for extraction.
 _REQUIRED_FEATURES = (
     "otype book chapter verse "
     "lex voc_lex_utf8 g_word_utf8 sp gloss vs vt ps nu prs_ps prs_nu "
-    "gn prs_gn st ls pdp nametype root"
+    "gn prs_gn st ls pdp nametype root "
+    "typ txt rela kind function det "
+    "valence grammatical sense"
 )
 
 _PSALMS_BOOK_NAME = "Psalmi"
@@ -113,6 +121,62 @@ class PsalmWord:
     lexemes (e.g. a verb and its cognate noun) that ``lexeme`` keeps
     distinct. Only populated for a subset of content words; "" otherwise."""
 
+    clause_type: str
+    """BHSA clause-atom type of the word's enclosing clause (e.g. ``Way0``
+    wayyiqtol-null, ``NmCl`` nominal clause) - a fine-grained classification
+    of clause structure, denormalized from the clause down onto each of its
+    words so it composes with the same per-word tag-counting machinery as
+    every other feature."""
+
+    text_type: str
+    """BHSA text type of the word's enclosing clause: ``N`` narrative,
+    ``D`` discursive, ``Q`` quotation, or ``?`` unknown, with embedding
+    shown by repetition (e.g. ``QND`` = discursive within narrative within
+    quotation). A quotation-heavy psalm reads differently from a
+    narrative-heavy one."""
+
+    clause_relation: str
+    """BHSA syntactic relation of the word's enclosing clause to its
+    context (e.g. ``Coor`` coordinated, ``Attr`` attributive, ``Objc``
+    object clause), or "" if not applicable (most clauses)."""
+
+    clause_kind: str
+    """BHSA coarse clause kind derived from ``clause_type``: ``VC`` verbal,
+    ``NC`` nominal, or ``WP`` without predication."""
+
+    phrase_function: str
+    """BHSA syntactic function of the word's enclosing phrase (e.g.
+    ``Pred`` predicate, ``Subj`` subject, ``Voct`` vocative)."""
+
+    phrase_determination: str
+    """BHSA determination of the word's enclosing phrase: ``det``
+    determined, ``und`` undetermined, or "" if not applicable."""
+
+    phrase_type: str
+    """BHSA phrase-atom type of the word's enclosing phrase (e.g. ``VP``
+    verbal phrase, ``PP`` prepositional phrase, ``PrNP`` proper-noun
+    phrase) - the phrase-level counterpart of ``clause_type``, sharing the
+    same underlying `typ` feature but scoped to a different object type."""
+
+    phrase_valence: str
+    """ETCBC/valence classification of the word's enclosing phrase as a
+    verbal argument: ``core`` (core argument), ``complement``, or
+    ``adjunct`` (peripheral). From a companion Text-Fabric module layered
+    on BHSA, not core BHSA itself - "" if unannotated."""
+
+    phrase_grammatical_role: str
+    """ETCBC/valence fine-grained constituent role of the word's enclosing
+    phrase (e.g. ``direct_object``, ``subject``, ``indirect_object``,
+    ``L_object``) - a finer-grained sibling of ``phrase_function``. From
+    the same companion module as ``phrase_valence``; "" if unannotated."""
+
+    verb_sense: str
+    """ETCBC/valence sense/argument-realization code for this word if it is
+    a verb occurrence (e.g. ``d-`` takes a direct object, ``-p`` takes a
+    prepositional complement), or "" otherwise. Distinct from
+    ``verb_stem``/``verb_mood``: this describes complementation pattern,
+    not morphology."""
+
 
 @dataclass(frozen=True, slots=True)
 class Psalm:
@@ -134,10 +198,12 @@ class Corpus:
         self._api = api
 
     @classmethod
-    def load(cls, tf_path: Path | None = None) -> Corpus:
-        """Load the BHSA Text-Fabric dataset from ``tf_path``.
+    def load(cls, tf_path: Path | None = None, valence_tf_path: Path | None = None) -> Corpus:
+        """Load the BHSA Text-Fabric dataset from ``tf_path``, merged with
+        the companion ETCBC/valence module from ``valence_tf_path`` (same
+        node numbering, loaded together as multiple Text-Fabric locations).
 
-        Raises FileNotFoundError if the dataset is not present, and
+        Raises FileNotFoundError if either dataset is not present, and
         RuntimeError if Text-Fabric fails to load the required features.
         """
         path = tf_path or DEFAULT_BHSA_TF_PATH
@@ -147,10 +213,19 @@ class Corpus:
                 "Clone https://github.com/ETCBC/bhsa and pass its tf/<version> "
                 "directory via --bhsa-path or the TEHILLIM_BHSA_PATH env var."
             )
-        tf = Fabric(locations=str(path), silent="deep")
+        valence_path = valence_tf_path or DEFAULT_VALENCE_TF_PATH
+        if not valence_path.exists():
+            raise FileNotFoundError(
+                f"ETCBC/valence Text-Fabric data not found at {valence_path}. "
+                "Clone https://github.com/ETCBC/valence and pass its tf/<version> "
+                "directory via --valence-path or the TEHILLIM_VALENCE_PATH env var."
+            )
+        tf = Fabric(locations=[str(path), str(valence_path)], silent="deep")
         api = tf.load(_REQUIRED_FEATURES, silent="deep")
         if api is None:
-            raise RuntimeError(f"Text-Fabric failed to load required features from {path}")
+            raise RuntimeError(
+                f"Text-Fabric failed to load required features from {path} and {valence_path}"
+            )
         return cls(api)
 
     def psalms(self) -> list[Psalm]:
@@ -183,9 +258,15 @@ class Corpus:
         return psalms
 
     def _word(self, node: int) -> PsalmWord:
-        F = self._api.F  # noqa: N806
-        lex_node = self._api.L.u(node, otype="lex")
+        F, L = self._api.F, self._api.L  # noqa: N806
+        lex_node = L.u(node, otype="lex")
         gloss = F.gloss.v(lex_node[0]) if lex_node else ""
+
+        clause_nodes = L.u(node, otype="clause")
+        clause = clause_nodes[0] if clause_nodes else None
+        phrase_nodes = L.u(node, otype="phrase")
+        phrase = phrase_nodes[0] if phrase_nodes else None
+
         return PsalmWord(
             node=node,
             lexeme=F.lex.v(node),
@@ -206,6 +287,16 @@ class Corpus:
             phrase_dependent_pos=F.pdp.v(node) or "",
             name_type=_na_to_empty(F.nametype.v(node)),
             root=_na_to_empty(F.root.v(node)),
+            clause_type=_na_to_empty(F.typ.v(clause)) if clause else "",
+            text_type=_na_to_empty(F.txt.v(clause)) if clause else "",
+            clause_relation=_na_to_empty(F.rela.v(clause)) if clause else "",
+            clause_kind=_na_to_empty(F.kind.v(clause)) if clause else "",
+            phrase_function=_na_to_empty(F.function.v(phrase)) if phrase else "",
+            phrase_determination=_na_to_empty(F.det.v(phrase)) if phrase else "",
+            phrase_type=_na_to_empty(F.typ.v(phrase)) if phrase else "",
+            phrase_valence=_na_to_empty(F.valence.v(phrase)) if phrase else "",
+            phrase_grammatical_role=_na_to_empty(F.grammatical.v(phrase)) if phrase else "",
+            verb_sense=_na_to_empty(F.sense.v(node)),
         )
 
 

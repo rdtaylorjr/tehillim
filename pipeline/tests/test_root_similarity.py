@@ -27,6 +27,16 @@ def _word(
         phrase_dependent_pos=pos,
         name_type="",
         root=root,
+        clause_type="",
+        text_type="",
+        clause_relation="",
+        clause_kind="",
+        phrase_function="",
+        phrase_determination="",
+        phrase_type="",
+        phrase_valence="",
+        phrase_grammatical_role="",
+        verb_sense="",
     )
 
 

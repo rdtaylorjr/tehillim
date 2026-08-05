@@ -25,6 +25,16 @@ def _word(pos: str = "subs", state: str = "", lexeme: str = "X", node: int = 0) 
         phrase_dependent_pos=pos,
         name_type="",
         root="",
+        clause_type="",
+        text_type="",
+        clause_relation="",
+        clause_kind="",
+        phrase_function="",
+        phrase_determination="",
+        phrase_type="",
+        phrase_valence="",
+        phrase_grammatical_role="",
+        verb_sense="",
     )
 
 

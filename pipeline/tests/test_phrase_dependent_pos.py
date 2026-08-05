@@ -25,6 +25,16 @@ def _word(pos: str = "subs", pdp: str | None = None, lexeme: str = "X", node: in
         phrase_dependent_pos=pdp if pdp is not None else pos,
         name_type="",
         root="",
+        clause_type="",
+        text_type="",
+        clause_relation="",
+        clause_kind="",
+        phrase_function="",
+        phrase_determination="",
+        phrase_type="",
+        phrase_valence="",
+        phrase_grammatical_role="",
+        verb_sense="",
     )
 
 

@@ -28,6 +28,10 @@ const METHOD_LABELS: Record<string, string> = {
   "person-profile-tfidf-cosine": "Syntactic Similarity (Person)",
   "lexical-set-tfidf-cosine": "Syntactic Similarity (Lexical Set)",
   "named-entity-tfidf-cosine": "Syntactic Similarity (Named Entity Type)",
+  "clause-type-tfidf-cosine": "Clause Structure (Clause Type)",
+  "text-type-tfidf-cosine": "Clause Structure (Text Type)",
+  "clause-relation-tfidf-cosine": "Clause Structure (Clause Relation)",
+  "verb-sense-tfidf-cosine": "Clause Structure (Verb Sense)",
 };
 
 function methodLabel(id: string): string {

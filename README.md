@@ -4,8 +4,10 @@ This repo investigates how the Psalter's internal similarities (verbatim
 duplicates, formulaic genre patterns, poetic parallelism, editorial
 groupings) can be recovered computationally from the Masoretic Text, and
 what each representation (lexical, morphosyntactic, embedding-based,
-structural) makes visible or hides. It is built directly on the [ETCBC's](https://etcbc.nl/)
-own infrastructure, the [BHSA](https://github.com/ETCBC/bhsa) database and
+structural) makes visible or hides.
+
+It is built directly on [ETCBC's](https://etcbc.nl/) infrastructure, the
+[BHSA](https://github.com/ETCBC/bhsa) database and
 [Text-Fabric](https://annotation.github.io/text-fabric/), and is designed
 as a working laboratory for a specific research program: a layered sequence
 of comparison methods, each motivated by a documented gap in the current
@@ -18,7 +20,9 @@ interactive app today (see below), including a full sweep of BHSA's
 word-level grammatical annotations plus clause/phrase-level structure and
 the ETCBC/valence module's verbal-argument data, each kept only where it
 measurably clears a real discriminativeness bar rather than assumed useful
-(see "What's implemented and validated now"). The remaining work splits
+(see "What's implemented and validated now").
+
+The remaining work splits
 into two independent tracks: a **genre track** (can these psalms' internal
 formal patterns be clustered by genre, unsupervised, and can a shift in
 genre *within* a single psalm be located computationally?) and a
@@ -36,20 +40,26 @@ literatures that this project tries to bring into the same pipeline.
 
 Close-reading scholarship has long catalogued specific relationships within
 and around the Psalter by hand: Psalm 18 duplicates 2 Samuel 22 almost
-verbatim; Psalm 14 and Psalm 53 are variant recensions of the same
-composition, differing mainly in divine-name preference; Psalm 108 is a
-literal recombination of Psalm 57:8–12 and Psalm 60:7–14. Beyond verbatim
+verbatim. Psalm 14 and Psalm 53 are variant recensions of the same
+composition, differing mainly in divine-name preference. Psalm 108 is a
+literal recombination of Psalm 57:8–12 and Psalm 60:7–14.
+
+Beyond verbatim
 duplication, form- and intertextuality-focused scholarship reads the
 Psalter as a network of internal and external echo: Phil J. Botha's
 *Intertextuality and the Interpretation of Psalm 1* traces how Psalm 1's
 tree-planted-by-water imagery echoes Jeremiah 17 (and further afield,
 Joshua 1, Ezekiel 47, and 1 Chronicles 22), arguing that "Torah" there
 already carries a Deuteronomic, temple-oriented resonance rather than a
-narrow legal sense. Beth LaNeel Tanner's *The Book of Psalms Through the
+narrow legal sense.
+
+Beth LaNeel Tanner's *The Book of Psalms Through the
 Lens of Intertextuality* extends this to the Psalter as a whole, applying
 Kristevan intertextuality and Lévi-Straussian *bricolage* to argue that the
 Psalter's editorial arrangement is itself a meaning-making intertextual
-act, not just a container for 150 independent poems. A tradition-historical
+act, not just a container for 150 independent poems.
+
+A tradition-historical
 literature also traces the Psalter's relationship to other wisdom and
 lament corpora, e.g. work relating Job's dialogues to psalmic lament form,
 arguing (against a purely intertextual account) that shared theological
@@ -57,8 +67,10 @@ arguing (against a purely intertextual account) that shared theological
 Job 7:17–18 / Psalm 8:5.
 
 This scholarship is precise about *which* relationships matter and *why*,
-but it is produced one pericope at a time, by hand. It supplies exactly the
-ground truth a computational method needs to be checked against; and, as
+but it is produced one pericope at a time, by hand.
+
+It supplies exactly the
+ground truth a computational method needs to be checked against. And, as
 Beth LaNeel Tanner's and Phil J. Botha's work in particular makes clear, it
 already assumes that similarity in the Psalter is plural: lexical,
 structural, formal, and theological similarity are different things that
@@ -68,13 +80,17 @@ multi-method architecture is built to take seriously.
 ### Computational approaches
 
 A distinct and currently very active NLP literature approaches the same
-territory computationally, in two waves. Earlier work matched shared
+territory computationally, in two waves.
+
+Earlier work matched shared
 strings or lemmata directly: Martijn Naaijer and Dirk Roorda's *Parallel
 Texts in the Hebrew Bible, New Methods and Visualizations*
 (arXiv:1603.01541) develops algorithmic detection and synoptic
 visualization of parallel passages across the Hebrew Bible, work that
 grew directly out of the ETCBC/Text-Fabric ecosystem this project also
-builds on (Roorda is Text-Fabric's author). A 2026 paper in *Religions*,
+builds on (Roorda is Text-Fabric's author).
+
+A 2026 paper in *Religions*,
 *Detection and Typology of Psalmic Text Reuses in the New Testament*
 (Religions 17(1):88, published in the context of the BiblIndex project),
 takes the same lexical/lemma-based approach further: tokenization,
@@ -90,20 +106,27 @@ Benchmark* (arXiv:2506.24117) first benchmarks four *pretrained*
 transformer models (E5, AlephBERT among them) zero-shot, with no
 fine-tuning, and reports E5 and AlephBERT as the most promising while
 explicitly naming fine-tuning as future work rather than something it
-does itself. The follow-up paper, *MiqraBERT: Regression-Based
+does itself.
+
+The follow-up paper, *MiqraBERT: Regression-Based
 Sentence-BERT Finetuning for Biblical Hebrew Parallel Detection*
 (arXiv:2606.19638), is that recommended next step carried out: it
 fine-tunes AlephBERT via cosine-similarity regression on 1,650 labeled
 Hebrew Bible verse pairs (825 true parallels, 825 negatives) to move past
 lexical overlap toward genuinely semantic, paraphrase-tolerant matching.
+
 MiqraBERT reports a real, substantial gain over the pretrained
 baseline (a 2.7-fold improvement in distributional separation between
 parallel and non-parallel pairs, shrinking the ambiguous overlap region
 from roughly 24% to about 6%), but with a striking genre asymmetry: recall@10
 on narrative synoptic parallels (e.g. Samuel–Kings/Chronicles) reaches
-87.1%, while recall@10 on *poetic* parallelism falls below 9%. The authors
+87.1%, while recall@10 on *poetic* parallelism falls below 9%.
+
+The authors
 attribute this directly to mean-pooling a whole verse into one vector,
-which erases the token-level signal poetic parallelism depends on. A
+which erases the token-level signal poetic parallelism depends on.
+
+A
 separate, independently authored strand of transformer-based work,
 McGovern, Sirin, and Lippincott's *Computational Discovery of Chiasmus in
 Ancient Religious Text* (arXiv:2501.10739), uses sentence embeddings and
@@ -111,6 +134,7 @@ cosine-similarity matrices (deliberately avoiding LLMs, for
 contamination and interpretability reasons) to detect chiastic (mirror-
 image) structure at verse and half-verse granularity, reporting
 precision@k around 0.80 at verse level and 0.60 at half-verse level.
+
 Finally, on the textual-criticism side, David J. Sigrist's Trinity Western
 University thesis, *Tracking Changes: A Proposal for a Linguistically
 Sensitive Schema for Categorizing Textual Variation of Hebrew Bible Texts
@@ -123,15 +147,21 @@ principled schema, rather than being ad hoc.
 ### The gap this project targets
 
 Read together, these two literatures agree on a trend and disagree on
-where to go next. Lexical/lemma methods (Naaijer & Roorda's algorithmic
-approach; the Religions 2026 textometric method) are precise and fully
+where to go next.
+
+Lexical/lemma methods (Naaijer & Roorda's algorithmic
+approach, the Religions 2026 textometric method) are precise and fully
 interpretable but blind to paraphrase: they cannot see a parallel that
-shares no words. Transformer embeddings fix that for narrative synoptic
+shares no words.
+
+Transformer embeddings fix that for narrative synoptic
 material but currently *fail specifically on Hebrew poetry* (the genre
 the Psalter is written in) because the standard architecture (mean-pool a
 verse, cosine-compare the result) is a poor fit for parallelism, which
 routinely pairs non-synonymous, non-cognate words across cola ("heaven" /
-"earth", "day" / "night") in ways no single pooled vector preserves. Both
+"earth", "day" / "night") in ways no single pooled vector preserves.
+
+Both
 literatures also note, without acting on it, that pretrained embedding
 spaces are anisotropic (geometrically compressed in ways that distort raw
 cosine similarity), a problem the papers reviewed above only ever address
@@ -164,7 +194,9 @@ dimensionality reduction, density estimation, regularized/ensemble
 classifiers) and ISYE 6525/8803 *Topics on High-Dimensional Data
 Analytics* (functional data analysis, robust PCA, tensor decomposition,
 sparse/structured regularization), chosen because they fill specific,
-identifiable gaps in the literature above, not as a matter of course. In
+identifiable gaps in the literature above, not as a matter of course.
+
+In
 particular: nothing in the literature surveyed attempts *unsupervised*
 genre discovery (every paper does supervised or algorithmic pairwise
 parallel detection), and nothing attempts to locate a genre shift *within*
@@ -190,15 +222,15 @@ alone, not a claim to have recovered Gattung in Gunkel's full sense.
 
 | Method | Status | Fills |
 |---|---|---|
-| **Verb-morphology signal**: TF-IDF cosine over verb stem/conjugation tag profiles | **Implemented, validated against a narrow case; broad genre-cohesion not shown** | Gunkel's form leg operationalized directly from BHSA's own morphology, tested independently of vocabulary. See "Statistical validation methodology" for how much of the genre claim survives correction |
+| **Verb-morphology signal**: TF-IDF cosine over verb stem/conjugation tag profiles | **Implemented, validated against a narrow case. Broad genre-cohesion not shown** | Gunkel's form leg operationalized directly from BHSA's own morphology, tested independently of vocabulary. See "Statistical validation methodology" for how much of the genre claim survives correction |
 | **Grammatical-person profile**: TF-IDF cosine over word-level and pronominal-suffix person/number tag profiles | **Implemented, validated** | A second, independent form-critical marker (individual vs. communal address) that separates even more cleanly than verb morphology |
-| **Clause type and text type (`typ`, `txt`)**: TF-IDF cosine over clause-atom-type and narrative/discursive/quotation tag profiles | **Implemented, validated** | Completes what the verb-morphology method's own original motivation named (clause type, 40 constituent-order/verb-form patterns) and adds text type as a classical discourse-register marker; clause-type turned out to be the single most discriminative method of any tried (66.7% of psalm pairs score below 0.5) |
+| **Clause type and text type (`typ`, `txt`)**: TF-IDF cosine over clause-atom-type and narrative/discursive/quotation tag profiles | **Implemented, validated** | Completes what the verb-morphology method's own original motivation named (clause type, 40 constituent-order/verb-form patterns) and adds text type as a classical discourse-register marker. Clause-type turned out to be the single most discriminative method of any tried (66.7% of psalm pairs score below 0.5) |
 | **Clause relation and verb sense**: TF-IDF cosine over clause-relation tags (`rela`) and ETCBC/valence verb argument-realization codes | **Implemented, validated** | Two further independent syntactic/semantic signals (sparse but real: 22.5% and 12.6% word coverage respectively) that survived the same discriminativeness screening six other clause/phrase-level candidates failed |
-| **Per-signal spectral clustering**: spectral clustering run independently over each of the eleven shipped similarity signals (the six syntactic/clause-structure signals above, plus the five lexical/vocabulary signals from the textual & structural track) | **Implemented** | The literature gap named above, directly, for the syntactic family: validated against Gunkel's exemplars (e.g. individual and communal laments separate cleanly under person-profile clustering); the lexical family's clusters are thematic rather than generic, surfaced side by side for comparison rather than silently omitted |
+| **Per-signal spectral clustering**: spectral clustering run independently over each of the eleven shipped similarity signals (the six syntactic/clause-structure signals above, plus the five lexical/vocabulary signals from the textual & structural track) | **Implemented** | The literature gap named above, directly, for the syntactic family: validated against Gunkel's exemplars (e.g. individual and communal laments separate cleanly under person-profile clustering). The lexical family's clusters are thematic rather than generic, surfaced side by side for comparison rather than silently omitted |
 | **Data-driven cluster count**: silhouette score (and, computed but not yet wired in as an alternative selector, spectral eigengap) across a range of k, replacing a shared fixed k=6 that had been chosen by analogy to Gunkel's genre count rather than by anything about the data | **Implemented** | A principled answer to "is 6 the right number": checked against real data, it wasn't, for either validated genre-fingerprint signal. Every one of the eleven shipped clustering methods now picks its own k from its own similarity matrix (`pipeline/k_selection.py`) |
 | Gaussian-mixture soft clustering and Random Forest proximity as independent cross-checks against the spectral partitions above | **Next** | Soft cluster membership, and a structurally different affinity (Random Forest proximity) to see whether it agrees with spectral clustering's data-chosen k |
 | Sub-psalm segmentation via BHSA's half-verse (`label`) division | Planned (infrastructure) | Already-annotated in BHSA, no need to derive Masoretic colometry from scratch to get sub-verse units |
-| **Intra-psalm genre trajectory and shift detection**: derivative-based edge detection on a single smoothed signal first, checked against the two already-known shift cases (Psalms 13, 22); then, corpus-wide, functional PCA (with a pre-registered minimum-length threshold and an explicit absolute-vs-normalized-position choice, since fPCA's components mean different things under each and psalm length spans 2–176 verses) and robust PCA (low-rank "steady genre" + sparse "shift"), run alongside (not instead of) a single Hidden Markov Model fit jointly across all eligible psalms' half-verse sequences (Baum–Welch pools across the whole corpus; fitting it on only the 2 known cases would starve it of data). Any corpus-wide changepoint scan needs the same Benjamini–Hochberg correction already built for the exemplar-cohesion tests (`pipeline/analysis.py`), not a per-psalm p-value taken in isolation | Planned | The specific, most novel deliverable: mapping *where* a psalm moves from one genre to another: two independently-motivated methods (continuous-trajectory FDA vs. discrete-regime HMM) cross-checked against each other, not just one pipeline taken on faith |
+| **Intra-psalm genre trajectory and shift detection**: derivative-based edge detection on a single smoothed signal first, checked against the two already-known shift cases (Psalms 13, 22). Then, corpus-wide, functional PCA (with a pre-registered minimum-length threshold and an explicit absolute-vs-normalized-position choice, since fPCA's components mean different things under each and psalm length spans 2–176 verses) and robust PCA (low-rank "steady genre" + sparse "shift"), run alongside (not instead of) a single Hidden Markov Model fit jointly across all eligible psalms' half-verse sequences (Baum–Welch pools across the whole corpus. Fitting it on only the 2 known cases would starve it of data). Any corpus-wide changepoint scan needs the same Benjamini–Hochberg correction already built for the exemplar-cohesion tests (`pipeline/analysis.py`), not a per-psalm p-value taken in isolation | Planned | The specific, most novel deliverable: mapping *where* a psalm moves from one genre to another: two independently-motivated methods (continuous-trajectory FDA vs. discrete-regime HMM) cross-checked against each other, not just one pipeline taken on faith |
 | Tensor decomposition (CP/Tucker/HOSVD) over a psalm × psalm × signal tensor: stacking the eleven already-computed similarity matrices, *not* a psalm × feature × signal tensor (which would first require harmonizing four incompatible tag vocabularies) | Planned | A principled way to combine independently-validated signals, rather than an ad hoc weighted average |
 | Multi-relational graph fusion with spectral/Louvain–Leiden community detection, over sub-psalm nodes | Planned (capstone) | Unifies clustering and shift detection into one computation: which community a psalm's own ordered nodes fall into, and where that community changes, *is* the shift map. Gated on two unresolved risks: whether half-verse-level (3–8 word) similarity carries any discriminative structure at all (checked the same way every whole-psalm signal was, % of pairs below 0.5, before reaching for denoising machinery), and how the graph weighs within-psalm adjacency against cross-psalm similarity, a free parameter that should be tuned by cross-validating against the already-validated whole-psalm partitions rather than set by hand |
 
@@ -210,14 +242,14 @@ literature review above.
 
 | Method | Status | Fills |
 |---|---|---|
-| **Lexical similarity**: TF-IDF weighted cosine similarity over content-word lexemes | **Implemented, validated** | Standard IR baseline; the most legible sanity check in the whole project (Psalm 14/53, Psalm 108/57/60) |
-| **Root similarity and named-entity identity**: TF-IDF cosine over triliteral roots, and over proper-noun lexemes only | **Implemented, validated** | Root similarity credits shared thematic vocabulary across derivationally related words that plain lexeme-matching misses; named-entity identity isolates *which* names two psalms share (e.g. both naming Zion), a sharper, more discriminative version of the type-only onomastic signal below |
+| **Lexical similarity**: TF-IDF weighted cosine similarity over content-word lexemes | **Implemented, validated** | Standard IR baseline. The most legible sanity check in the whole project (Psalm 14/53, Psalm 108/57/60) |
+| **Root similarity and named-entity identity**: TF-IDF cosine over triliteral roots, and over proper-noun lexemes only | **Implemented, validated** | Root similarity credits shared thematic vocabulary across derivationally related words that plain lexeme-matching misses. Named-entity identity isolates *which* names two psalms share (e.g. both naming Zion), a sharper, more discriminative version of the type-only onomastic signal below |
 | Classical distance ensemble: character n-gram edit distance + root-level Dice/Jaccard, combined via logistic regression | Planned | A stronger, still fully interpretable classical baseline for near-verbatim reuse, in the same territory as Naaijer & Roorda and the *Religions* 2026 paper |
 | Transformer embeddings (E5, AlephBERT, MiqraBERT) at psalm *and* half-verse level | Planned | A direct, testable extension of MiqraBERT's own diagnosed weakness: does finer-grained pooling close its poetic-recall gap? |
 | Anisotropy correction (whitening / top-PC removal / kernel PCA) before cosine comparison | Planned | Both transformer papers diagnose this geometric flaw but only ever address it via fine-tuning |
-| Optimal transport (Word-Mover's-Distance-style) between token embedding sets, replacing mean-pooling | Planned | The highest-leverage fix for the pooling-erasure failure; both papers already use Wasserstein distance for *evaluation* but never as the similarity metric itself |
+| Optimal transport (Word-Mover's-Distance-style) between token embedding sets, replacing mean-pooling | Planned | The highest-leverage fix for the pooling-erasure failure. Both papers already use Wasserstein distance for *evaluation* but never as the similarity metric itself |
 | Alignment kernels (Smith–Waterman / Needleman–Wunsch) at half-verse level, for chiasmus and refrain detection | Planned | A direct benchmark against the chiasmus paper's embedding-only approach |
-| Frequent-itemset mining over root-pairs, building a data-driven fixed-word-pair lexicon | Planned | Computationally operationalizes a tradition Hebrew poetics scholarship has catalogued by hand for decades; addresses the "black box" critique the NLP papers raise about themselves |
+| Frequent-itemset mining over root-pairs, building a data-driven fixed-word-pair lexicon | Planned | Computationally operationalizes a tradition Hebrew poetics scholarship has catalogued by hand for decades. Addresses the "black box" critique the NLP papers raise about themselves |
 
 ### Cross-cutting
 
@@ -232,16 +264,19 @@ Eleven methods ship in the live app today, organized into three families:
 **lexical** (which specific words a pair of psalms share), **syntactic**
 (how words are used, independent of vocabulary), and **clause structure**
 (higher-level syntactic and discourse patterning, including one signal
-from the ETCBC/valence companion module rather than core BHSA). Every
+from the ETCBC/valence companion module rather than core BHSA).
+
+Every
 method here earned its place by clearing a real, measured
 discriminativeness bar against the actual similarity-score distribution it
 produces across all 150 psalms, not by assumption. Six further candidates
 were built, tested, and deliberately *not* shipped because they measured
-near-degenerate; that negative result is documented below too.
+near-degenerate. That negative result is documented below too.
 
 **Lexical similarity** (phase 0). TF-IDF weighted cosine similarity over
 BHSA content-word lexemes (nouns, verbs, adjectives, adverbs, proper
-nouns, interjections; closed-class grammatical words excluded).
+nouns, interjections, closed-class grammatical words excluded).
+
 Integration-tested against the textual-duplicate ground truth above: Psalm
 14 ranks Psalm 53 as its single closest match (score 0.811, the highest
 pairwise lexical similarity anywhere in the Psalter), and Psalm 108 shows
@@ -252,9 +287,10 @@ Psalm 57 and Psalm 60.
 cousins of lexical similarity, both keyed on `lexeme` variants rather than
 grammatical tags. Root similarity collapses derivationally related words
 (a verb and its cognate noun) that lexical similarity keeps distinct.
+
 Named-entity identity restricts the same TF-IDF-cosine machinery to
 proper nouns only, isolating which specific names (Zion, Jacob, David, …)
-two psalms share; it turned out to be the most discriminative of the
+two psalms share. It turned out to be the most discriminative of the
 newer lexical-family methods (60% of pairs score below 0.5), because the
 signal was already present but diluted across ~2,100 other terms inside
 plain lexical similarity.
@@ -268,34 +304,41 @@ of Gunkel's form-critical claim that genres like the hymn are constituted
 by recurring grammatical patterns (imperative-heavy calls to praise) rather
 than shared vocabulary. This is deliberately *not* a parallel-passage
 detector: two psalms can score highly here while sharing no words at all.
-Validated empirically, not just asserted; and validated honestly: the
+
+Validated empirically, not just asserted. And validated honestly: the
 broad, hand-picked "hymn" exemplar set (11 psalms, already excluding
-commonly-cited genre blends like Psalm 19; see `ground_truth.py`) does
+commonly-cited genre blends like Psalm 19, see `ground_truth.py`) does
 *not* cohere as a whole (mean internal similarity 0.41, actually below
 the 0.52 corpus-wide baseline), confirmed by a label-permutation test
 (`pipeline/analysis.py`'s `permutation_test_cohesion`, the right tool
 here since pairwise similarities aren't independent observations), which
 finds this group is *not* more cohesive than a random same-size draw from
-the corpus at all (p = 0.94 against 20,000 permutations). This isn't an
+the corpus at all (p = 0.94 against 20,000 permutations).
+
+This isn't an
 exemplar-contamination artifact: even with acknowledged blends already
 excluded, verb morphology still can't tell a quiet creation hymn (Psalm
 8) from a pure imperative call-to-praise (the Final Hallel) as the same
-formal register. The same test applied to the other five exemplar sets,
+formal register.
+
+The same test applied to the other five exemplar sets,
 corrected for running all six as one family (Benjamini-Hochberg,
 `analysis.py`'s `benjamini_hochberg`) rather than reading each p-value in
 isolation, is a genuinely negative picture: none of the six genres reach
 significance under verb-morphology cohesion. Communal lament and
 thanksgiving look suggestive in isolation (raw p = 0.030, 0.076) but do
-not survive correction (BH-adjusted p = 0.18, 0.23); individual lament,
+not survive correction (BH-adjusted p = 0.18, 0.23). Individual lament,
 royal, and wisdom were never close (raw p = 0.13, 0.20, 0.39) at this
 sample size (4-11 psalms each), a materially more cautious result than even the
 single-test picture already was, and the reason this section leads with
 the one exemplar pair that holds up on its own narrow textual grounds
-rather than as a genre-wide cohesion claim. The narrower, textually
+rather than as a genre-wide cohesion claim.
+
+The narrower, textually
 homogeneous case the hypothesis
 was really about holds cleanly: Psalm 150, an almost pure sequence of Piel
 imperatives ("Praise! Praise! Praise!"), is dramatically closer to its
-Final Hallel siblings (Psalm 149: 0.43; Psalm 146: 0.41) than to a stark
+Final Hallel siblings (Psalm 149: 0.43, Psalm 146: 0.41) than to a stark
 individual lament (Psalm 88: 0.003) or a quiet creation hymn (Psalm 8:
 0.008), and, in the live app, Psalm 150's single closest match under this
 method is Psalm 117 (0.980), the Psalter's other short, pure
@@ -308,7 +351,9 @@ matrices is 0.19.
 and pronominal-suffix person/number tag profiles ("I" vs. "we" vs. "you"
 vs. "he/she/it"), extracted from BHSA's `ps`/`nu`/`prs_ps`/`prs_nu`
 features: a second, independent form-critical marker distinguishing
-individual from communal address. This separates even more cleanly than
+individual from communal address.
+
+This separates even more cleanly than
 verb morphology, and (unlike verb morphology's broader exemplar
 sets) part of the separation holds up under permutation testing even
 after correcting for multiple comparisons, not just as a raw score
@@ -316,11 +361,15 @@ comparison: individual laments (Psalms 3, 22, 38, 51, 88) average 0.87
 similarity with each other, and this is the one cohesion result across
 both signals' twelve-test battery that survives Benjamini-Hochberg
 correction for running six genre tests per signal (raw p = 0.0018,
-BH-adjusted p = 0.011, against 20,000 permutations). Communal laments (44,
+BH-adjusted p = 0.011, against 20,000 permutations).
+
+Communal laments (44,
 74, 79, 80, 137) average 0.73 with each other, a real-looking raw signal
 (p = 0.029) that, like verb-morphology's, does not survive correction once
 weighed against the other five genre tests run alongside it (BH-adjusted
-p = 0.058, just above the conventional 0.05 threshold). The cross-group
+p = 0.086, well above the conventional 0.05 threshold).
+
+The cross-group
 separation is the one claim in this paragraph that does not need that
 correction, because it was the single, specific, pre-registered contrast
 the person-profile hypothesis was actually about, not one of six
@@ -332,13 +381,14 @@ dimension than two random psalms, confirmed directly by a
 20,000 permutations). Psalm 22 ("My God, my God, why have you
 forsaken me") scores above 0.92 with fellow individual laments Psalm 38
 and Psalm 88, and below 0.45 with communal laments Psalm 44 and Psalm 137.
+
 Confirmed independent of both other methods: correlation with lexical
 similarity and with verb-morphology similarity are each below 0.5.
 
 **Lexical-set and named-entity-type profiles.** Two further syntactic
 signals: lexical set is BHSA's finer subclassification of part-of-speech
 (numerals, focus particles, prepositional/adverbial/copular uses of
-otherwise-nominal or verbal words); named-entity type is an onomastic
+otherwise-nominal or verbal words). Named-entity type is an onomastic
 *register* (person- vs. place- vs. deity-name-dense), the coarser sibling
 of the identity-based method above.
 
@@ -348,12 +398,16 @@ and screened against the same discriminativeness bar as everything else.
 Clause type (`typ`, 40 constituent-order/verb-form patterns like
 wayyiqtol-null vs. nominal clause) turned out to be the single most
 discriminative method of any tried: 66.7% of psalm pairs score below 0.5,
-ahead of even lexical similarity's own spread. Text type (`txt`,
+ahead of even lexical similarity's own spread.
+
+Text type (`txt`,
 narrative/discursive/quotation with embedding) is BHSA's closest analogue
-to a discourse-register feature; there is no separate "discourse" object
-type in the corpus; `sentence`, `sentence_atom`, and `half_verse` carry no
+to a discourse-register feature. There is no separate "discourse" object
+type in the corpus. `sentence`, `sentence_atom`, and `half_verse` carry no
 independent content tags at all, checked directly against every feature in
-the dataset. Clause relation (`rela`) and verb sense (from the
+the dataset.
+
+Clause relation (`rela`) and verb sense (from the
 ETCBC/valence module, Janet Dyk's verbal-valence research at VU/ETCBC,
 part of the SYNVAR project, giving whether a verb occurrence takes a
 direct object, a prepositional complement, or neither) both survived as
@@ -364,22 +418,28 @@ nominal state, phrase-dependent part-of-speech, clause kind, phrase
 function, phrase determination, phrase type, verbal valence, and
 grammatical role were all extracted, tested, and measured, and all
 turned out structurally near-degenerate under TF-IDF-cosine (0–4.9% of
-pairs score below 0.5, versus 15%+ for every shipped method). The pattern
+pairs score below 0.5, versus 15%+ for every shipped method).
+
+The pattern
 that emerged, and now documents itself in `pipeline/methods.py`:
 TF-IDF-cosine over a tag-frequency profile is only discriminative when a
 tag is either high-cardinality or genuinely *sparse* (fires on a minority
-of words), dense features, even with good category balance (phrase
+of words). Dense features, even with good category balance (phrase
 function has 27 well-balanced codes and still only clears 2.8%), produce
 nearly identical profile shapes across the whole Psalter, since every
 psalm needs verbs, nouns, determined phrases, and core arguments
-regardless of genre. Their integration tests document the finding
+regardless of genre.
+
+Their integration tests document the finding
 directly rather than pretending it's a usable comparison method: a
 negative result treated with the same rigor as a positive one.
 
 All eleven shipped methods, and the interactive heatmap / network-graph /
-ranked-match visualization built on top of them, are live in the app;
-see `app/README.md`. 534 pipeline tests and 205 frontend tests currently
-pass; `pipeline/ground_truth.py` and its integration tests are the
+ranked-match visualization built on top of them, are live in the app.
+See `app/README.md`.
+
+534 pipeline tests and 208 frontend tests currently
+pass. `pipeline/ground_truth.py` and its integration tests are the
 executable form of the "validate every phase against known scholarship"
 discipline above.
 
@@ -402,7 +462,7 @@ inferential/diagnostic machinery close that gap, all in `pipeline/`:
   genre-fingerprint signals (twelve cohesion tests total, corrected as two
   six-test families rather than twelve isolated p-values, and using
   exemplar lists that already exclude four commonly-cited genre blends
-  (Psalms 19, 32, 73, 133); see `ground_truth.py`): verb-morphology
+  (Psalms 19, 32, 73, 133), see `ground_truth.py`): verb-morphology
   clears none of them, including its broad hymn set (p = 0.94, consistent
   with its own already-documented negative result) and communal lament
   and thanksgiving, whose raw p-values (0.030, 0.076) look suggestive
@@ -421,11 +481,11 @@ inferential/diagnostic machinery close that gap, all in `pipeline/`:
   individual/communal-lament distinction specifically (cohesion of the
   first group, plus the separation between the two), not a general
   "every exemplar genre coheres" result.
-- **Gap statistic** (`k_selection.py`'s `gap_statistic`; Tibshirani,
+- **Gap statistic** (`k_selection.py`'s `gap_statistic`, citing Tibshirani,
   Walther & Hastie, 2001): silhouette score, used below to choose k, is
   mathematically undefined for a single cluster, so a silhouette-only
   sweep over k≥2 can never conclude "this signal shows no real cluster
-  structure"; it always reports some k as the winner, however
+  structure." It always reports some k as the winner, however
   uninformative the affinity matrix actually is. An earlier attempt to
   patch this (testing a partition's silhouette against random relabelings
   of itself) turned out to have no power to fail: see the
@@ -447,7 +507,7 @@ inferential/diagnostic machinery close that gap, all in `pipeline/`:
   traditional genre count, not by anything about the data. That was never
   checked until this diagnostic existed: run against the real similarity
   matrices, neither validated genre-fingerprint signal actually preferred
-  6 (verb-morphology peaks sharply at k=2; person-profile peaks at k=4,
+  6 (verb-morphology peaks sharply at k=2. Person-profile peaks at k=4,
   but only barely: its silhouette score at k=2 is 0.405 against k=4's
   0.411, a near-tie that the subsample-stability figure below treats with
   appropriate caution rather than reporting k=4 as a settled choice). Once
@@ -479,9 +539,9 @@ inferential/diagnostic machinery close that gap, all in `pipeline/`:
   clause-type, and, only barely at adjusted p ≈ 0.045, verb-morphology
   and named-entity), while root, lexical-set, clause-relation, and
   verb-sense do not. Worth flagging plainly: **lexical** (a *thematic*,
-  not genre, signal; see its "thematic signal, not genre" badge in the
+  not genre, signal, see its "thematic signal, not genre" badge in the
   app) has one of the strongest AMI-significance results of any signal.
-  That is not evidence lexical similarity recovers genre; it is exactly
+  That is not evidence lexical similarity recovers genre. It is exactly
   the coincidental vocabulary correlation (hymns share praise words,
   laments share complaint words) the thematic badge exists to warn
   against, and statistical significance and correct interpretation are two
@@ -557,11 +617,11 @@ inferential/diagnostic machinery close that gap, all in `pipeline/`:
   *some* real structure. (Known, documented limitation that the fix does
   not remove: resampling a relational similarity matrix by index (even
   without replacement) is still an imperfect proxy for a true i.i.d.
-  bootstrap, since psalms are not independent observations of each other;
-  see the function's own docstring.)
+  bootstrap, since psalms are not independent observations of each other.
+  See the function's own docstring.)
 - **Does TF-IDF weighting earn its place on a small, closed grammatical
   tag vocabulary?** TF-IDF's idf term is designed for large, open
-  vocabularies where a rare term is genuinely informative; over the
+  vocabularies where a rare term is genuinely informative. Over the
   verb-morphology signal's 47-tag stem-by-conjugation vocabulary, or
   person-profile's 15-tag vocabulary, a reviewer could reasonably suspect
   idf is mostly encoding "this tag is rare in Biblical Hebrew generally,"
@@ -572,21 +632,23 @@ inferential/diagnostic machinery close that gap, all in `pipeline/`:
   verb-morphology, idf values span a real range (1.05 to 5.32, std 1.38,
   reflecting genuinely uneven stem/conjugation rarity), and disabling idf
   collapses discriminativeness from 42.7% of pairs scoring below 0.5 down
-  to 22.5%, roughly halving how separable the signal is; the two
+  to 22.5%, roughly halving how separable the signal is. The two
   matrices' upper-triangle values correlate at only r = 0.94, not the
   r > 0.99 that would say idf is cosmetic. Person-profile shows the same
   direction on a smaller scale (49.7% down to 41.2%, r = 0.98). idf
   weighting is doing real, load-bearing work for both shipped signals,
   not decoration left over from a document-retrieval default.
 
-## Built on ETCBC's own tools
+## Built on ETCBC
 
 This project is not a from-scratch reimplementation: extraction runs
 directly on Text-Fabric against the BHSA database, using the same
-form-to-function methodology the ETCBC's own database is built on
+form-to-function methodology the BHSA database itself is built on
 (register the surface-level annotation first: `sp`, `vs`, `vt`, `lex`,
 then derive functional/interpretive labels on top of it, rather than
-baking interpretation into extraction). It also draws on the companion
+baking interpretation into extraction).
+
+It also draws on the companion
 [ETCBC/valence](https://github.com/ETCBC/valence) module (Janet Dyk,
 VU/ETCBC), loaded alongside BHSA via Text-Fabric's multi-location support
 since it shares the same node numbering: verbal-argument annotation BHSA
@@ -600,8 +662,10 @@ re-deriving structure from scratch.
 Every similarity method produces the same shape of result: an N×N
 similarity matrix plus a ranked-neighbors list per psalm, which is
 exactly what the app's method selector, heatmap, and network graph already
-handle generically; each new method of that kind drops in without
-changing any existing code, as it now has eleven times over. Unsupervised
+handle generically. Each new method of that kind drops in without
+changing any existing code, as it now has eleven times over.
+
+Unsupervised
 clustering produces a genuinely different shape (a partition of the whole
 corpus, not a pairwise matrix) that doesn't fit that UI at all, so the app
 is a single-page app with two client-side routes sharing the same
@@ -611,9 +675,13 @@ panel, at `/compare/`) and a **Cluster** route (recovering Gunkel's psalm
 genres with unsupervised clustering, via a 2D similarity scatter plot with
 per-cluster hull outlines plus a genre-alignment matrix checking each
 clustering against Gunkel's own psalm-by-psalm genre classification, at
-`/cluster/`). See `app/README.md`. A tiny router swaps the center panel
-between the two without a full page reload; visiting the site root
-redirects to `/compare/`. Both routes' method dropdowns draw their labels
+`/cluster/`). See `app/README.md`.
+
+A tiny router swaps the center panel
+between the two without a full page reload. Visiting the site root
+redirects to `/compare/`.
+
+Both routes' method dropdowns draw their labels
 from one shared
 registry (`app/src/lib/featureNames.ts`) so the same signal reads
 identically on each. Intra-psalm shift detection, which will produce a
@@ -644,7 +712,7 @@ it, not before.
   directly rather than a marketing page linking out to it. See
   `app/README.md`.
 - **`about/`**: the earlier static marketing page (unchanged content),
-  kept but no longer the site root; reachable at `/about/`.
+  kept but no longer the site root, reachable at `/about/`.
 - Root-level `index.html`, `assets/`, and `data/` are gitignored build
   output of `app/`, not committed source.
 
@@ -667,14 +735,16 @@ cd ../app && npm install && npm run build
 
 `npm run build` in `app/` writes the site directly to the repo root
 (`index.html`, `assets/`, `data/`) alongside the untouched `about/`
-folder; deploy that root as one static site. Since Compare and Cluster are
+folder. Deploy that root as one static site.
+
+Since Compare and Cluster are
 both client-side routes into that one built `index.html` rather than
 separate physical pages, the host must fall back to serving `index.html`
 for any path it doesn't otherwise recognize (e.g. a direct or refreshed
 load of `/cluster/`) instead of 404ing. A `wrangler.jsonc` at the repo root
 configures this for Cloudflare Workers static-asset deployment
 (`assets.directory: "."`, `assets.not_found_handling:
-"single-page-application"`, `npx wrangler deploy`); Cloudflare Pages,
+"single-page-application"`, `npx wrangler deploy`). Cloudflare Pages,
 GitHub Pages, or Netlify need the equivalent SPA-fallback setting pointed
 at the repo root.
 

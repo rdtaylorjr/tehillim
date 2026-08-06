@@ -45,7 +45,7 @@ export function describeScatterConfidence(
     return lowStructure
       ? {
           level: "low",
-          message: `This 2D layout captures only ${percent}% of this signal's cluster-relevant structure, and ${structureNote} - read this chart's shapes with real skepticism.`,
+          message: `This 2D layout captures only ${percent}% of this signal's cluster-relevant structure, and ${structureNote}. Read this chart's shapes with real skepticism.`,
         }
       : {
           level: "low",
@@ -56,7 +56,7 @@ export function describeScatterConfidence(
   if (lowStructure) {
     return {
       level: "moderate",
-      message: `This 2D layout captures only ${percent}% of this signal's cluster-relevant structure - treat exact point positions and hull boundaries as approximate.`,
+      message: `This 2D layout captures only ${percent}% of this signal's cluster-relevant structure. Treat exact point positions and hull boundaries as approximate.`,
     };
   }
 

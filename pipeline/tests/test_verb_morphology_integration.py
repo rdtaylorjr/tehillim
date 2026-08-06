@@ -5,10 +5,12 @@ These assertions were calibrated by first computing the real numbers (not
 guessed), so they reflect what the method actually does rather than what
 the roadmap hoped it would do. Notably, the broad `GUNKEL_GENRE_EXEMPLARS
 ["hymn"]` set does NOT show elevated internal cohesion as a whole (mean
-0.40, actually *below* the corpus-wide mean of 0.52) - it mixes formally
-very different hymn subtypes (a quiet creation hymn like Psalm 8, a mixed
-hymn/wisdom composition like Psalm 19, and pure imperative calls-to-praise
-like the Final Hallel), and lumping them together washes out the signal.
+0.41, actually *below* the corpus-wide mean of 0.52) - and this is not an
+exemplar-contamination artifact: the set already excludes Psalm 19 as a
+commonly-cited hymn/wisdom blend (see ground_truth.py), yet it still mixes
+formally very different *uncontested* hymn subtypes (a quiet creation hymn
+like Psalm 8 vs. pure imperative calls-to-praise like the Final Hallel),
+and lumping them together washes out the signal.
 
 The imperative-heavy hymnic pattern the roadmap specifically describes
 *does* show up clearly - but at the narrower grain of the Final Hallel

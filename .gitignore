@@ -11,3 +11,5 @@
 # app/ build, so it isn't regenerated or overwritten by npm run build.
 
 .DS_Store
+
+.claude/

@@ -211,7 +211,7 @@ export async function mountClusterPage(
     noStructureBadge.classList.toggle("is-hidden", method.nClusters > 1);
     if (method.nClusters <= 1) {
       noStructureBadge.textContent =
-        "This signal's cluster count is 1 - the gap statistic found no cluster structure beyond what a structureless reference with the same similarity values would show. The scatter plot and genre alignment below are technically well-defined but trivial for a single cluster, not evidence of real structure.";
+        "This signal's cluster count is 1. The gap statistic found no cluster structure beyond what a structureless reference with the same similarity values would show. The scatter plot and genre alignment below are technically well-defined but trivial for a single cluster, not evidence of real structure.";
     }
 
     picker?.destroy();

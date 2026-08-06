@@ -49,14 +49,14 @@ export function describeKStability(
   if (stability < LOW_STABILITY_THRESHOLD) {
     return {
       level: "low",
-      message: `This signal's cluster count (k=${nClusters}) was chosen by silhouette score, but agreed with resampling only ${percent}% of the time - close to a coin flip. Read this k as unsettled, not a fixed fact about the signal.`,
+      message: `This signal's cluster count (k=${nClusters}) was chosen by silhouette score, but agreed with resampling only ${percent}% of the time (close to a coin flip). Read this k as unsettled, not a fixed fact about the signal.`,
     };
   }
 
   if (stability < HIGH_STABILITY_THRESHOLD) {
     return {
       level: "moderate",
-      message: `This signal's cluster count (k=${nClusters}) was chosen by silhouette score and agreed with resampling ${percent}% of the time - a moderately stable choice.`,
+      message: `This signal's cluster count (k=${nClusters}) was chosen by silhouette score and agreed with resampling ${percent}% of the time (a moderately stable choice).`,
     };
   }
 

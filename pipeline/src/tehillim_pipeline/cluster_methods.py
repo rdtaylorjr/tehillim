@@ -55,11 +55,11 @@ _K_VALUES = range(2, 11)
 LEXICAL_CLUSTERING = SpectralClusteringMethod(
     name="lexical-spectral",
     description=(
-        "Spectral clustering over lexical similarity - partitions the "
+        "Spectral clustering over lexical similarity. Partitions the "
         "Psalter by shared Biblical Hebrew content-word vocabulary (nouns, "
         "verbs, adjectives, adverbs, proper nouns, interjections). A "
         "thematic grouping (which words two psalms share), not a genre "
-        "grouping - contrast with the syntactic/clause-structure methods "
+        "grouping. Contrast with the syntactic/clause-structure methods "
         "below, which cluster on grammatical form instead."
     ),
     k_selector=data_driven_k(_K_VALUES),
@@ -68,7 +68,7 @@ LEXICAL_CLUSTERING = SpectralClusteringMethod(
 ROOT_CLUSTERING = SpectralClusteringMethod(
     name="root-spectral",
     description=(
-        "Spectral clustering over root similarity - partitions the Psalter "
+        "Spectral clustering over root similarity. Partitions the Psalter "
         "by shared triliteral consonantal roots, a coarser cousin of "
         "lexical clustering that credits shared thematic vocabulary across "
         "derivationally related words (e.g. a verb and its cognate noun) "
@@ -80,8 +80,8 @@ ROOT_CLUSTERING = SpectralClusteringMethod(
 NAMED_ENTITY_IDENTITY_CLUSTERING = SpectralClusteringMethod(
     name="named-entity-identity-spectral",
     description=(
-        "Spectral clustering over named-entity-identity similarity - "
-        "partitions the Psalter by which specific proper nouns (personal "
+        "Spectral clustering over named-entity-identity similarity. "
+        "Partitions the Psalter by which specific proper nouns (personal "
         "names, place names, ...) two psalms share, e.g. a Zion-naming "
         "cluster distinct from a Sinai-naming one. Thematic, not genre."
     ),
@@ -91,7 +91,7 @@ NAMED_ENTITY_IDENTITY_CLUSTERING = SpectralClusteringMethod(
 LEXICAL_SET_CLUSTERING = SpectralClusteringMethod(
     name="lexical-set-spectral",
     description=(
-        "Spectral clustering over lexical-set similarity - partitions the "
+        "Spectral clustering over lexical-set similarity. Partitions the "
         "Psalter by numeral, focus-particle, and grammaticalized-"
         "preposition/adverb/copula tag frequency profile, a finer "
         "part-of-speech subclassification than `sp`. Sits between the "
@@ -105,22 +105,24 @@ LEXICAL_SET_CLUSTERING = SpectralClusteringMethod(
 NAMED_ENTITY_CLUSTERING = SpectralClusteringMethod(
     name="named-entity-spectral",
     description=(
-        "Spectral clustering over named-entity-type similarity - "
-        "partitions the Psalter by onomastic register (person-name-dense "
+        "Spectral clustering over named-entity-type similarity. "
+        "Partitions the Psalter by onomastic register (person-name-dense "
         "vs. place-name-dense vs. deity-name-dense, ...), independent of "
         "which specific names appear. Thematic, not genre."
     ),
     k_selector=data_driven_k(_K_VALUES),
 )
 
-# --- Syntactic / grammatical-profile: form-critical genre fingerprint ------
+# --- Syntactic / grammatical-profile: candidate form-critical signals -----
 
 VERB_MORPHOLOGY_CLUSTERING = SpectralClusteringMethod(
     name="verb-morphology-spectral",
     description=(
-        "Spectral clustering over verb-morphology similarity - partitions "
-        "the Psalter by verb stem/mood tag profile, a form-critical genre "
-        "fingerprint independent of vocabulary."
+        "Spectral clustering over verb-morphology similarity. Partitions "
+        "the Psalter by verb stem/conjugation tag profile (including "
+        "participles), motivated by Gunkel's form-critical genre "
+        "categories but validated only narrowly against them; see the "
+        "README."
     ),
     k_selector=data_driven_k(_K_VALUES),
 )
@@ -128,8 +130,8 @@ VERB_MORPHOLOGY_CLUSTERING = SpectralClusteringMethod(
 PERSON_PROFILE_CLUSTERING = SpectralClusteringMethod(
     name="person-profile-spectral",
     description=(
-        "Spectral clustering over grammatical-person similarity - "
-        "partitions the Psalter by individual vs. communal address, a "
+        "Spectral clustering over grammatical-person similarity. "
+        "Partitions the Psalter by individual vs. communal address, a "
         "classical form-critical marker distinct from verb morphology."
     ),
     k_selector=data_driven_k(_K_VALUES),
@@ -138,7 +140,7 @@ PERSON_PROFILE_CLUSTERING = SpectralClusteringMethod(
 CLAUSE_TYPE_CLUSTERING = SpectralClusteringMethod(
     name="clause-type-spectral",
     description=(
-        "Spectral clustering over clause-type similarity - partitions the "
+        "Spectral clustering over clause-type similarity. Partitions the "
         "Psalter by constituent-order/verb-form clause pattern, the most "
         "discriminative signal of any tried (66.7% of pairs score below "
         "0.5)."
@@ -149,7 +151,7 @@ CLAUSE_TYPE_CLUSTERING = SpectralClusteringMethod(
 TEXT_TYPE_CLUSTERING = SpectralClusteringMethod(
     name="text-type-spectral",
     description=(
-        "Spectral clustering over text-type similarity - partitions the "
+        "Spectral clustering over text-type similarity. Partitions the "
         "Psalter by narrative/discursive/quotation discourse register, "
         "BHSA's closest analogue to a discourse-register feature."
     ),
@@ -159,7 +161,7 @@ TEXT_TYPE_CLUSTERING = SpectralClusteringMethod(
 CLAUSE_RELATION_CLUSTERING = SpectralClusteringMethod(
     name="clause-relation-spectral",
     description=(
-        "Spectral clustering over clause-relation similarity - partitions "
+        "Spectral clustering over clause-relation similarity. Partitions "
         "the Psalter by how clauses relate to their context (coordinated, "
         "attributive, object clause, ...); sparse (22.5% of words) but "
         "real signal."
@@ -170,7 +172,7 @@ CLAUSE_RELATION_CLUSTERING = SpectralClusteringMethod(
 VERB_SENSE_CLUSTERING = SpectralClusteringMethod(
     name="verb-sense-spectral",
     description=(
-        "Spectral clustering over verb-sense similarity - partitions the "
+        "Spectral clustering over verb-sense similarity. Partitions the "
         "Psalter by verb argument-realization pattern (ETCBC/valence), "
         "covering 60.6% of Psalter verb occurrences."
     ),

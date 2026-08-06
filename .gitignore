@@ -1,7 +1,13 @@
 # Built output of app/ (run: cd app && npm run build), shipped straight to
-# the repo root so the domain root serves the app directly.
+# the repo root so the domain root serves the app directly. Compare and
+# Cluster are both routes within this single built index.html - see
+# app/src/lib/router.ts - so there's no separate /cluster/ build output.
 /index.html
 /assets/
 /data/
+
+# NOT ignored: /genre/ - a small, hand-maintained static redirect stub to
+# /cluster/ (this page's old URL), same as /about/ - not part of the
+# app/ build, so it isn't regenerated or overwritten by npm run build.
 
 .DS_Store

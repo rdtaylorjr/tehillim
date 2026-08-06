@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Compare the Psalms by lexical and syntactic similarity, computed from the ETCBC Hebrew Bible database via Text-Fabric."
+      content="Compare and cluster the Psalms by lexical and syntactic similarity, computed from the ETCBC Hebrew Bible database via Text-Fabric."
     />
-    <title>Compare the Psalms</title>
+    <title>Computational Analysis of Psalms</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,98 +17,12 @@
     />
   </head>
   <body>
-    <div id="app">
-      <header class="app-header">
-        <a
-          class="brand"
-          href="https://github.com/rdtaylorjr/tehillim"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="View source on GitHub"
-        >
-          <span class="brand-mark">ת</span>
-        </a>
-        <div class="title-block">
-          <h1>Compare the Psalms</h1>
-          <p class="subtitle">Psalm-to-psalm similarity across the Hebrew Psalter</p>
-        </div>
-        <div class="method-picker">
-          <label class="visually-hidden" for="method-select">Comparison method</label>
-          <select id="method-select"></select>
-        </div>
-      </header>
-
-      <main class="layout">
-        <section class="picker-panel" aria-label="Psalm picker">
-          <div class="picker-header">
-            <label for="psalm-search">Jump to Psalm</label>
-            <input
-              id="psalm-search"
-              type="number"
-              min="1"
-              max="150"
-              placeholder="1&ndash;150"
-              autocomplete="off"
-            />
-          </div>
-          <div
-            class="psalm-grid"
-            id="psalm-grid"
-            role="listbox"
-            aria-label="Select a psalm"
-          ></div>
-          <ul class="book-legend" id="book-legend" aria-label="Books of the Psalter"></ul>
-        </section>
-
-        <section class="viz-panel" aria-label="Visualization">
-          <p class="view-hint" id="method-description"></p>
-          <div class="view-tabs" role="tablist">
-            <button
-              class="view-tab is-active"
-              type="button"
-              data-view="matrix"
-              role="tab"
-              aria-selected="true"
-            >
-              Similarity Matrix
-            </button>
-            <button
-              class="view-tab"
-              type="button"
-              data-view="network"
-              role="tab"
-              aria-selected="false"
-            >
-              Network Graph
-            </button>
-          </div>
-
-          <div class="view" id="matrix-view" role="tabpanel">
-            <div class="heatmap-container" id="heatmap-container"></div>
-          </div>
-
-          <div class="view" id="network-view" role="tabpanel" hidden>
-            <div class="network-controls">
-              <label for="threshold-slider">Similarity threshold</label>
-              <input id="threshold-slider" type="range" min="0" max="1" step="0.01" />
-              <output id="threshold-value" for="threshold-slider"></output>
-              <span class="edge-count" id="edge-count"></span>
-            </div>
-            <div class="network-container" id="network-container"></div>
-          </div>
-        </section>
-
-        <aside class="detail-panel" id="detail-panel" aria-label="Psalm detail">
-          <div class="detail-empty">
-            <p>Select a psalm from the grid or the visualization to see its closest matches.</p>
-          </div>
-        </aside>
-      </main>
-
-      <footer class="app-footer">
-        <span id="corpus-credit"></span>
-      </footer>
-    </div>
+    <!-- Single-page app: main.ts is a tiny client-side router that mounts
+         either pages/comparePage.ts or pages/clusterPage.ts into #app,
+         swapping between them (and setting document.title) on navigation
+         without a full page reload. Neither page's own markup lives here -
+         each renders its own header/main/footer into #app on mount. -->
+    <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

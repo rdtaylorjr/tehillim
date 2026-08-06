@@ -41,3 +41,34 @@ export function buildNetworkGraph(
 
   return { nodes, edges };
 }
+
+/** Whether node `id` should read as de-emphasized given the current
+ * selection - true for every node outside the selected node's own
+ * neighbor set, but only once that selection actually has a visible
+ * neighbor (dimming the whole graph behind one edgeless dot is worse
+ * than not dimming at all). */
+export function isNodeDimmed(
+  id: number,
+  selected: number | null,
+  neighbors: ReadonlyMap<number, ReadonlySet<number>>,
+): boolean {
+  if (selected === null || id === selected) return false;
+  const neighborSet = neighbors.get(selected);
+  if (!neighborSet || neighborSet.size === 0) return false;
+  return !neighborSet.has(id);
+}
+
+
+/** Same de-emphasis rule as `isNodeDimmed`, for an edge: dimmed unless it
+ * touches the selected node. */
+export function isEdgeDimmed(
+  source: number,
+  target: number,
+  selected: number | null,
+  neighbors: ReadonlyMap<number, ReadonlySet<number>>,
+): boolean {
+  if (selected === null) return false;
+  const neighborSet = neighbors.get(selected);
+  if (!neighborSet || neighborSet.size === 0) return false;
+  return source !== selected && target !== selected;
+}

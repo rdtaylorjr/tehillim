@@ -27,3 +27,9 @@ export function bookOfPsalm(psalmNumber: number): PsalmBook {
 export function allBooks(): readonly PsalmBook[] {
   return BOOKS;
 }
+
+/** Last psalm number of every book except the last - divider positions
+ * for a book-ordered 150x150 grid. */
+export function bookBoundaries(): readonly number[] {
+  return BOOKS.slice(0, -1).map((book) => book.range[1]);
+}

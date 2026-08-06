@@ -2,6 +2,10 @@
   "name": "tehillim",
   "compatibility_date": "2026-08-04",
   "assets": {
-    "directory": "."
+    "directory": ".",
+    // Cluster is a client-side route (see app/src/lib/router.ts), not a
+    // physical page - a direct or refreshed load of /cluster/ has to fall
+    // back to index.html rather than 404ing so the SPA router can take over.
+    "not_found_handling": "single-page-application"
   }
 }

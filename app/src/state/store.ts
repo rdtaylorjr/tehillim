@@ -1,3 +1,5 @@
+import type { ReferenceColorMode } from "../lib/referenceColor";
+
 export type ViewMode = "matrix" | "network";
 
 export interface AppState {
@@ -5,6 +7,7 @@ export interface AppState {
   selectedMethodId: string;
   view: ViewMode;
   networkThreshold: number;
+  referenceColorMode: ReferenceColorMode;
 }
 
 export const initialState: AppState = {
@@ -14,13 +17,15 @@ export const initialState: AppState = {
   selectedMethodId: "",
   view: "matrix",
   networkThreshold: 0.35,
+  referenceColorMode: "book",
 };
 
 export type Action =
   | { type: "SELECT_PSALM"; psalm: number | null }
   | { type: "SET_METHOD"; methodId: string }
   | { type: "SET_VIEW"; view: ViewMode }
-  | { type: "SET_THRESHOLD"; threshold: number };
+  | { type: "SET_THRESHOLD"; threshold: number }
+  | { type: "SET_REFERENCE_COLOR_MODE"; mode: ReferenceColorMode };
 
 export function reduce(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -35,6 +40,8 @@ export function reduce(state: AppState, action: Action): AppState {
         ...state,
         networkThreshold: Math.min(1, Math.max(0, action.threshold)),
       };
+    case "SET_REFERENCE_COLOR_MODE":
+      return { ...state, referenceColorMode: action.mode };
   }
 }
 

@@ -9,6 +9,7 @@ dependencies = [
     "text-fabric>=13.1.0",
     "numpy>=1.26",
     "scikit-learn>=1.4",
+    "scipy>=1.11",
 ]
 
 [project.optional-dependencies]

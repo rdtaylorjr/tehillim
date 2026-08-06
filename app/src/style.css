@@ -90,6 +90,8 @@ button {
   margin: 0;
   letter-spacing: -0.01em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .subtitle {
@@ -117,7 +119,10 @@ button {
   flex-shrink: 0;
 }
 
-#method-select {
+/* .method-picker's <select> is shared by both pages (Compare's
+   #method-select, Genre's #cluster-method-select) - styled by class so
+   neither page needs its own copy of this rule. */
+.method-picker select {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--ink);
@@ -128,9 +133,34 @@ button {
   cursor: pointer;
 }
 
-#method-select:focus {
+.method-picker select:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+}
+
+/* Page nav (Compare / Cluster) */
+
+.page-nav {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  background: var(--sand);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.page-nav a {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.page-nav a[aria-current="page"] {
+  background: var(--accent);
+  color: white;
 }
 
 /* Layout */
@@ -142,6 +172,53 @@ button {
   gap: 20px;
   padding: 20px 28px;
   align-items: start;
+}
+
+/* Cluster page: the picker panel (Jump to Psalm + grid + legend) keeps
+   the exact same fixed width and grid sizing as Compare's, so the same
+   control reads as the same size on both pages - only the viz-panel
+   column is wider, to hold the two heatmap visualizations. */
+.layout-cluster {
+  grid-template-columns: 220px minmax(0, 1fr) 340px;
+}
+
+.view-caption {
+  margin: 0 0 12px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* A clean-looking scatter plot can still carry ~no real signal (see
+   lib/scatterConfidence.ts) - these three levels give that fact the same
+   visual weight as the chart itself, rather than a footnote easy to skip. */
+.scatter-confidence.is-moderate {
+  color: #8a6a1f;
+}
+
+.scatter-confidence.is-low {
+  color: #9a3b2e;
+  font-weight: 600;
+}
+
+/* Hulls drawn with the same visual confidence regardless of whether the
+   partition behind them is statistically real is exactly the problem
+   scatterConfidence.ts exists to fix - fading them out here is the visual
+   half of that fix, not just the caption text. */
+.scatter-container.is-low-confidence .scatter-hull-path,
+.scatter-container.is-low-confidence .scatter-hull-ring {
+  opacity: 0.35;
+}
+
+/* How settled a signal's data-chosen k actually is (see
+   lib/kStabilityConfidence.ts) - same three-level treatment as
+   scatter-confidence above, for the same reason. */
+.k-stability-note.is-moderate {
+  color: #8a6a1f;
+}
+
+.k-stability-note.is-low {
+  color: #9a3b2e;
+  font-weight: 600;
 }
 
 section,
@@ -185,6 +262,23 @@ aside {
 }
 
 #psalm-search:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+#reference-color-select {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: white;
+  cursor: pointer;
+}
+
+#reference-color-select:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
@@ -243,6 +337,13 @@ aside {
   flex-shrink: 0;
 }
 
+/* The picker legend's swatches match the psalm grid's own resting opacity
+   (see .psalm-cell above) - the grid's muted look is intentional; the
+   legend should read as "the same color," not a brighter reference. */
+.book-legend .legend-swatch {
+  opacity: 0.55;
+}
+
 /* Viz panel */
 
 .viz-panel {
@@ -271,6 +372,242 @@ aside {
   background: var(--accent);
   border-color: var(--accent);
   color: white;
+}
+
+/* Genre-alignment table (Cluster page) */
+
+.alignment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.alignment-table th,
+.alignment-table td {
+  padding: 6px 8px;
+  text-align: center;
+  border: 1px solid var(--line);
+}
+
+.alignment-corner {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.alignment-cluster-header {
+  font-size: 0.78rem;
+  color: var(--ink);
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.alignment-cluster-number {
+  font-weight: 700;
+}
+
+.alignment-cluster-genre {
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: normal;
+  max-width: 110px;
+}
+
+.alignment-score-summary {
+  display: flex;
+  gap: 18px;
+  margin: 0 0 10px;
+  padding: 10px 14px;
+  background: var(--sand);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.alignment-score b {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  margin-right: 4px;
+}
+
+/* Spells out the table's two visual channels (the number, the shading)
+   right next to the table, so it doesn't depend on the reader having
+   already read the prose paragraph above the whole section. */
+.alignment-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 12px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.alignment-legend-shade {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.alignment-legend-bar {
+  display: inline-flex;
+  height: 10px;
+  width: 120px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.alignment-legend-bar span {
+  flex: 1;
+}
+
+.alignment-table th.alignment-row-header {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.alignment-genre-name {
+  margin-right: 6px;
+}
+
+.alignment-genre-total {
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.alignment-table td {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--ink);
+  transition: background 0.15s;
+}
+
+.alignment-table td.is-dark {
+  color: white;
+}
+
+.alignment-table td.is-selected-cell {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* Genre-alignment view (Cluster page): alluvial diagram first, purity/AMI/ARI
+   stat tiles below it in a smaller, secondary role - see
+   components/genreAlignmentView.ts. */
+
+/* Shared "important caveat" callout style - used for the thematic-vs-genre
+   badge (genreAlignmentView.ts) and the no-cluster-structure badge
+   (clusterPage.ts) alike, since both are the same kind of message: read
+   the numbers below with this specific caution in mind. */
+.caveat-badge {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  background: #f4e9d8;
+  border: 1px solid #e0c79a;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  color: #7a5a1f;
+}
+
+.alignment-stat-tiles {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.alignment-stat-tile {
+  flex: 1;
+  padding: 6px 10px;
+  background: var(--sand);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.alignment-stat-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.alignment-stat-label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.alluvial-container {
+  width: 100%;
+  height: 520px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fbfaf7, #f4efe6);
+  border: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+
+.alluvial-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.alluvial-ribbon {
+  fill-opacity: 0.45;
+  stroke: none;
+  transition: fill-opacity 0.15s;
+}
+
+.alluvial-ribbon.is-dim {
+  fill-opacity: 0.08;
+}
+
+.alluvial-ribbon.is-selected {
+  fill-opacity: 0.85;
+}
+
+.alluvial-source-node,
+.alluvial-target-node {
+  cursor: default;
+}
+
+.alluvial-label {
+  font-size: 0.74rem;
+  fill: var(--ink);
+}
+
+.alluvial-label-source {
+  text-anchor: end;
+}
+
+.alluvial-label-target {
+  text-anchor: start;
+}
+
+.alignment-detail {
+  margin-top: 4px;
+}
+
+.alignment-detail summary {
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 6px 0;
+}
+
+.alignment-detail[open] summary {
+  color: var(--ink);
+  margin-bottom: 10px;
 }
 
 .view-hint {
@@ -322,6 +659,38 @@ aside {
   color: #ffd166;
 }
 
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  max-width: 760px;
+  margin: 10px auto 0;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.heatmap-legend-bar {
+  display: inline-flex;
+  height: 10px;
+  width: 200px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.heatmap-legend-bar span {
+  flex: 1;
+}
+
+.heatmap-legend-label {
+  font-variant-numeric: tabular-nums;
+}
+
+.heatmap-legend-caption {
+  margin-left: 2px;
+}
+
 .network-controls {
   display: flex;
   align-items: center;
@@ -361,6 +730,10 @@ aside {
   border: 1px solid var(--line);
 }
 
+.is-hidden {
+  display: none;
+}
+
 .network-container svg {
   width: 100%;
   height: 100%;
@@ -382,12 +755,87 @@ aside {
 }
 
 .network-edge {
-  stroke: var(--accent);
+  stroke: var(--ink);
+  stroke-width: 1.25px;
   fill: none;
 }
 
 .network-edge.is-dim {
   opacity: 0.06;
+}
+
+.scatter-container {
+  width: 100%;
+  height: 560px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fbfaf7, #f4efe6);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.scatter-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Point color is always the shared reference coloring (see
+   lib/referenceColor.ts) - cluster membership is the hull traced around
+   each cluster's points below, never a point's own fill. */
+.scatter-point {
+  cursor: pointer;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 1px;
+  transition: opacity 0.12s;
+}
+
+.scatter-point.is-selected {
+  stroke: var(--ink);
+  stroke-width: 2.5px;
+}
+
+/* Selecting a psalm dims every point/hull outside its cluster, mirroring
+   the Compare page's network graph dimming non-neighbors - the selected
+   psalm's own cluster (hull + members) is what's left at full strength. */
+.scatter-point.is-dim {
+  opacity: 0.18;
+}
+
+/* pointer-events: none so a click "inside" a hull's shaded region (which
+   covers most of the plot once several clusters overlap) still reaches
+   the svg background and clears the selection - only points themselves
+   are clickable. */
+.scatter-hull-path,
+.scatter-hull-ring,
+.scatter-hull-label {
+  transition: opacity 0.12s;
+  pointer-events: none;
+}
+
+.scatter-hull.is-dim {
+  opacity: 0.15;
+}
+
+.scatter-hull-path {
+  fill: rgba(31, 42, 48, 0.05);
+  stroke: var(--muted);
+  stroke-width: 1.25px;
+  stroke-dasharray: 4 3;
+}
+
+.scatter-hull-ring {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.25px;
+  stroke-dasharray: 3 3;
+}
+
+.scatter-hull-label {
+  font-size: 10px;
+  font-weight: 700;
+  fill: var(--muted);
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
 }
 
 .network-label {

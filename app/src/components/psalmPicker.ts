@@ -1,58 +1,33 @@
-import { allBooks, bookOfPsalm } from "../lib/books";
-import { createBookColorScale } from "../lib/colorScale";
+import type { ReferenceColoring } from "../lib/referenceColor";
 import type { PsalmCore } from "../types";
+import { createPsalmGrid, type PsalmGrid } from "./psalmGrid";
 
-export interface PsalmPicker {
-  setSelected(psalm: number | null): void;
-  destroy(): void;
-}
+export type PsalmPicker = PsalmGrid;
 
+/** The shared psalm-picker grid + legend used identically by both pages -
+ * `coloring` (Book / Gunkel family / Gunkel genre - see lib/referenceColor.ts)
+ * is the only thing that ever changes it, driven by the one shared
+ * reference-color dropdown in the picker header. */
 export function createPsalmPicker(
   gridEl: HTMLElement,
   legendEl: HTMLElement,
   psalms: PsalmCore[],
+  coloring: ReferenceColoring,
   onSelect: (psalm: number) => void,
 ): PsalmPicker {
-  const colorScale = createBookColorScale();
-  const cells = new Map<number, HTMLButtonElement>();
-
-  gridEl.innerHTML = "";
-  for (const { number: psalm } of psalms) {
-    const cell = document.createElement("button");
-    cell.type = "button";
-    cell.className = "psalm-cell";
-    cell.style.background = colorScale(bookOfPsalm(psalm).index);
-    cell.title = `Psalm ${psalm}`;
-    cell.setAttribute("role", "option");
-    cell.setAttribute("aria-label", `Psalm ${psalm}`);
-    cell.addEventListener("click", () => onSelect(psalm));
-    gridEl.append(cell);
-    cells.set(psalm, cell);
-  }
+  const grid = createPsalmGrid(gridEl, psalms, coloring.colorOf, onSelect);
 
   legendEl.innerHTML = "";
-  for (const book of allBooks()) {
+  for (const entry of coloring.legend) {
     const item = document.createElement("li");
     const swatch = document.createElement("span");
     swatch.className = "legend-swatch";
-    swatch.style.background = colorScale(book.index);
+    swatch.style.background = entry.color;
     const label = document.createElement("span");
-    label.textContent = `${book.name} (${book.range[0]}–${book.range[1]})`;
+    label.textContent = entry.label;
     item.append(swatch, label);
     legendEl.append(item);
   }
 
-  let selectedCell: HTMLButtonElement | null = null;
-
-  return {
-    setSelected(psalm: number | null): void {
-      selectedCell?.classList.remove("is-selected");
-      selectedCell = psalm !== null ? (cells.get(psalm) ?? null) : null;
-      selectedCell?.classList.add("is-selected");
-      selectedCell?.scrollIntoView({ block: "nearest" });
-    },
-    destroy(): void {
-      cells.clear();
-    },
-  };
+  return grid;
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { maxOffDiagonal, percentileOffDiagonal } from "./matrix";
+import { maxOffDiagonal, percentile, percentileOffDiagonal } from "./matrix";
 
 describe("maxOffDiagonal", () => {
   it("ignores the diagonal even when it holds the largest values", () => {
@@ -68,5 +68,47 @@ describe("percentileOffDiagonal", () => {
 
   it("returns 0 for an empty matrix", () => {
     expect(percentileOffDiagonal([], 50)).toBe(0);
+  });
+});
+
+describe("percentile", () => {
+  // sorted: 0.1, 0.2, 0.3, 0.4, 0.5, 0.6
+  const values = [0.4, 0.1, 0.6, 0.2, 0.5, 0.3];
+
+  it("returns the minimum value at the 0th percentile", () => {
+    expect(percentile(values, 0)).toBeCloseTo(0.1);
+  });
+
+  it("returns the maximum value at the 100th percentile", () => {
+    expect(percentile(values, 100)).toBeCloseTo(0.6);
+  });
+
+  it("does not mutate the input array", () => {
+    const original = [...values];
+    percentile(values, 50);
+    expect(values).toEqual(original);
+  });
+
+  it("returns a higher value for a higher percentile", () => {
+    expect(percentile(values, 90)).toBeGreaterThan(percentile(values, 10));
+  });
+
+  it("matches percentileOffDiagonal's own off-diagonal value set", () => {
+    // percentileOffDiagonal is the off-diagonal-extraction special case of
+    // this general-purpose function - same result for the same values.
+    const matrix = [
+      [1, 0.1, 0.2],
+      [0.1, 1, 0.3],
+      [0.2, 0.3, 1],
+    ];
+    expect(percentile([0.1, 0.2, 0.3], 90)).toBeCloseTo(percentileOffDiagonal(matrix, 90));
+  });
+
+  it("returns 0 for an empty array", () => {
+    expect(percentile([], 50)).toBe(0);
+  });
+
+  it("handles a single-value array", () => {
+    expect(percentile([0.42], 37)).toBeCloseTo(0.42);
   });
 });

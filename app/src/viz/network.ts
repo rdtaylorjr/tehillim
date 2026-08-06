@@ -1,25 +1,25 @@
 import * as d3 from "d3";
-import { createBookColorScale } from "../lib/colorScale";
-import { bookOfPsalm } from "../lib/books";
-import { buildNetworkGraph, type NetworkEdge, type NetworkNode } from "../lib/network";
+import type { ReferenceColoring } from "../lib/referenceColor";
+import { buildNetworkGraph, isEdgeDimmed, isNodeDimmed, type NetworkEdge, type NetworkNode } from "../lib/network";
 import type { MethodPayload } from "../types";
 
 interface SimNode extends NetworkNode, d3.SimulationNodeDatum {}
-interface SimEdge extends d3.SimulationLinkDatum<SimNode> {
-  weight: number;
-}
+type SimEdge = d3.SimulationLinkDatum<SimNode>;
 
 export interface NetworkOptions {
   container: HTMLElement;
   data: MethodPayload;
+  coloring: ReferenceColoring;
   onSelect: (psalm: number) => void;
   onEdgeCountChange?: (count: number) => void;
 }
 
-/** Force-directed similarity network: nodes are psalms, edges are pairs above a threshold. */
+/** Force-directed similarity network: nodes are psalms, edges are pairs above a threshold.
+ * Node fill always follows the shared reference coloring (Book / Gunkel family / Gunkel
+ * genre) - see setColoring() for switching it without restarting the force layout. */
 export class NetworkGraph {
   private readonly options: NetworkOptions;
-  private readonly colorScale = createBookColorScale();
+  private coloring: ReferenceColoring;
 
   private readonly svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
   private readonly edgeLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
@@ -34,6 +34,7 @@ export class NetworkGraph {
 
   constructor(options: NetworkOptions) {
     this.options = options;
+    this.coloring = options.coloring;
     options.container.innerHTML = "";
 
     this.svg = d3.select(options.container).append("svg");
@@ -76,6 +77,16 @@ export class NetworkGraph {
     this.applySelectionStyles();
   }
 
+  /** Swaps the reference coloring and recolors existing nodes in place -
+   * deliberately not a remount, so the force layout keeps its current
+   * positions instead of jumping and restarting just to change colors. */
+  setColoring(coloring: ReferenceColoring): void {
+    this.coloring = coloring;
+    this.nodeLayer
+      .selectAll<SVGCircleElement, SimNode>("circle")
+      .attr("fill", (d) => this.coloring.colorOf(d.id));
+  }
+
   destroy(): void {
     this.resizeObserver.disconnect();
     this.simulation.stop();
@@ -96,24 +107,20 @@ export class NetworkGraph {
     const simEdges: SimEdge[] = edges.map((e) => ({
       source: e.source,
       target: e.target,
-      weight: e.weight,
     }));
     for (const e of edges) {
       this.neighbors.get(e.source)?.add(e.target);
       this.neighbors.get(e.target)?.add(e.source);
     }
 
-    const maxWeight = edges.reduce((max, e) => Math.max(max, e.weight), 0.01);
-    const strokeWidth = d3.scaleLinear().domain([0, maxWeight]).range([0.4, 3]);
-    const strokeOpacity = d3.scaleLinear().domain([0, maxWeight]).range([0.08, 0.55]);
-
+    // Fixed style, not scaled by weight - a plain, consistent line for
+    // every edge (see .network-edge in style.css) rather than doubling
+    // as a second, thickness-encoded similarity scale.
     this.edgeLayer
       .selectAll<SVGLineElement, SimEdge>("line")
       .data(simEdges, (d) => `${(d.source as SimNode | number).valueOf()}-${(d.target as SimNode | number).valueOf()}`)
       .join("line")
-      .attr("class", "network-edge")
-      .attr("stroke-width", (d) => strokeWidth(d.weight))
-      .attr("stroke-opacity", (d) => strokeOpacity(d.weight));
+      .attr("class", "network-edge");
 
     const nodeSelection = this.nodeLayer
       .selectAll<SVGCircleElement, SimNode>("circle")
@@ -128,8 +135,8 @@ export class NetworkGraph {
             .call(this.dragBehavior()),
         (update) => update,
       )
-      .attr("fill", (d) => this.colorScale(d.book));
-    nodeSelection.append("title").text((d) => `Psalm ${d.id} (${bookOfPsalm(d.id).name})`);
+      .attr("fill", (d) => this.coloring.colorOf(d.id));
+    nodeSelection.append("title").text((d) => `Psalm ${d.id}`);
 
     this.labelLayer
       .selectAll<SVGTextElement, SimNode>("text")
@@ -157,25 +164,17 @@ export class NetworkGraph {
 
   private applySelectionStyles(): void {
     const selected = this.selected;
-    const neighborSet = selected !== null ? this.neighbors.get(selected) : undefined;
-    // Only dim the rest of the graph when the selection actually has visible
-    // edges at the current threshold - otherwise dimming everything just
-    // hides the graph behind one lonely dot.
-    const shouldDim = selected !== null && (neighborSet?.size ?? 0) > 0;
 
     this.nodeLayer
       .selectAll<SVGCircleElement, SimNode>("circle")
       .classed("is-selected", (d) => d.id === selected)
-      .classed("is-dim", (d) => shouldDim && d.id !== selected && !neighborSet?.has(d.id));
+      .classed("is-dim", (d) => isNodeDimmed(d.id, selected, this.neighbors));
 
-    this.edgeLayer
-      .selectAll<SVGLineElement, SimEdge>("line")
-      .classed("is-dim", (d) => {
-        if (!shouldDim) return false;
-        const s = (d.source as SimNode).id ?? d.source;
-        const t = (d.target as SimNode).id ?? d.target;
-        return s !== selected && t !== selected;
-      });
+    this.edgeLayer.selectAll<SVGLineElement, SimEdge>("line").classed("is-dim", (d) => {
+      const s = (d.source as SimNode).id ?? (d.source as number);
+      const t = (d.target as SimNode).id ?? (d.target as number);
+      return isEdgeDimmed(s, t, selected, this.neighbors);
+    });
   }
 
   private onTick(): void {

@@ -178,11 +178,13 @@ praise turn in psalms like 13 and 22) be located computationally?
 | **Grammatical-person profile** — TF-IDF cosine over word-level and pronominal-suffix person/number tag profiles | **Implemented, validated** | A second, independent form-critical marker (individual vs. communal address) — separates even more cleanly than verb morphology |
 | **Clause type and text type (`typ`, `txt`)** — TF-IDF cosine over clause-atom-type and narrative/discursive/quotation tag profiles | **Implemented, validated** | Completes what the verb-morphology method's own original motivation named (clause type, 40 constituent-order/verb-form patterns) and adds text type as a classical discourse-register marker — clause-type turned out to be the single most discriminative method of any tried (66.7% of psalm pairs score below 0.5) |
 | **Clause relation and verb sense** — TF-IDF cosine over clause-relation tags (`rela`) and ETCBC/valence verb argument-realization codes | **Implemented, validated** | Two further independent syntactic/semantic signals (sparse but real: 22.5% and 12.6% word coverage respectively) that survived the same discriminativeness screening six other clause/phrase-level candidates failed |
-| **Unsupervised genre clustering** — spectral clustering and Gaussian-mixture soft clustering over the signals above, plus density estimation to check whether the data actually supports Gunkel's ~6 categories, and Random Forest proximity as an independent cross-check | **Next** | The literature gap named above, directly — now backed by six independently-validated, non-redundant signals (verb morphology, person, clause type, text type, clause relation, verb sense) instead of two |
+| **Per-signal spectral clustering** — spectral clustering run independently over each of the eleven shipped similarity signals (the six syntactic/clause-structure signals above, plus the five lexical/vocabulary signals from the textual & structural track) | **Implemented** | The literature gap named above, directly, for the syntactic family — validated against Gunkel's exemplars (e.g. individual and communal laments separate cleanly under person-profile clustering); the lexical family's clusters are thematic rather than generic, surfaced side by side for comparison rather than silently omitted |
+| **Data-driven cluster count** — silhouette score (and, computed but not yet wired in as an alternative selector, spectral eigengap) across a range of k, replacing a shared fixed k=6 that had been chosen by analogy to Gunkel's genre count rather than by anything about the data | **Implemented** | A principled answer to "is 6 the right number": checked against real data, it wasn't, for either validated genre-fingerprint signal - every one of the eleven shipped clustering methods now picks its own k from its own similarity matrix (`pipeline/k_selection.py`) |
+| Gaussian-mixture soft clustering and Random Forest proximity as independent cross-checks against the spectral partitions above | **Next** | Soft cluster membership, and a structurally different affinity (Random Forest proximity) to see whether it agrees with spectral clustering's data-chosen k |
 | Sub-psalm segmentation via BHSA's half-verse (`label`) division | Planned (infrastructure) | Already-annotated in BHSA — no need to derive Masoretic colometry from scratch to get sub-verse units |
-| **Intra-psalm genre trajectory and shift detection** — smoothing splines → functional PCA to find trajectory shapes across the corpus; robust PCA (smooth low-rank "steady genre" + sparse "shift") and derivative-based edge detection to locate the shift point itself | Planned | The specific, most novel deliverable: mapping *where* a psalm moves from one genre to another |
-| Tensor decomposition (CP/Tucker/HOSVD) combining verb-morphology, clause-type, person, and text-type jointly rather than one signal at a time, feeding richer factors back into the clustering step | Planned | A principled way to combine independently-validated signals, rather than an ad hoc weighted average |
-| Multi-relational graph fusion with spectral/Louvain–Leiden community detection, over sub-psalm nodes | Planned (capstone) | Unifies clustering and shift detection into one computation: which community a psalm's own ordered nodes fall into, and where that community changes, *is* the shift map |
+| **Intra-psalm genre trajectory and shift detection** — derivative-based edge detection on a single smoothed signal first, checked against the two already-known shift cases (Psalms 13, 22); then, corpus-wide, functional PCA (with a pre-registered minimum-length threshold and an explicit absolute-vs-normalized-position choice, since fPCA's components mean different things under each and psalm length spans 2–176 verses) and robust PCA (low-rank "steady genre" + sparse "shift"), run alongside — not instead of — a single Hidden Markov Model fit jointly across all eligible psalms' half-verse sequences (Baum–Welch pools across the whole corpus; fitting it on only the 2 known cases would starve it of data). Any corpus-wide changepoint scan needs the same Benjamini–Hochberg correction already built for the exemplar-cohesion tests (`pipeline/analysis.py`), not a per-psalm p-value taken in isolation | Planned | The specific, most novel deliverable: mapping *where* a psalm moves from one genre to another - two independently-motivated methods (continuous-trajectory FDA vs. discrete-regime HMM) cross-checked against each other, not just one pipeline taken on faith |
+| Tensor decomposition (CP/Tucker/HOSVD) over a psalm × psalm × signal tensor — stacking the eleven already-computed similarity matrices, *not* a psalm × feature × signal tensor (which would first require harmonizing four incompatible tag vocabularies) | Planned | A principled way to combine independently-validated signals, rather than an ad hoc weighted average |
+| Multi-relational graph fusion with spectral/Louvain–Leiden community detection, over sub-psalm nodes | Planned (capstone) | Unifies clustering and shift detection into one computation: which community a psalm's own ordered nodes fall into, and where that community changes, *is* the shift map. Gated on two unresolved risks: whether half-verse-level (3–8 word) similarity carries any discriminative structure at all (checked the same way every whole-psalm signal was — % of pairs below 0.5 — before reaching for denoising machinery), and how the graph weighs within-psalm adjacency against cross-psalm similarity, a free parameter that should be tuned by cross-validating against the already-validated whole-psalm partitions rather than set by hand |
 
 ### Textual & structural track
 
@@ -204,7 +206,7 @@ literature review above.
 ### Cross-cutting
 
 - **Group LASSO / Elastic Net** (HDDA) — explainability: which *family* of features (not just which single tag) actually drives a proposed cluster or shift.
-- **Matrix completion / compressive sensing** (HDDA) — recovering full similarity structure from a reliable subset of sub-psalm comparisons, rather than computing every sparse, noisy short-unit pair directly.
+- **Matrix completion** (HDDA) — *not* a computational shortcut (computing every half-verse pair directly is trivial at this corpus size, ~4.5M pairs). The real use, if the discriminativeness check above passes: denoising a noisy-but-informative sub-psalm similarity matrix by assuming approximate low rank. It does not fix the different problem of a unit being too short to carry any signal at all - that's a resolution problem (half-verse vs. verse), not a missing-data problem, and no amount of completion recovers information the raw text never had.
 - **Shrinkage / regularized covariance estimation** — the same small-*n*, high-dimensional problem MiqraBERT's 1,650-pair training set faces, relevant anywhere a model gets fit against `ground_truth.py`'s necessarily small labeled sets.
 - **Continuous validation against scholarly ground truth** — ongoing since phase 0, the same discipline the cited papers use when validating against Samuel–Kings/Chronicles.
 
@@ -250,10 +252,27 @@ than shared vocabulary. This is deliberately *not* a parallel-passage
 detector: two psalms can score highly here while sharing no words at all.
 Validated empirically, not just asserted — and validated honestly: the
 broad, hand-picked "hymn" exemplar set does *not* cohere as a whole (mean
-internal similarity 0.40, actually below the 0.52 corpus-wide baseline),
-because it lumps together formally different hymn subtypes (a quiet
-creation hymn, a mixed hymn/wisdom composition, and pure imperative
-calls-to-praise). The narrower, textually homogeneous case the hypothesis
+internal similarity 0.40, actually below the 0.52 corpus-wide baseline) —
+confirmed by a label-permutation test (`pipeline/analysis.py`'s
+`permutation_test_cohesion`, the right tool here since pairwise
+similarities aren't independent observations), which finds this group is
+*not* more cohesive than a random same-size draw from the corpus at all
+(p = 0.97 against 20,000 permutations) — because it lumps together
+formally different hymn subtypes (a quiet creation hymn, a mixed
+hymn/wisdom composition, and pure imperative calls-to-praise). The same
+test applied to the other five exemplar sets, corrected for running all
+six as one family (Benjamini-Hochberg, `analysis.py`'s
+`benjamini_hochberg`) rather than reading each p-value in isolation, is a
+genuinely negative picture: none of the six genres reach significance
+under verb-morphology cohesion. Communal lament and thanksgiving look
+suggestive in isolation (raw p = 0.030, 0.055) but do not survive
+correction (BH-adjusted p = 0.16 each); individual lament, royal, and
+wisdom were never close (raw p = 0.13, 0.20, 0.66) at this sample size
+(5-10 psalms each) — a materially more cautious result than even the
+single-test picture already was, and the reason this section leads with
+the one exemplar pair that holds up on its own narrow textual grounds
+rather than as a genre-wide cohesion claim. The narrower, textually
+homogeneous case the hypothesis
 was really about holds cleanly: Psalm 150, an almost pure sequence of Piel
 imperatives ("Praise! Praise! Praise!"), is dramatically closer to its
 Final Hallel siblings (Psalm 149: 0.43; Psalm 146: 0.41) than to a stark
@@ -270,16 +289,31 @@ and pronominal-suffix person/number tag profiles ("I" vs. "we" vs. "you"
 vs. "he/she/it"), extracted from BHSA's `ps`/`nu`/`prs_ps`/`prs_nu`
 features — a second, independent form-critical marker distinguishing
 individual from communal address. This separates even more cleanly than
-verb morphology: individual laments (Psalms 3, 22, 38, 51, 88) average
-0.87 similarity with each other, communal laments (44, 74, 79, 80, 137)
-average 0.73, and the two groups average only 0.41 with *each other* —
-below the 0.51 corpus-wide baseline, meaning an individual and a communal
-lament are measurably *less* alike on this dimension than two random
-psalms. Psalm 22 ("My God, my God, why have you forsaken me") scores
-above 0.92 with fellow individual laments Psalm 38 and Psalm 88, and below
-0.45 with communal laments Psalm 44 and Psalm 137. Confirmed independent
-of both other methods: correlation with lexical similarity and with
-verb-morphology similarity are each below 0.5.
+verb morphology, and — unlike verb morphology's broader exemplar
+sets — part of the separation holds up under permutation testing even
+after correcting for multiple comparisons, not just as a raw score
+comparison: individual laments (Psalms 3, 22, 38, 51, 88) average 0.87
+similarity with each other, and this is the one cohesion result across
+both signals' twelve-test battery that survives Benjamini-Hochberg
+correction for running six genre tests per signal (raw p = 0.0018,
+BH-adjusted p = 0.011, against 20,000 permutations). Communal laments (44,
+74, 79, 80, 137) average 0.73 with each other — a real-looking raw signal
+(p = 0.029) that, like verb-morphology's, does not survive correction once
+weighed against the other five genre tests run alongside it (BH-adjusted
+p = 0.058, just above the conventional 0.05 threshold). The cross-group
+separation is the one claim in this paragraph that does not need that
+correction, because it was the single, specific, pre-registered contrast
+the person-profile hypothesis was actually about, not one of six
+exploratory per-genre tests: the two groups average only 0.41 similarity
+with *each other* — below the 0.51 corpus-wide baseline, meaning an
+individual and a communal lament are measurably *less* alike on this
+dimension than two random psalms — confirmed directly by a
+`permutation_test_separation` label-reshuffle test (p = 0.0033 against
+20,000 permutations). Psalm 22 ("My God, my God, why have you
+forsaken me") scores above 0.92 with fellow individual laments Psalm 38
+and Psalm 88, and below 0.45 with communal laments Psalm 44 and Psalm 137.
+Confirmed independent of both other methods: correlation with lexical
+similarity and with verb-morphology similarity are each below 0.5.
 
 **Lexical-set and named-entity-type profiles.** Two further syntactic
 signals: lexical set is BHSA's finer subclassification of part-of-speech
@@ -324,10 +358,185 @@ negative result treated with the same rigor as a positive one.
 
 All eleven shipped methods, and the interactive heatmap / network-graph /
 ranked-match visualization built on top of them, are live in the app —
-see `app/README.md`. 372 pipeline tests and 60 frontend tests currently
+see `app/README.md`. 534 pipeline tests and 205 frontend tests currently
 pass; `pipeline/ground_truth.py` and its integration tests are the
 executable form of the "validate every phase against known scholarship"
 discipline above.
+
+### Statistical validation methodology
+
+Descriptive point estimates (a raw mean similarity, a raw purity score)
+can't say on their own whether an observed pattern reflects real structure
+or corpus noise, and a classical t-test doesn't apply here: pairwise
+similarities aren't independent observations (each psalm appears in
+multiple pairs, so its own idiosyncrasy correlates every pair it's part
+of — a dyadic/network dependency, the same issue Mantel tests and QAP
+address in ecology and social-network analysis). Seven pieces of
+inferential/diagnostic machinery close that gap, all in `pipeline/`:
+
+- **Label-permutation significance testing, corrected for multiple
+  comparisons** (`analysis.py`'s `permutation_test_cohesion`/
+  `permutation_test_separation`, corrected by `benjamini_hochberg`) —
+  never assumes independence, only exchangeability under the null.
+  Applied to all six Gunkel exemplar groups for both validated
+  genre-fingerprint signals (twelve cohesion tests total, corrected as two
+  six-test families rather than twelve isolated p-values): verb-morphology
+  clears none of them, including its broad hymn set (p = 0.97, consistent
+  with its own already-documented negative result) and communal lament
+  and thanksgiving, whose raw p-values (0.030, 0.055) look suggestive
+  alone but don't survive correction (BH-adjusted p = 0.16 each).
+  Person-profile fares only slightly better: individual-lament cohesion is
+  the one cohesion result across both families that survives correction
+  (raw p = 0.0018, BH-adjusted p = 0.011), while its own communal-lament
+  cohesion (raw p = 0.029) falls just short once corrected
+  (BH-adjusted p = 0.058). The one claim that doesn't need this
+  correction — because it's the single, specific, pre-registered contrast
+  the hypothesis was actually about, not one of twelve exploratory
+  per-genre tests — is person-profile's individual-vs-communal separation
+  (p = 0.0033), which holds up cleanly on its own. Read together, this is
+  a materially more cautious picture than the raw score gaps alone
+  suggested: the project's one fully rigorous flagship claim is the
+  individual/communal-lament distinction specifically (cohesion of the
+  first group, plus the separation between the two) — not a general
+  "every exemplar genre coheres" result.
+- **Gap statistic** (`k_selection.py`'s `gap_statistic`; Tibshirani,
+  Walther & Hastie, 2001) — silhouette score, used below to choose k, is
+  mathematically undefined for a single cluster, so a silhouette-only
+  sweep over k≥2 can never conclude "this signal shows no real cluster
+  structure" — it always reports some k as the winner, however
+  uninformative the affinity matrix actually is. An earlier attempt to
+  patch this (testing a partition's silhouette against random relabelings
+  of itself) turned out to have no power to fail: see the
+  partition-significance bullet below. The gap statistic closes the gap
+  properly, comparing real within-cluster dispersion against dispersion
+  on reference matrices with no structure by construction (random
+  permutations of the real matrix's own similarity values, preserving
+  their distribution while destroying which specific psalms are similar
+  to which). Run against the real data, it does exactly what it exists to
+  do: ten of the eleven signals show real structure, but **text-type
+  genuinely shows none** — its silhouette sweep alone would have reported
+  a confident-looking k=8, but the gap statistic finds that dispersion
+  curve indistinguishable from a structureless reference's own, so
+  text-type now ships with k=1 (flagged plainly in the app) rather than an
+  8-way split with nothing real behind it.
+- **Data-driven k-selection** (`k_selection.py`, silhouette score across a
+  range of k, gated by the gap statistic above) — `cluster_methods.py`
+  used to fix `n_clusters=6` for every signal, chosen by matching Gunkel's
+  traditional genre count, not by anything about the data. That was never
+  checked until this diagnostic existed: run against the real similarity
+  matrices, neither validated genre-fingerprint signal actually preferred
+  6 (verb-morphology peaks sharply at k=2; person-profile peaks at k=4,
+  but only barely — its silhouette score at k=2 is 0.405 against k=4's
+  0.411, a near-tie that the subsample-stability figure below treats with
+  appropriate caution rather than reporting k=4 as a settled choice). Once
+  that was known, keeping an admittedly arbitrary number stopped being
+  defensible, so every one of the eleven shipped clustering methods now
+  picks its own k via `data_driven_k`, computed fresh from its own
+  similarity matrix — no shared cluster count at all. Ten signals land on
+  their own k above 1 (2 for root/verb-morphology/named-entity/
+  clause-relation/verb-sense, 4 for person-profile/clause-type, 5 for
+  named-entity-identity, 9 for lexical-set, 10 for lexical), and text-type
+  lands on k=1 (see above) — itself informative: the signals with the
+  least category structure to find collapse to the simplest possible
+  split (or, for text-type, to no split at all), while richer signals
+  support finer partitions.
+- **Adjusted Mutual Information, not plain NMI, with its own
+  permutation-significance test** (`genre_alignment.py`) — NMI has no
+  chance correction and biases upward with many small, uneven categories
+  (this data's exact shape: 14 Gunkel genres over 144 indexed psalms,
+  several with a single member). Recomputed at each signal's data-chosen
+  k: verb-morphology's k=2 partition scores barely above zero (AMI ≈
+  0.03), person-profile's k=4 partition is meaningfully stronger (AMI ≈
+  0.22) — a real, informative difference an arbitrary shared k had been
+  obscuring. Neither AMI's chance-correction nor an eyeballed comparison
+  actually tests whether one realized value is real, though, so every
+  signal's AMI is now also permutation-tested and corrected across all
+  eleven signals together with the same `benjamini_hochberg` used for the
+  exemplar battery. The honest result: six of the ten testable signals
+  clear correction (lexical, named-entity-identity, person-profile,
+  clause-type, and — only barely, at adjusted p ≈ 0.045 — verb-morphology
+  and named-entity), while root, lexical-set, clause-relation, and
+  verb-sense do not. Worth flagging plainly: **lexical** — a *thematic*,
+  not genre, signal (see its "thematic signal, not genre" badge in the
+  app) — has one of the strongest AMI-significance results of any signal.
+  That is not evidence lexical similarity recovers genre; it is exactly
+  the coincidental vocabulary correlation (hymns share praise words,
+  laments share complaint words) the thematic badge exists to warn
+  against — statistical significance and correct interpretation are two
+  different questions. The picture is also granularity-sensitive:
+  coarsening to Gunkel's 6 families drops named-entity-identity and
+  named-entity below significance while leaving the other four
+  unchanged, another reason the family view is offered as a genuinely
+  different lens rather than a cleaned-up version of the genre one.
+- **Spectral-embedding structure-captured** (`embedding.py`) — the
+  Cluster page's scatter plot used to lay psalms out via classical
+  (Torgerson) MDS, which optimizes a different objective entirely
+  (preserve variance in the raw similarity matrix) with no guaranteed
+  relationship to the space spectral clustering actually partitions.
+  Checked directly against real data, this let the 2D layout and the
+  cluster hulls drawn on top of it visually contradict each other — a
+  psalm could sit far from its own cluster's other members with nothing
+  mathematically "wrong," because the picture and the partition were two
+  independently-derived geometries presented as one. The scatter plot now
+  uses the same normalized-Laplacian eigenspace `SpectralClusteringMethod`
+  itself partitions, so for any signal whose k is 2, the picture *is*,
+  exactly, the space the algorithm used to decide. `structureCaptured`
+  reports what fraction of each signal's cluster-relevant spectral
+  structure the 2D view actually shows — 0.98 for named-entity and 0.85
+  for lexical-set (a 2D view is nearly the whole story), down to 0.15 for
+  lexical, whose data-chosen k=10 genuinely needs far more than 2
+  dimensions to represent. The analogue of classical MDS's own "percent
+  variance explained," adapted for the Laplacian's opposite convention (a
+  small eigenvalue, not a large one, is the meaningful one) — deliberately
+  not called "variance explained" itself, since it isn't a decomposition
+  of statistical variance.
+- **Partition-significance testing** (`k_selection.py`'s
+  `_partition_significance`) — tests each signal's own winning partition
+  against random relabelings of its own distance matrix. Run against the
+  real data, every one of the ten signals with real structure (all but
+  text-type, whose k=1 has no multi-cluster partition to test) lands at
+  the permutation floor (p ≈ 0.0005, the smallest value 2,000 permutations
+  can report) — an honest limit of this specific test worth stating
+  plainly rather than presenting as uniform proof of genre structure: a
+  spectral partition fit to *any* non-uniform affinity matrix will beat
+  pure label-scrambling almost every time, since real TF-IDF-cosine
+  matrices are never perfectly uniform even under a weak or non-genre
+  signal. This is exactly why the gap statistic above was built as a
+  separate, properly-powered test rather than relying on this one to
+  cover the "no real structure" case — it doesn't, and now correctly
+  doesn't have to, since text-type's k=1 already handles that possibility
+  upstream. This test rules out "this partition is statistically
+  indistinguishable from noise" for the other ten signals, but on its own
+  cannot certify that a partition is genre-meaningful — that question is
+  what the AMI significance above, and the stability figure below, are
+  actually for.
+- **Subsample k-stability** (`k_selection.py`'s `subsample_k_stability`)
+  — draws 100 random subsamples of the corpus (80% of the psalms each
+  time, *without* replacement) and reruns the silhouette k-sweep on each,
+  reporting what fraction agree with the k chosen on the full corpus.
+  This replaced an earlier bootstrap-*with*-replacement version that had
+  a real, uncorrected flaw: resampling a *relational* similarity matrix's
+  indices with replacement can draw the same psalm twice, creating an
+  off-diagonal pair that is trivially self-similar (1.0) with no analogue
+  in the real data. Subsampling without replacement has no such artifact
+  — and the fix was not merely more correct in principle, it materially
+  changed the answer: root's stability jumped from an apparently
+  near-arbitrary 3% under the flawed bootstrap to a genuinely
+  well-supported 94% under the corrected method, exactly the direction a
+  reviewer should worry about when a resampling scheme has a known
+  self-similarity artifact. The current, corrected picture: verb-morphology
+  and named-entity are perfectly stable (100%), root is now also highly
+  stable (94%), verb-sense is stable (80%), person-profile sits at a
+  moderate 63% (consistent with its own k=4-vs-k=2 near-tie noted above),
+  lexical-set (39%), clause-relation (35%), named-entity-identity (33%),
+  and lexical (19%) are progressively less settled, and clause-type (10%)
+  is close to a coin flip and should be read with real caution as a
+  specific cluster count, even though the gap statistic confirms it has
+  *some* real structure. (Known, documented limitation that the fix does
+  not remove: resampling a relational similarity matrix by index — even
+  without replacement — is still an imperfect proxy for a true i.i.d.
+  bootstrap, since psalms are not independent observations of each other;
+  see the function's own docstring.)
 
 ## Built on ETCBC's own tools
 
@@ -347,25 +556,37 @@ re-deriving structure from scratch.
 
 ## Application architecture
 
-Every method in the *textual & structural* track (and phase 1's family in
-the *genre* track) produces the same shape of result — an N×N similarity
-matrix plus a ranked-neighbors list per psalm — which is exactly what the
-current app's method selector, heatmap, and network graph already handle
-generically; each new method of that kind drops in without changing any
-existing code, as it now has ten times over. Unsupervised clustering and
-intra-psalm shift detection produce a genuinely different shape (a
-partition of the whole corpus; a sequence within one psalm) that doesn't
-fit that UI at all, so once the clustering phase lands the app splits into
-two pages — a **Compare** page (today's app, extended with more pairwise
-methods over time) and a **Genre** page (cluster view, and eventually the
-per-psalm trajectory chart) — sharing the same psalm picker and detail
-components rather than duplicating them.
+Every similarity method produces the same shape of result — an N×N
+similarity matrix plus a ranked-neighbors list per psalm — which is
+exactly what the app's method selector, heatmap, and network graph already
+handle generically; each new method of that kind drops in without
+changing any existing code, as it now has eleven times over. Unsupervised
+clustering produces a genuinely different shape (a partition of the whole
+corpus, not a pairwise matrix) that doesn't fit that UI at all, so the app
+is a single-page app with two client-side routes sharing the same
+psalm-picker and detail-panel components rather than duplicating them: a
+**Compare** route (the similarity heatmap, network graph, and ranked-match
+panel, at `/compare/`) and a **Cluster** route (recovering Gunkel's psalm
+genres with unsupervised clustering, via a 2D similarity scatter plot with
+per-cluster hull outlines plus a genre-alignment matrix checking each
+clustering against Gunkel's own psalm-by-psalm genre classification, at
+`/cluster/`) — see `app/README.md`. A tiny router swaps the center panel
+between the two without a full page reload; visiting the site root
+redirects to `/compare/`. Both routes' method dropdowns draw their labels
+from one shared
+registry (`app/src/lib/featureNames.ts`) so the same signal reads
+identically on each. Intra-psalm shift detection, which will produce a
+third result shape (a sequence within one psalm), is still planned.
 
 On the pipeline side, the same pattern extends the same way: a `Protocol`
-(`SimilarityMethod` today; a `ClusteringMethod` once phase 2 needs one) and
-a generic result type, composed in `methods.py` without either the
-extractor or the metric knowing about the other. New capability is added
-by introducing a new Protocol exactly when its first concrete method needs
+per computation kind (`SimilarityMethod` and, since the clustering phase,
+`ClusteringMethod`) paired with a generic result type, composed in
+`methods.py`/`cluster_methods.py` without the extractor or the metric
+knowing about each other. `ClusteringMethod` consumes an already-computed
+`SimilarityResult` rather than building its own features from scratch, so
+clustering is guaranteed to partition the same signal the Compare page
+shows, not a silently different one. New capability is added by
+introducing a new Protocol exactly when its first concrete method needs
 it - not before.
 
 ## Repository structure
@@ -405,10 +626,16 @@ cd ../app && npm install && npm run build
 
 `npm run build` in `app/` writes the site directly to the repo root
 (`index.html`, `assets/`, `data/`) alongside the untouched `about/`
-folder; deploy that root as one static site. A `wrangler.jsonc` at the
-repo root configures Cloudflare Workers static-asset deployment
-(`assets.directory: "."`, `npx wrangler deploy`); Cloudflare Pages,
-GitHub Pages, or Netlify work the same way pointed at the repo root.
+folder; deploy that root as one static site. Since Compare and Cluster are
+both client-side routes into that one built `index.html` rather than
+separate physical pages, the host must fall back to serving `index.html`
+for any path it doesn't otherwise recognize (e.g. a direct or refreshed
+load of `/cluster/`) instead of 404ing. A `wrangler.jsonc` at the repo root
+configures this for Cloudflare Workers static-asset deployment
+(`assets.directory: "."`, `assets.not_found_handling:
+"single-page-application"`, `npx wrangler deploy`); Cloudflare Pages,
+GitHub Pages, or Netlify need the equivalent SPA-fallback setting pointed
+at the repo root.
 
 ## References
 

@@ -67,7 +67,7 @@ function renderThematicBadge(): HTMLElement {
   const badge = document.createElement("div");
   badge.className = "caveat-badge";
   badge.textContent =
-    "Thematic signal, not genre - this clusters on shared vocabulary, not grammatical form, so the numbers below are a coincidence check against Gunkel's genres, not a validated recovery claim.";
+    "Thematic signal, not genre. This clusters on shared vocabulary, not grammatical form, so the numbers below are a coincidence check against Gunkel's genres, not a validated recovery claim.";
   return badge;
 }
 

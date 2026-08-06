@@ -69,8 +69,11 @@ class PsalmWord:
     word is not a verb."""
 
     verb_mood: str
-    """BHSA verb conjugation/mood code (e.g. ``impv``, ``impf``), or "" if
-    this word is not a verb."""
+    """BHSA verbal-tense/conjugation code (``vt``: e.g. ``impv``, ``impf``,
+    or the non-finite ``ptca``/``ptcp`` participles), or "" if this word is
+    not a verb. Named `verb_mood` for historical reasons; the value domain
+    is BHSA's conjugation system, not grammatical mood in the strict
+    linguistic sense."""
 
     person: str
     """BHSA grammatical person of the word itself (``p1``/``p2``/``p3``, or

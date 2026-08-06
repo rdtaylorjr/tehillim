@@ -100,19 +100,28 @@ ACROSTIC_PSALMS: tuple[int, ...] = (9, 10, 25, 34, 37, 111, 112, 119, 145)
 #: Deliberately small, low-controversy exemplar sets for Gunkel's major
 #: form-critical genres. This is NOT an exhaustive or definitive
 #: classification of the Psalter - genre assignment is genuinely contested,
-#: and many psalms mix genres (e.g. Psalm 19 combines a creation hymn with
-#: Torah wisdom). Each list below is restricted to psalms that are cited as
-#: that genre across multiple standard form-critical handbooks (Gunkel &
-#: Begrich, Gerstenberger, Westermann) with little disagreement. Use these
-#: only to test whether a method recovers *coarse* genre structure among
-#: its clearest cases - not for fine-grained genre classification.
+#: and many psalms mix genres. Each list below is restricted to psalms that
+#: are cited as that genre, *without a mixed-genre qualification*, across
+#: multiple standard form-critical handbooks (Gunkel & Begrich,
+#: Gerstenberger, Westermann) - use these only to test whether a method
+#: recovers *coarse* genre structure among its clearest cases, not for
+#: fine-grained genre classification.
+#:
+#: Four psalms that would otherwise qualify are deliberately excluded here
+#: as commonly-cited blends, kept out of the "low-controversy" claim rather
+#: than included with an unstated caveat: Psalm 19 (creation hymn crossed
+#: with Torah wisdom), Psalm 32 (thanksgiving crossed with the penitential
+#: tradition), Psalm 73 (individual lament that resolves into wisdom
+#: reflection, not wisdom throughout), and Psalm 133 (closer to a communal
+#: pilgrimage/harmony song than the didactic wisdom of 1/37/49/127/128 in
+#: Gunkel & Begrich's own scheme).
 GUNKEL_GENRE_EXEMPLARS: dict[str, tuple[int, ...]] = {
-    "hymn": (8, 19, 29, 33, 100, 103, 145, 146, 147, 148, 149, 150),
+    "hymn": (8, 29, 33, 100, 103, 145, 146, 147, 148, 149, 150),
     "individual_lament": (3, 22, 38, 51, 88),
     "communal_lament": (44, 74, 79, 80, 137),
-    "thanksgiving": (30, 32, 34, 116, 118),
+    "thanksgiving": (30, 34, 116, 118),
     "royal": (2, 18, 20, 21, 45, 72, 101, 110, 132, 144),
-    "wisdom": (1, 37, 49, 73, 127, 128, 133),
+    "wisdom": (1, 37, 49, 127, 128),
 }
 
 

@@ -58,7 +58,7 @@ ROOT_SIMILARITY = TfidfCosineSimilarity(
     name="root-tfidf-cosine",
     description=(
         "TF-IDF weighted cosine similarity over shared triliteral "
-        "consonantal roots - a coarser cousin of lexical similarity that "
+        "consonantal roots. A coarser cousin of lexical similarity that "
         "credits shared thematic vocabulary across derivationally related "
         "words (e.g. a verb and its cognate noun) that `lexeme` keeps "
         "distinct."
@@ -69,7 +69,7 @@ NAMED_ENTITY_IDENTITY_SIMILARITY = TfidfCosineSimilarity(
     name="named-entity-identity-tfidf-cosine",
     description=(
         "TF-IDF weighted cosine similarity restricted to proper-noun "
-        "lexemes (personal names, place names, ...) - isolates which "
+        "lexemes (personal names, place names, ...). Isolates which "
         "specific named entities two psalms share (e.g. both naming Zion), "
         "distinct from the type-only named-entity method and from general "
         "lexical similarity, where names are diluted among ~2100 other "
@@ -82,9 +82,11 @@ NAMED_ENTITY_IDENTITY_SIMILARITY = TfidfCosineSimilarity(
 VERB_MORPHOLOGY_SIMILARITY = TfidfCosineSimilarity(
     name="verb-morphology-tfidf-cosine",
     description=(
-        "TF-IDF weighted cosine similarity over verb stem and mood/"
-        "conjugation tag frequency profiles - a form-critical genre "
-        "fingerprint (Gunkel), not a lexical-overlap measure."
+        "TF-IDF weighted cosine similarity over verb stem and verbal "
+        "conjugation tag frequency profiles (including participles). "
+        "Motivated by Gunkel's form-critical genre categories, not a "
+        "lexical-overlap measure; see the README for how much of that "
+        "motivation the statistics actually bear out."
     ),
 )
 
@@ -93,7 +95,7 @@ PERSON_PROFILE_SIMILARITY = TfidfCosineSimilarity(
     description=(
         "TF-IDF weighted cosine similarity over grammatical-person tag "
         "frequency profiles (word-level and pronominal-suffix person and "
-        "number) - individual vs. communal address, a classical "
+        "number). Individual vs. communal address, a classical "
         "form-critical marker distinct from verb morphology."
     ),
 )
@@ -103,7 +105,7 @@ LEXICAL_SET_SIMILARITY = TfidfCosineSimilarity(
     description=(
         "TF-IDF weighted cosine similarity over lexical-set tag frequency "
         "profiles (numerals, focus particles, words grammaticalized into "
-        "prepositions/adverbs/copulas, ...) - a finer subclassification of "
+        "prepositions/adverbs/copulas, ...). A finer subclassification of "
         "part-of-speech than `sp`."
     ),
 )
@@ -112,8 +114,8 @@ NAMED_ENTITY_SIMILARITY = TfidfCosineSimilarity(
     name="named-entity-tfidf-cosine",
     description=(
         "TF-IDF weighted cosine similarity over named-entity *type* tag "
-        "frequency profiles (person, place, people/nation, deity, ...) - "
-        "an onomastic register (e.g. place-name-dense vs. person-name-dense), "
+        "frequency profiles (person, place, people/nation, deity, ...). "
+        "An onomastic register (e.g. place-name-dense vs. person-name-dense), "
         "not which specific names appear. See named-entity-identity for that."
     ),
 )
@@ -125,7 +127,7 @@ CLAUSE_TYPE_SIMILARITY = TfidfCosineSimilarity(
     description=(
         "TF-IDF weighted cosine similarity over clause-type tag frequency "
         "profiles (40 constituent-order/verb-form patterns, e.g. "
-        "wayyiqtol-null vs. nominal clause) - the most discriminative of "
+        "wayyiqtol-null vs. nominal clause). The most discriminative of "
         "the clause/phrase-structure methods (66.7% of pairs score below "
         "0.5), a finer decomposition of clause structure than verb "
         "morphology's stem/mood tags alone."
@@ -136,7 +138,7 @@ TEXT_TYPE_SIMILARITY = TfidfCosineSimilarity(
     name="text-type-tfidf-cosine",
     description=(
         "TF-IDF weighted cosine similarity over text-type tag frequency "
-        "profiles (narrative/discursive/quotation, with embedding) - "
+        "profiles (narrative/discursive/quotation, with embedding). "
         "BHSA's closest analogue to a discourse-register feature; a "
         "quotation-heavy psalm reads differently from a narrative-heavy one."
     ),
@@ -147,7 +149,7 @@ CLAUSE_RELATION_SIMILARITY = TfidfCosineSimilarity(
     description=(
         "TF-IDF weighted cosine similarity over clause-relation tag "
         "frequency profiles (coordinated, attributive, object clause, "
-        "...) - sparse (22.5% of words) but real signal, the same shape "
+        "...). Sparse (22.5% of words) but real signal, the same shape "
         "as lexical-set similarity."
     ),
 )
@@ -156,8 +158,8 @@ VERB_SENSE_SIMILARITY = TfidfCosineSimilarity(
     name="verb-sense-tfidf-cosine",
     description=(
         "TF-IDF weighted cosine similarity over verb argument-realization "
-        "codes from the ETCBC/valence module (Janet Dyk, VU/ETCBC) - "
-        "whether a verb occurrence takes a direct object, a prepositional "
+        "codes from the ETCBC/valence module (Janet Dyk, VU/ETCBC). "
+        "Whether a verb occurrence takes a direct object, a prepositional "
         "complement, or neither. Distinct from verb morphology: this is "
         "complementation pattern, not stem/mood. Covers 60.6% of Psalter "
         "verb occurrences (a documented subset of verbs, not all of them)."
@@ -196,7 +198,7 @@ PHRASE_DEPENDENT_POS_SIMILARITY = TfidfCosineSimilarity(
         "POS proportions are nearly constant across the Psalter (every "
         "psalm uses a broadly similar noun/verb/prep/conj mix), though a "
         "windowed, within-psalm version of this signal showed a real "
-        "local shift at Psalm 13's lament-to-praise turn - worth revisiting "
+        "local shift at Psalm 13's lament-to-praise turn. Worth revisiting "
         "as a segmentation signal rather than a corpus-wide one."
     ),
 )
@@ -207,7 +209,7 @@ CLAUSE_KIND_SIMILARITY = TfidfCosineSimilarity(
         "TF-IDF weighted cosine similarity over clause-kind (verbal/"
         "nominal/without-predication) tag frequency profiles. Not shipped: "
         "only 3 categories, dense (100% of words tagged), 0% of pairs "
-        "score below 0.5 - the same degenerate shape as nominal-state."
+        "score below 0.5. The same degenerate shape as nominal-state."
     ),
 )
 
@@ -218,7 +220,7 @@ PHRASE_FUNCTION_SIMILARITY = TfidfCosineSimilarity(
         "frequency profiles (predicate, subject, object, ...). Not "
         "shipped: despite good category balance (27 codes, none over "
         "24%), it's dense (100% of words tagged) and only 2.8% of pairs "
-        "score below 0.5 - balance alone doesn't rescue a dense feature."
+        "score below 0.5. Balance alone doesn't rescue a dense feature."
     ),
 )
 
@@ -236,7 +238,7 @@ PHRASE_TYPE_SIMILARITY = TfidfCosineSimilarity(
     description=(
         "TF-IDF weighted cosine similarity over phrase-type tag frequency "
         "profiles (verbal/nominal/prepositional phrase, ...). Not shipped: "
-        "dense (100% of words tagged), 0% of pairs score below 0.5 - the "
+        "dense (100% of words tagged), 0% of pairs score below 0.5. The "
         "same failure mode as phrase-dependent-pos despite 13 categories."
     ),
 )
@@ -248,7 +250,7 @@ PHRASE_VALENCE_SIMILARITY = TfidfCosineSimilarity(
         "complement/adjunct tag frequency profiles. Not shipped: despite a "
         "real 3-way split with no crushing single-category dominance, it's "
         "dense (69% of words tagged) and only 0.2% of pairs score below "
-        "0.5 - density mattered more than category balance."
+        "0.5. Density mattered more than category balance."
     ),
 )
 

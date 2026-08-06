@@ -127,7 +127,7 @@ export function renderAlluvialDiagram(
     targetNodes.selectAll("title").remove();
     targetNodes.append("title").text((n, i) => {
       const match = alignment.clusterGenreLabels[columnOrder[i]];
-      return match ? `${n.label}: ${n.value} psalms - best match: ${match}` : `${n.label}: ${n.value} psalms - no strong match`;
+      return match ? `${n.label}: ${n.value} psalms. Best match: ${match}` : `${n.label}: ${n.value} psalms. No strong match`;
     });
 
     genreLabelLayer

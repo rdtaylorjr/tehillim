@@ -1,12 +1,17 @@
-"""Verb-morphology feature extraction: a form-critical genre fingerprint.
+"""Verb-morphology feature extraction: a candidate form-critical signal.
 
 Gunkel's form-critical genres (hymn, individual lament, communal lament,
 thanksgiving, royal, wisdom) are defined by recurring formal patterns -
 imperative-heavy calls to praise vs. imperfect/cohortative-heavy petition,
-fixed opening/closing formulae - that verb stem (binyan) and mood/
-conjugation tags capture directly. This module builds a psalm x
-(stem, mood) tag-count FeatureMatrix, the same shape features.py builds for
-lexemes, so the same TfidfCosineSimilarity metric applies unchanged.
+fixed opening/closing formulae - that verb stem (binyan) and conjugation
+tags (including the two participle forms, which are non-finite and not
+strictly a "mood") capture directly. This is only the *form* leg of
+Gunkel's Gattung, not the Stimmung or Sitz im Leben he also required (see
+README's "Genre track" section); how much of the genre-cohesion claim
+survives permutation testing is reported honestly there, not assumed here.
+This module builds a psalm x (stem, conjugation) tag-count FeatureMatrix,
+the same shape features.py builds for lexemes, so the same
+TfidfCosineSimilarity metric applies unchanged.
 
 This is a genre-clustering signal, not a parallel-passage detector: two
 psalms can score highly similar here purely by sharing a formal register
@@ -33,8 +38,10 @@ _STEM_LABELS: dict[str, str] = {
     "poel": "Poel",
 }
 
-#: BHSA verb conjugation/mood codes -> human-readable labels.
-_MOOD_LABELS: dict[str, str] = {
+#: BHSA verb conjugation codes (BHSA's `vt`) -> human-readable labels.
+#: Includes the two participle forms (ptca/ptcp), which are non-finite
+#: verbal adjectives, not a tense/mood/conjugation in the strict sense.
+_CONJUGATION_LABELS: dict[str, str] = {
     "perf": "Perfect",
     "impf": "Imperfect",
     "wayq": "Wayyiqtol",
@@ -58,7 +65,7 @@ def _tag(word: PsalmWord) -> str:
 
 def _label(tag: str) -> str:
     stem, mood = tag.split(".", 1)
-    return f"{_STEM_LABELS.get(stem, stem)} {_MOOD_LABELS.get(mood, mood)}"
+    return f"{_STEM_LABELS.get(stem, stem)} {_CONJUGATION_LABELS.get(mood, mood)}"
 
 
 def build_verb_morphology_feature_matrix(psalms: list[Psalm]) -> FeatureMatrix:

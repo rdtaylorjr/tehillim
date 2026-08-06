@@ -58,8 +58,8 @@ export function renderGenreAlignmentMatrix(
     const th = document.createElement("th");
     th.className = "alignment-cluster-header";
     th.title = matchedGenre
-      ? `Cluster ${clusterIndex + 1} - best matches "${matchedGenre}"`
-      : `Cluster ${clusterIndex + 1} - no genre matched strongly enough`;
+      ? `Cluster ${clusterIndex + 1}. Best matches "${matchedGenre}"`
+      : `Cluster ${clusterIndex + 1}. No genre matched strongly enough`;
 
     const numberLine = document.createElement("div");
     numberLine.className = "alignment-cluster-number";

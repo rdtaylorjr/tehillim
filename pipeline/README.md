@@ -120,6 +120,94 @@ All shipped methods are exported together into one JSON payload (`cli.py`'s
 between them. Adding a new TF-IDF-cosine-style method is a one-line addition
 to `_METHODS` plus an entry in `app/src/main.ts`'s `METHOD_LABELS` map.
 
+## Clustering
+
+`clustering.py` defines a `ClusteringMethod` Protocol mirroring
+`similarity.py`'s `SimilarityMethod`, plus `SpectralClusteringMethod`, the
+one concrete implementation so far (`sklearn.cluster.SpectralClustering`,
+`affinity="precomputed"` - it consumes an already-computed
+`SimilarityResult`'s matrix directly rather than building its own features,
+so a clustering is guaranteed to partition the same signal the Compare page
+shows). `cluster_methods.py` configures one `SpectralClusteringMethod` per
+shipped similarity method - all eleven, each choosing its own cluster
+count via `data_driven_k` (`k_selection.py`) rather than a shared
+fixed number: an earlier version fixed every signal at `n_clusters=6`
+(Gunkel's traditional genre count), but that was arbitrary, and checking
+it against real data found neither validated genre-fingerprint signal
+actually preferred 6 (see the top-level README's "Statistical validation
+methodology"). This is a deliberate *per-signal* pass: each method gets
+its own independent partition, with no cross-signal fusion yet -
+comparing where these partitions agree and disagree is itself useful,
+before combining them.
+
+Two different questions get asked side by side. The six syntactic/
+clause-structure signals (verb morphology, person, clause type, text type,
+clause relation, verb sense) cluster on grammatical form and are validated
+against `ground_truth.py`'s `GUNKEL_GENRE_EXEMPLARS` (see
+`tests/test_clustering_integration.py`) - e.g. individual and communal
+laments separate cleanly under person-profile clustering. The five lexical/
+vocabulary signals (lexical, root, named-entity-identity, lexical-set,
+named-entity-type) cluster on content instead, surfacing *thematic* groups
+(psalms that share vocabulary or named entities), not genre - there's no
+Gunkel hypothesis to validate them against, so they only get the generic
+structural sanity checks (covers all 150 psalms, uses at most 6 labels).
+
+`cli.py`'s `run()` computes every clustering after every similarity result
+and writes them to a second payload, `app/public/data/clustering.json`,
+consumed by the frontend's Cluster route (`app/src/pages/clusterPage.ts`). Adding a new
+clustering method for an already-shipped similarity signal is a one-line
+addition to `cluster_methods.py` plus `cli.py`'s `_CLUSTER_METHODS` plus an
+entry in `app/src/lib/featureNames.ts`'s shared name registry (used by both
+the Compare and Cluster page dropdowns).
+
+## Genre alignment
+
+`gunkel_genre_index.py` is a comprehensive, psalm-by-psalm Gunkel genre
+classification (144 of 150 psalms - see the module docstring for the six
+excluded composite/partial ones and the resolution rules for cross-listed
+or hedged rows), sourced from Tyler F. Williams' compilation of Gunkel's
+1933 Einleitung. This supersedes nothing - `ground_truth.py`'s
+`GUNKEL_GENRE_EXEMPLARS` stays as the small, low-controversy set the
+verb-morphology and person-profile integration tests validate against; the
+new index is comprehensive enough to check a whole clustering against, not
+just a handful of clearest cases.
+
+`genre_alignment.py`'s `compute_genre_alignment()` cross-tabulates a
+`ClusteringResult` against the index: for each Gunkel genre, how many of
+its psalms landed in each of the clustering's clusters. `export_clustering.py`
+attaches this as `genreAlignment` on every method in `clustering.json`,
+rendered by the frontend as a genre x cluster contingency table
+(`app/src/components/genreAlignmentMatrix.ts`) - a genre concentrated in
+one cell means the signal recovers it; a genre spread evenly across a row
+means it doesn't.
+
+Cluster indices from `SpectralClusteringMethod` are otherwise arbitrary
+integers with no inherent meaning, so `compute_genre_alignment()` also
+solves the linear sum assignment problem (the Hungarian algorithm,
+`scipy.optimize.linear_sum_assignment`) on the contingency table, giving
+each cluster the single genre it overlaps with most - the same technique
+used to compute "clustering accuracy" against known labels. This matches
+on raw counts, not each genre's row-normalized share, deliberately: shares
+were tried and rejected because a genre with only 1-2 indexed psalms can
+trivially land 100% inside whatever cluster it happens to fall into, which
+is small-sample noise, not a real match (see the function's own docstring
+for the checked example). The accepted trade-off in the other direction -
+a genre with total overlap in one cluster can lose that cluster's label to
+a larger genre with merely a majority share, because more correctly-labeled
+psalms wins the sum this assignment maximizes - stays fully visible in the
+underlying counts; only the column's one-line caption is affected.
+
+Because that labeling is itself only a display convenience, three
+label-independent external validation scores are computed alongside it and
+also exported: **purity** (each cluster's largest single-genre share,
+unweighted by the matching), **Normalized Mutual Information**, and the
+**Adjusted Rand Index** (`sklearn.metrics`) - 0 for independent/random
+agreement with Gunkel's genres, 1 for an exact match. Checked against real
+computed output, not asserted from hope: the six syntactic/clause-structure
+signals score in the 0.03-0.26 NMI/ARI range against the full 14-genre
+index - real, non-chance structure (confirmed > 0 in every case checked),
+but modest, not a strong recovery of Gunkel's scheme.
+
 ## Setup
 
 Requires local clones of [ETCBC/bhsa](https://github.com/ETCBC/bhsa) and
@@ -143,7 +231,8 @@ pip install -e ".[dev]"
 python -m tehillim_pipeline.cli
 ```
 
-Writes `app/public/data/similarity.json`. Pass `--output` to write elsewhere.
+Writes `app/public/data/similarity.json` and `app/public/data/clustering.json`.
+Pass `--output` / `--cluster-output` to write elsewhere.
 
 ## Development
 

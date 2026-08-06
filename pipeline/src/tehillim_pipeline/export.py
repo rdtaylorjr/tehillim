@@ -48,14 +48,16 @@ def build_similarity_payload(
     return {
         "generatedAt": datetime.now(UTC).isoformat(timespec="seconds"),
         "corpus": CORPUS_SOURCE,
-        "psalms": [_psalm_core(psalm) for psalm in psalms],
+        "psalms": [psalm_core(psalm) for psalm in psalms],
         "methods": [_method_payload(psalms, computation) for computation in computations],
         "defaultMethod": default_method,
     }
 
 
-def _psalm_core(psalm: Psalm) -> dict[str, Any]:
-    """Method-independent psalm facts, exported once and shared."""
+def psalm_core(psalm: Psalm) -> dict[str, Any]:
+    """Method-independent psalm facts, exported once and shared - reused by
+    export_clustering.py so both payloads agree on this shape without
+    duplicating it."""
     return {
         "number": psalm.number,
         "verseCount": psalm.verse_count,

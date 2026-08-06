@@ -15,6 +15,19 @@ import pytest
 from tehillim_pipeline.clause_kind_profile import build_clause_kind_feature_matrix
 from tehillim_pipeline.clause_relation_profile import build_clause_relation_feature_matrix
 from tehillim_pipeline.clause_type_profile import build_clause_type_feature_matrix
+from tehillim_pipeline.cluster_methods import (
+    CLAUSE_RELATION_CLUSTERING,
+    CLAUSE_TYPE_CLUSTERING,
+    LEXICAL_CLUSTERING,
+    LEXICAL_SET_CLUSTERING,
+    NAMED_ENTITY_CLUSTERING,
+    NAMED_ENTITY_IDENTITY_CLUSTERING,
+    PERSON_PROFILE_CLUSTERING,
+    ROOT_CLUSTERING,
+    TEXT_TYPE_CLUSTERING,
+    VERB_MORPHOLOGY_CLUSTERING,
+    VERB_SENSE_CLUSTERING,
+)
 from tehillim_pipeline.corpus import DEFAULT_BHSA_TF_PATH, DEFAULT_VALENCE_TF_PATH, Corpus
 from tehillim_pipeline.features import build_lexical_feature_matrix
 from tehillim_pipeline.gender_profile import build_gender_profile_feature_matrix
@@ -297,3 +310,58 @@ def verb_sense_features(psalms):
 @pytest.fixture(scope="session")
 def verb_sense_result(verb_sense_features):
     return VERB_SENSE_SIMILARITY.compute(verb_sense_features)
+
+
+@pytest.fixture(scope="session")
+def lexical_clustering(similarity_result):
+    return LEXICAL_CLUSTERING.compute(similarity_result)
+
+
+@pytest.fixture(scope="session")
+def root_clustering(root_result):
+    return ROOT_CLUSTERING.compute(root_result)
+
+
+@pytest.fixture(scope="session")
+def named_entity_identity_clustering(named_entity_identity_result):
+    return NAMED_ENTITY_IDENTITY_CLUSTERING.compute(named_entity_identity_result)
+
+
+@pytest.fixture(scope="session")
+def lexical_set_clustering(lexical_set_result):
+    return LEXICAL_SET_CLUSTERING.compute(lexical_set_result)
+
+
+@pytest.fixture(scope="session")
+def named_entity_clustering(named_entity_result):
+    return NAMED_ENTITY_CLUSTERING.compute(named_entity_result)
+
+
+@pytest.fixture(scope="session")
+def verb_morphology_clustering(verb_morphology_result):
+    return VERB_MORPHOLOGY_CLUSTERING.compute(verb_morphology_result)
+
+
+@pytest.fixture(scope="session")
+def person_profile_clustering(person_profile_result):
+    return PERSON_PROFILE_CLUSTERING.compute(person_profile_result)
+
+
+@pytest.fixture(scope="session")
+def clause_type_clustering(clause_type_result):
+    return CLAUSE_TYPE_CLUSTERING.compute(clause_type_result)
+
+
+@pytest.fixture(scope="session")
+def text_type_clustering(text_type_result):
+    return TEXT_TYPE_CLUSTERING.compute(text_type_result)
+
+
+@pytest.fixture(scope="session")
+def clause_relation_clustering(clause_relation_result):
+    return CLAUSE_RELATION_CLUSTERING.compute(clause_relation_result)
+
+
+@pytest.fixture(scope="session")
+def verb_sense_clustering(verb_sense_result):
+    return VERB_SENSE_CLUSTERING.compute(verb_sense_result)

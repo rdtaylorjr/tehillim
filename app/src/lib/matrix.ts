@@ -10,7 +10,22 @@ export function maxOffDiagonal(matrix: number[][]): number {
 }
 
 /**
- * The value at `percentile` (0-100) among every distinct off-diagonal pair.
+ * The value at `p` (0-100) among `values` - nearest-rank method (no
+ * interpolation between adjacent values). Does not mutate its input.
+ */
+export function percentile(values: number[], p: number): number {
+  if (values.length === 0) return 0;
+
+  const sorted = [...values].sort((a, b) => a - b);
+  const index = Math.min(
+    sorted.length - 1,
+    Math.max(0, Math.ceil((p / 100) * sorted.length) - 1),
+  );
+  return sorted[index];
+}
+
+/**
+ * The value at `p` (0-100) among every distinct off-diagonal pair.
  *
  * Different similarity methods can have wildly different score
  * distributions (e.g. verb-morphology's baseline similarity runs far
@@ -19,19 +34,12 @@ export function maxOffDiagonal(matrix: number[][]): number {
  * another. Picking a threshold by percentile keeps the resulting edge
  * density comparable across methods.
  */
-export function percentileOffDiagonal(matrix: number[][], percentile: number): number {
+export function percentileOffDiagonal(matrix: number[][], p: number): number {
   const values: number[] = [];
   for (let i = 0; i < matrix.length; i++) {
     for (let j = i + 1; j < matrix.length; j++) {
       values.push(matrix[i][j]);
     }
   }
-  if (values.length === 0) return 0;
-
-  values.sort((a, b) => a - b);
-  const index = Math.min(
-    values.length - 1,
-    Math.max(0, Math.ceil((percentile / 100) * values.length) - 1),
-  );
-  return values[index];
+  return percentile(values, p);
 }

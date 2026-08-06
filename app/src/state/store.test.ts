@@ -41,6 +41,11 @@ describe("reduce", () => {
     expect(next.selectedMethodId).toBe("verb-morphology-tfidf-cosine");
   });
 
+  it("switches the reference color mode", () => {
+    const next = reduce(initialState, { type: "SET_REFERENCE_COLOR_MODE", mode: "genre" });
+    expect(next.referenceColorMode).toBe("genre");
+  });
+
   it("does not mutate the input state", () => {
     const before = { ...initialState };
     reduce(initialState, { type: "SELECT_PSALM", psalm: 5 });

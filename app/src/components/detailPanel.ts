@@ -127,7 +127,7 @@ export function renderDetailPanel(
   container.append(list);
 }
 
-function statItem(value: string, label: string): HTMLElement {
+export function statItem(value: string, label: string): HTMLElement {
   const span = document.createElement("span");
   const b = document.createElement("b");
   b.textContent = value;

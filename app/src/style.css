@@ -232,6 +232,7 @@ aside {
 /* Picker panel */
 
 .picker-panel {
+  width: 100%;
   padding: 18px;
   position: sticky;
   top: 88px;
@@ -848,6 +849,7 @@ aside {
 /* Detail panel */
 
 .detail-panel {
+  width: 100%;
   padding: 20px;
   position: sticky;
   top: 88px;

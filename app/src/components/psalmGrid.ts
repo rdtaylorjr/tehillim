@@ -32,6 +32,22 @@ export function createPsalmGrid(
 
   let selectedCell: HTMLButtonElement | null = null;
 
+  // Safari can fail to recompute this grid's column count when a media
+  // query crosses its breakpoint during a live window resize, leaving
+  // stale (often much wider) tracks until something else forces a fresh
+  // layout pass - toggling display does that.
+  let reflowFrame = 0;
+  const forceReflowOnResize = (): void => {
+    if (reflowFrame !== 0) return;
+    reflowFrame = requestAnimationFrame(() => {
+      reflowFrame = 0;
+      gridEl.style.display = "none";
+      void gridEl.offsetHeight;
+      gridEl.style.display = "";
+    });
+  };
+  window.addEventListener("resize", forceReflowOnResize);
+
   return {
     setSelected(psalm: number | null): void {
       selectedCell?.classList.remove("is-selected");
@@ -40,6 +56,8 @@ export function createPsalmGrid(
       selectedCell?.scrollIntoView({ block: "nearest" });
     },
     destroy(): void {
+      window.removeEventListener("resize", forceReflowOnResize);
+      cancelAnimationFrame(reflowFrame);
       cells.clear();
     },
   };

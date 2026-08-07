@@ -11,6 +11,7 @@ export interface AlluvialDiagram {
 const NODE_WIDTH = 12;
 const LABEL_GAP = 8;
 const LABEL_COLUMN = 190;
+const MIN_LABEL_COLUMN = 60;
 const NODE_GAP = 3;
 const TOP_PADDING = 8;
 const CLUSTER_FILL = "#a89a8a";
@@ -56,8 +57,12 @@ export function renderAlluvialDiagram(
     svg.attr("viewBox", [0, 0, width, height]);
 
     const plotHeight = Math.max(height - TOP_PADDING * 2, 1);
-    const leftX = LABEL_COLUMN;
-    const rightX = width - LABEL_COLUMN;
+    // On narrow containers a fixed 190px label column on each side would
+    // exceed the available width outright and invert the plot area, so it
+    // scales down with the container instead of staying fixed.
+    const labelColumn = Math.max(Math.min(LABEL_COLUMN, width * 0.28), MIN_LABEL_COLUMN);
+    const leftX = labelColumn;
+    const rightX = width - labelColumn;
 
     const layout: AlluvialLayout = computeAlluvialLayout(
       { sourceLabels: alignment.genres, targetLabels, counts },

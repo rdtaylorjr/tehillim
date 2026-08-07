@@ -104,8 +104,8 @@ cosine-similarity regression on 1,650 labeled Hebrew Bible verse pairs
 semantic, paraphrase-tolerant matching. MiqraBERT reports a real,
 substantial gain over the pretrained baseline. Distributional separation
 between parallel and non-parallel pairs improves 2.7-fold, shrinking the
-ambiguous overlap region from roughly 24% to about 6%. But there is a
-striking genre asymmetry. Recall@10 on narrative synoptic parallels, e.g.
+ambiguous overlap region from roughly 24% to about 6%. There is a genre
+asymmetry. Recall@10 on narrative synoptic parallels, e.g.
 Samuel–Kings/Chronicles, reaches 87.1%. Recall@10 on *poetic* parallelism
 falls below 9%. The authors attribute this directly to mean-pooling a
 whole verse into one vector, which erases the token-level signal poetic
@@ -202,7 +202,7 @@ sense.
 |---|---|---|
 | **Verb-morphology signal**: TF-IDF cosine over verb stem/conjugation tag profiles | **Implemented** | Gunkel's form leg operationalized directly from BHSA's own morphology, tested independently of vocabulary. See "Statistical validation methodology" for how much of the genre claim survives correction |
 | **Grammatical-person profile**: TF-IDF cosine over word-level and pronominal-suffix person/number tag profiles | **Implemented** | A second, independent form-critical marker (individual vs. communal address) that separates even more cleanly than verb morphology |
-| **Clause type and text type (`typ`, `txt`)**: TF-IDF cosine over clause-atom-type and narrative/discursive/quotation tag profiles | **Implemented** | Completes what the verb-morphology method's original motivation named (clause type, 40 constituent-order/verb-form patterns) and adds text type as a classical discourse-register marker. Clause-type is the single most discriminative method of any tried (66.7% of psalm pairs score below 0.5) |
+| **Clause type and text type (`typ`, `txt`)**: TF-IDF cosine over clause-atom-type and narrative/discursive/quotation tag profiles | **Implemented** | Completes what the verb-morphology method's original motivation named (clause type, 40 constituent-order/verb-form patterns) and adds text type as a classical discourse-register marker. Clause-type is the most discriminative method of any tried (66.7% of psalm pairs score below 0.5) |
 | **Clause relation and verb sense**: TF-IDF cosine over clause-relation tags (`rela`) and ETCBC/valence verb argument-realization codes | **Implemented** | Two further independent syntactic/semantic signals (sparse but real: 22.5% and 12.6% word coverage respectively) that survived the same discriminativeness screening six other clause/phrase-level candidates failed |
 | **Per-signal spectral clustering**: spectral clustering run independently over each of the eleven shipped similarity signals (the six syntactic/clause-structure signals above, plus the five lexical/vocabulary signals from the textual & structural track) | **Implemented** | The literature gap named above, directly, for the syntactic family: validated against Gunkel's exemplars (e.g. individual and communal laments separate cleanly under person-profile clustering). The lexical family's clusters are thematic rather than generic, surfaced side by side for comparison rather than silently omitted |
 | **Data-driven cluster count**: silhouette score (and, computed but not yet wired in as an alternative selector, spectral eigengap) across a range of k, replacing a shared fixed k=6 that had been chosen by analogy to Gunkel's genre count rather than by anything about the data | **Implemented** | A principled answer to "is 6 the right number": checked against real data, it wasn't, for either validated genre-fingerprint signal. Every one of the eleven shipped clustering methods now picks its own k from its own similarity matrix (`pipeline/k_selection.py`) |
@@ -306,14 +306,14 @@ verb-morphology cohesion. Communal lament and thanksgiving look
 suggestive in isolation, raw p = 0.030, 0.076, but do not survive
 correction, BH-adjusted p = 0.18, 0.23. Individual lament, royal, and
 wisdom were never close, raw p = 0.13, 0.20, 0.39, at this sample size
-(4-11 psalms each). This is a materially more cautious result than even
-the single-test picture already was. It is why this section leads with
+(4-11 psalms each), a more cautious result than the single-test picture
+suggested. It is why this section leads with
 the one exemplar pair that holds up on its own narrow textual grounds
 rather than as a genre-wide cohesion claim.
 
 The narrower, textually homogeneous case the hypothesis was really about
 holds cleanly. Psalm 150, an almost pure sequence of Piel imperatives
-("Praise! Praise! Praise!"), is dramatically closer to its Final Hallel
+("Praise! Praise! Praise!"), is closer to its Final Hallel
 siblings, Psalm 149 at 0.43 and Psalm 146 at 0.41, than to a stark
 individual lament, Psalm 88 at 0.003, or a quiet creation hymn, Psalm 8
 at 0.008. In the live app, Psalm 150's single closest match under this
@@ -368,9 +368,9 @@ coarser sibling of the identity-based method above.
 clause/phrase-structure signals, added in the most recent extraction
 pass and screened against the same discriminativeness bar as everything
 else. Clause type (`typ`, 40 constituent-order/verb-form patterns like
-wayyiqtol-null vs. nominal clause) is the single most discriminative
-method of any tried. 66.7% of psalm pairs score below 0.5, ahead of even
-lexical similarity's own spread. Text type (`txt`,
+wayyiqtol-null vs. nominal clause) is the most discriminative method of
+any tried. 66.7% of psalm pairs score below 0.5, ahead of lexical
+similarity's own spread. Text type (`txt`,
 narrative/discursive/quotation with embedding) is BHSA's closest
 analogue to a discourse-register feature. There is no separate
 "discourse" object type in the corpus. `sentence`, `sentence_atom`, and
@@ -493,7 +493,7 @@ pieces of inferential/diagnostic machinery close that gap, all in
   preserve their distribution while destroying which specific psalms
   are similar to which. Run against the real data, it does exactly what
   it exists to do. Ten of the eleven signals show real structure, but
-  **text-type genuinely shows none**. Its silhouette sweep alone would
+  **text-type shows none**. Its silhouette sweep alone would
   have reported a confident-looking k=8. The gap statistic finds that
   dispersion curve indistinguishable from a structureless reference's
   own, so text-type now ships with k=1, flagged plainly in the app,
@@ -526,34 +526,33 @@ pieces of inferential/diagnostic machinery close that gap, all in
   indexed psalms, several with a single member. Recomputed at each
   signal's data-chosen k, verb-morphology's k=2 partition scores barely
   above zero, AMI ≈ 0.03. Person-profile's k=4 partition is meaningfully
-  stronger, AMI ≈ 0.22, a real, informative difference an arbitrary
+  stronger, AMI ≈ 0.22, a difference an arbitrary
   shared k had been obscuring. Neither AMI's chance-correction nor an
   eyeballed comparison actually tests whether one realized value is
   real, though. Every signal's AMI is now also permutation-tested and
   corrected across all eleven signals together with the same
-  `benjamini_hochberg` used for the exemplar battery. The honest result
+  `benjamini_hochberg` used for the exemplar battery. The result
   is that six of the ten testable signals clear correction, lexical,
   named-entity-identity, person-profile, clause-type, and, only barely
   at adjusted p ≈ 0.045, verb-morphology and named-entity. Root,
-  lexical-set, clause-relation, and verb-sense do not. Worth flagging
-  plainly, **lexical**, a *thematic*, not genre, signal, see its
-  "thematic signal, not genre" badge in the app, has one of the
-  strongest AMI-significance results of any signal. That is not
-  evidence lexical similarity recovers genre. It is exactly the
-  coincidental vocabulary correlation, hymns share praise words, laments
-  share complaint words, that the thematic badge exists to warn against.
-  Statistical significance and correct interpretation are two different
-  questions. The picture is also granularity-sensitive. Coarsening to
-  Gunkel's 6 families drops named-entity-identity and named-entity below
-  significance while leaving the other four unchanged, another reason
-  the family view is offered as a genuinely different lens rather than
-  a cleaned-up version of the genre one.
+  lexical-set, clause-relation, and verb-sense do not. **Lexical**, a
+  *thematic*, not genre, signal, see its "thematic signal, not genre"
+  badge in the app, has one of the strongest AMI-significance results of
+  any signal. That is not evidence lexical similarity recovers genre. It
+  is exactly the coincidental vocabulary correlation, hymns share praise
+  words, laments share complaint words, that the thematic badge exists
+  to warn against. Statistical significance and correct interpretation
+  are two different questions. The picture is also granularity-sensitive.
+  Coarsening to Gunkel's 6 families drops named-entity-identity and
+  named-entity below significance while leaving the other four unchanged,
+  another reason the family view is offered as a different lens rather
+  than a cleaned-up version of the genre one.
 - **Semantic-embedding AMI, run through the same battery** (`pipeline/
   semantic_embedding.py`, evaluated at the 6-family level, joint BH
   correction across all fifteen signals together, not run in
-  isolation). The honest result cuts against this method's own working
-  hypothesis in two separate ways. First, **unfinetuned AlephBERT, not
-  MiqraBERT, is the strongest signal in the entire project**.
+  isolation). The result cuts against this method's own working
+  hypothesis in two ways. First, **unfinetuned AlephBERT, not
+  MiqraBERT, is the strongest signal of any tested**.
   Mean-pooled AlephBERT reaches AMI ≈ 0.24, BH-adjusted p ≈ 0.0015,
   ahead of person-profile (≈ 0.15), clause-type (≈ 0.14), and every
   other signal tested, syntactic or lexical. Second, **MiqraBERT
@@ -576,8 +575,8 @@ pieces of inferential/diagnostic machinery close that gap, all in
   our own labels" question is exactly what this method's design already
   rejects, in favor of testing an independently-built representation.
 
-  Two further findings from the immediate scholarly lineage this result
-  sits in are worth citing directly. Wido van Peursen and Eep Talstra's
+  Two further findings come from the immediate scholarly lineage this
+  result sits in. Wido van Peursen and Eep Talstra's
   prior computational work on parallel-passage detection in 2 Kings
   18-19 (*Vetus Testamentum* 57/1, 2007) is the methodological precedent
   MiqraBERT's own paper cites. And Bert Lobbezoo's 2015 TU Delft thesis
@@ -608,7 +607,7 @@ pieces of inferential/diagnostic machinery close that gap, all in
   cluster-relevant spectral structure the 2D view actually shows. It's
   0.98 for named-entity and 0.85 for lexical-set, where a 2D view is
   nearly the whole story, down to 0.15 for lexical, whose data-chosen
-  k=10 genuinely needs far more than 2 dimensions to represent. This is
+  k=10 needs far more than 2 dimensions to represent. This is
   the analogue of classical MDS's own "percent variance explained,"
   adapted for the Laplacian's opposite convention, where a small
   eigenvalue, not a large one, is the meaningful one. It's deliberately
@@ -620,9 +619,8 @@ pieces of inferential/diagnostic machinery close that gap, all in
   the real data, every one of the ten signals with real structure, all
   but text-type, whose k=1 has no multi-cluster partition to test, lands
   at the permutation floor, p ≈ 0.0005, the smallest value 2,000
-  permutations can report. That's an honest limit of this specific test
-  worth stating plainly rather than presenting as uniform proof of
-  genre structure. A spectral partition fit to *any* non-uniform
+  permutations can report. That's a limit of this specific test,
+  not uniform proof of genre structure. A spectral partition fit to *any* non-uniform
   affinity matrix will beat pure label-scrambling almost every time,
   since real TF-IDF-cosine matrices are never perfectly uniform even
   under a weak or non-genre signal. This is exactly why the gap
@@ -645,7 +643,7 @@ pieces of inferential/diagnostic machinery close that gap, all in
   1.0, with no analogue in the real data. Subsampling without
   replacement has no such artifact, and the fix materially changed the
   answer. Root's stability jumped from an apparently near-arbitrary 3%
-  under the flawed bootstrap to a genuinely well-supported 94% under
+  under the flawed bootstrap to a well-supported 94% under
   the corrected method. That's exactly the direction a reviewer should
   worry about when a resampling scheme has a known self-similarity
   artifact. Here is the current, corrected picture. Verb-morphology and
@@ -664,7 +662,7 @@ pieces of inferential/diagnostic machinery close that gap, all in
   other. See the function's own docstring.
 - **Does TF-IDF weighting earn its place on a small, closed grammatical
   tag vocabulary?** TF-IDF's idf term is designed for large, open
-  vocabularies where a rare term is genuinely informative. Over the
+  vocabularies where a rare term is informative. Over the
   verb-morphology signal's 47-tag stem-by-conjugation vocabulary, or
   person-profile's 15-tag vocabulary, a reviewer could reasonably
   suspect idf is mostly encoding "this tag is rare in Biblical Hebrew
@@ -673,7 +671,7 @@ pieces of inferential/diagnostic machinery close that gap, all in
   method's TF-IDF-cosine matrix vs. the same feature counts run through
   an idf-disabled TfidfTransformer, that suspicion doesn't hold. For
   verb-morphology, idf values span a real range, 1.05 to 5.32, std
-  1.38, reflecting genuinely uneven stem/conjugation rarity. Disabling
+  1.38, reflecting uneven stem/conjugation rarity. Disabling
   idf collapses discriminativeness from 42.7% of pairs scoring below 0.5
   down to 22.5%, roughly halving how separable the signal is. The two
   matrices' upper-triangle values correlate at only r = 0.94, not the
@@ -709,7 +707,7 @@ what the app's method selector, heatmap, and network graph already
 handle generically. Each new method of that kind drops in without
 changing any existing code, as it now has eleven times over.
 
-Unsupervised clustering produces a genuinely different shape, a
+Unsupervised clustering produces a different shape, a
 partition of the whole corpus, not a pairwise matrix, that doesn't fit
 that UI at all. So the app is a single-page app with two client-side
 routes sharing the same psalm-picker and detail-panel components rather

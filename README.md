@@ -144,8 +144,8 @@ cosine similarity), a problem the papers reviewed above only ever address
 by fine-tuning, never by directly correcting the embedding geometry
 itself.
 
-That gap — poetic-genre failure driven by pooling granularity, and
-anisotropy left uncorrected — is what the textual & structural track
+Poetic-genre failure driven by pooling granularity, and
+anisotropy left uncorrected is what the textual & structural track
 below is built to close. It is a distinct question from the genre track:
 none of the literature surveyed above attempts unsupervised genre
 discovery, let alone locating a genre shift *within* a single psalm (the
@@ -161,7 +161,7 @@ check it against the scholarly ground truth in `pipeline/ground_truth.py`
 (twin psalms, the Elohistic Psalter boundary, the Songs of Ascent, the
 Egyptian and Final Hallel, refrain psalms, acrostics, Wilson's five-book
 editorial frames, and a deliberately hedged set of Gunkel's form-critical
-genre exemplars) *before* moving on — the same discipline Smiley's and
+genre exemplars) *before* moving on. This is the same discipline Smiley's and
 Naaijer & Roorda's papers use when validating against known
 Samuel–Kings/Chronicles parallels.
 

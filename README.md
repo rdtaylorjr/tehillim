@@ -1,18 +1,13 @@
 # Computational Analysis of Psalms (tehillim.dev)
 
-This repo investigates how the Psalter's internal similarities can be
-recovered computationally from the Masoretic Text. Verbatim duplicates,
-formulaic genre patterns, poetic parallelism, and editorial groupings are
-all in scope. Each representation makes some things visible and hides
-others. Representations here are lexical, morphosyntactic,
-embedding-based, or structural.
-
-It is built on [ETCBC's](https://etcbc.nl/) infrastructure, the
-[BHSA](https://github.com/ETCBC/bhsa) database, and
-[Text-Fabric](https://annotation.github.io/text-fabric/). It works as a
-laboratory for a layered sequence of comparison methods. Each method is
-motivated by a documented gap in the literature. Each is validated
-against known scholarly landmarks before the next is attempted. Each is
+This is an exploratory data analysis of the Psalter's internal
+similarities, built on ETCBC's BHSA database and Text-Fabric. It tests
+whether verbatim duplicates and formulaic genre patterns can be recovered
+computationally from the Masoretic Text, using
+representations that are lexical, morphosyntactic, clause- and
+discourse-level, or embedding-based. Each method is motivated by
+specific gaps in the literature reviewed below. Each is validated
+against known scholarly landmarks before the next is attempted, and
 expressed as running, tested code, not only as a proposal.
 
 Eleven comparison methods are live in the interactive app today. This

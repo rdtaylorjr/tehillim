@@ -10,12 +10,27 @@ import { baseFeatureId } from "./featureNames";
 //: as thematic leanings, not genre." If cluster_methods.py's family split
 //: ever changes, this set needs updating to match - see that module's own
 //: docstring for the authoritative grouping.
+//:
+//: alephbert-mean-pool/alephbert-soft-alignment (semantic_embedding.py)
+//: are included for the same underlying reason via a different mechanism:
+//: AlephBERT's strong genre-family AMI could reflect psalms clustering by
+//: *content/theme* (an embedding space naturally groups "about praise"
+//: text together) rather than Gunkel's actual form + Stimmung + Sitz im
+//: Leben criteria - nothing built so far can tell those apart, so this
+//: gets the same honest caution lexical similarity's coincidental
+//: vocabulary correlation does. miqrabert-mean-pool/miqrabert-soft-
+//: alignment are deliberately NOT included: both collapse to k=1 (no
+//: structure found at all), so there is no signal to mis-attribute as
+//: thematic-vs-genre in the first place - the same plain "no structure"
+//: treatment text-type's own k=1 already gets.
 const THEMATIC_CLUSTER_SIGNALS = new Set([
   "lexical",
   "root",
   "named-entity-identity",
   "lexical-set",
   "named-entity",
+  "alephbert-mean-pool",
+  "alephbert-soft-alignment",
 ]);
 
 /** Whether a Cluster-page method id clusters on vocabulary/content

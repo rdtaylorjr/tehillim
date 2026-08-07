@@ -318,3 +318,35 @@ def test_verb_sense_is_only_populated_on_verb_occurrences(psalms):
     with_sense = [w for w in all_words if w.verb_sense]
     assert with_sense
     assert all(w.part_of_speech == "verb" for w in with_sense)
+
+
+def test_every_psalm_has_half_verses(psalms):
+    assert all(p.half_verses for p in psalms)
+
+
+def test_psalm_1_has_the_expected_half_verse_count(psalms):
+    # BHSA's `half_verse` sectional division isn't strictly binary per
+    # verse - most verses split into two, but a tricolon (like Ps 1:1's
+    # three-part "does not walk... does not stand... does not sit") splits
+    # into three. Psalm 1's real count, verified directly against the
+    # corpus: 14 half-verses across 6 verses (one tricolon, five bicola).
+    psalm_1 = next(p for p in psalms if p.number == 1)
+    assert len(psalm_1.half_verses) == 14
+    assert len(psalm_1.half_verses) >= psalm_1.verse_count
+
+
+def test_half_verses_are_nonempty_vocalized_hebrew_text(psalms):
+    all_half_verses = [hv for p in psalms for hv in p.half_verses]
+    assert all(hv.strip() for hv in all_half_verses)
+    # Vocalized (has niqqud, not bare consonants) - a real Hebrew vowel
+    # point (e.g. QAMATS, U+05B8) should show up somewhere in the corpus.
+    assert any("ָ" in hv for hv in all_half_verses)
+
+
+def test_psalm_14_and_53_share_a_near_identical_opening_half_verse(psalms):
+    # The twin-psalm pair already used elsewhere as ground truth
+    # (ground_truth.py's TWIN_PSALMS) - a concrete, checkable case that
+    # half-verse splitting lines up the same way across duplicated text.
+    psalm_14 = next(p for p in psalms if p.number == 14)
+    psalm_53 = next(p for p in psalms if p.number == 53)
+    assert psalm_14.half_verses[1] == psalm_53.half_verses[1]

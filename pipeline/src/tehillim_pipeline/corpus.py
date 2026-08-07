@@ -191,6 +191,15 @@ class Psalm:
     incipit: str
     """Vocalized Hebrew text of the psalm's first verse."""
 
+    half_verses: tuple[str, ...] = ()
+    """Vocalized Hebrew text of each of the psalm's half-verses, in order,
+    via BHSA's own `half_verse` sectional otype (the Masoretic verse-
+    internal division, e.g. at the atnach) - not a heuristic split. This is
+    the granularity semantic_embedding.py's MiqraBERT-based signal uses,
+    matching the unit Smiley's own training pairs were built from, rather
+    than mean-pooling a whole verse (the pooling granularity his paper
+    identifies as the specific cause of MiqraBERT's poor poetic recall)."""
+
 
 class Corpus:
     """A loaded Text-Fabric BHSA corpus, scoped to psalm extraction."""
@@ -248,12 +257,18 @@ class Corpus:
             verse_nodes = L.d(chapter_node, otype="verse")
             incipit = T.text(L.d(verse_nodes[0], otype="word")).strip() if verse_nodes else ""
 
+            half_verse_nodes = L.d(chapter_node, otype="half_verse")
+            half_verses = tuple(
+                T.text(L.d(hv, otype="word")).strip() for hv in half_verse_nodes
+            )
+
             psalms.append(
                 Psalm(
                     number=psalm_number,
                     verse_count=len(verse_nodes),
                     words=words,
                     incipit=incipit,
+                    half_verses=half_verses,
                 )
             )
 

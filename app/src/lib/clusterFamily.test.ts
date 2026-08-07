@@ -26,4 +26,14 @@ describe("isThematicClustering", () => {
       expect(isThematicClustering(id)).toBe(false);
     }
   });
+
+  it("flags AlephBERT's semantic variants (strong AMI, theme/genre ambiguity unresolved)", () => {
+    expect(isThematicClustering("alephbert-mean-pool-spectral")).toBe(true);
+    expect(isThematicClustering("alephbert-soft-alignment-spectral")).toBe(true);
+  });
+
+  it("does not flag MiqraBERT's semantic variants (no structure found, nothing to mis-attribute)", () => {
+    expect(isThematicClustering("miqrabert-mean-pool-spectral")).toBe(false);
+    expect(isThematicClustering("miqrabert-soft-alignment-spectral")).toBe(false);
+  });
 });

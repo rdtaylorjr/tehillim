@@ -42,14 +42,22 @@ Unsupervised partitioning of the whole Psalter, one similarity signal at a
 time, a genuinely different result shape (a partition of 150 psalms into
 groups) than Compare's pairwise matrix, so it gets its own route rather than
 a third view bolted onto the same one. A method dropdown switches between
-spectral clustering runs over each of the same eleven similarity signals,
-using the *same* feature names as Compare's dropdown (`lib/featureNames.ts`
-is the shared source of truth, so the two pages can never drift out of
-sync). The six syntactic/clause-structure signals are validated against
-Gunkel's form-critical genre exemplars (`pipeline/ground_truth.py`); the
-five lexical/vocabulary signals produce *thematic* clusters instead (which
-words/names a group of psalms share). The method description states
-explicitly which kind of grouping the selected signal produces.
+spectral clustering runs over fifteen signals: the same eleven similarity
+signals Compare offers, using the *same* feature names as Compare's dropdown
+(`lib/featureNames.ts` is the shared source of truth, so the two pages can
+never drift out of sync), plus four Cluster-page-only semantic-embedding
+signals (MiqraBERT/AlephBERT half-verse embeddings, mean-pool and
+soft-alignment aggregation - see the top-level `README.md`) that have no
+Compare-page counterpart, since Compare's term-level "why are these similar"
+explainability has no embedding analogue. The six syntactic/clause-structure
+signals are validated against Gunkel's form-critical genre exemplars
+(`pipeline/ground_truth.py`); the five lexical/vocabulary signals, plus the
+two AlephBERT semantic variants, produce *thematic* clusters instead (which
+words/names/content a group of psalms share, flagged via the same "thematic,
+not genre" badge - `lib/clusterFamily.ts`); the two MiqraBERT variants find
+no cluster structure at all (k=1), shipped as a plain negative result rather
+than hidden. The method description states explicitly which kind of
+grouping the selected signal produces.
 
 The picker panel is identical to Compare's, including its **Color by**
 dropdown (Books / Gunkel Genres (6) / Gunkel Genres (14);
@@ -91,8 +99,8 @@ views render whichever method is selected:
   "how well does this signal recover Gunkel's genres," since (unlike the
   column captions) they don't depend on any particular cluster-to-category
   assignment; AMI is additionally permutation-tested and corrected across
-  all eleven signals (see the top-level README). Both tabs remount when the
-  signal or the color-by mode changes.
+  all fifteen signals together (see the top-level README). Both tabs
+  remount when the signal or the color-by mode changes.
 
 The detail panel (`components/clusterDetailPanel.ts`) shows a selected
 psalm's cluster and the incipits of every other member.

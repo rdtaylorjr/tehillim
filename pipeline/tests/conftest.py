@@ -69,6 +69,19 @@ from tehillim_pipeline.phrase_grammatical_role_profile import (
 from tehillim_pipeline.phrase_type_profile import build_phrase_type_feature_matrix
 from tehillim_pipeline.phrase_valence_profile import build_phrase_valence_feature_matrix
 from tehillim_pipeline.root_similarity import build_root_feature_matrix
+from tehillim_pipeline.semantic_embedding import (
+    ALEPHBERT_MEAN_POOL_CLUSTERING,
+    ALEPHBERT_MEAN_POOL_SIMILARITY,
+    ALEPHBERT_MODEL,
+    ALEPHBERT_SOFT_ALIGNMENT_CLUSTERING,
+    ALEPHBERT_SOFT_ALIGNMENT_SIMILARITY,
+    MIQRABERT_MEAN_POOL_CLUSTERING,
+    MIQRABERT_MEAN_POOL_SIMILARITY,
+    MIQRABERT_MODEL,
+    MIQRABERT_SOFT_ALIGNMENT_CLUSTERING,
+    MIQRABERT_SOFT_ALIGNMENT_SIMILARITY,
+    compute_half_verse_embeddings,
+)
 from tehillim_pipeline.similarity import tfidf_weights
 from tehillim_pipeline.text_type_profile import build_text_type_feature_matrix
 from tehillim_pipeline.verb_morphology import build_verb_morphology_feature_matrix
@@ -365,3 +378,57 @@ def clause_relation_clustering(clause_relation_result):
 @pytest.fixture(scope="session")
 def verb_sense_clustering(verb_sense_result):
     return VERB_SENSE_CLUSTERING.compute(verb_sense_result)
+
+
+# --- Semantic-embedding signals (session-scoped: two real model downloads
+# and a full-corpus encode, each computed once and reused) -----------------
+
+
+@pytest.fixture(scope="session")
+def miqrabert_embeddings(psalms):
+    return compute_half_verse_embeddings(psalms, MIQRABERT_MODEL)
+
+
+@pytest.fixture(scope="session")
+def alephbert_embeddings(psalms):
+    return compute_half_verse_embeddings(psalms, ALEPHBERT_MODEL)
+
+
+@pytest.fixture(scope="session")
+def miqrabert_mean_pool_result(miqrabert_embeddings):
+    return MIQRABERT_MEAN_POOL_SIMILARITY.compute(miqrabert_embeddings)
+
+
+@pytest.fixture(scope="session")
+def miqrabert_mean_pool_clustering(miqrabert_mean_pool_result):
+    return MIQRABERT_MEAN_POOL_CLUSTERING.compute(miqrabert_mean_pool_result)
+
+
+@pytest.fixture(scope="session")
+def miqrabert_soft_alignment_result(miqrabert_embeddings):
+    return MIQRABERT_SOFT_ALIGNMENT_SIMILARITY.compute(miqrabert_embeddings)
+
+
+@pytest.fixture(scope="session")
+def miqrabert_soft_alignment_clustering(miqrabert_soft_alignment_result):
+    return MIQRABERT_SOFT_ALIGNMENT_CLUSTERING.compute(miqrabert_soft_alignment_result)
+
+
+@pytest.fixture(scope="session")
+def alephbert_mean_pool_result(alephbert_embeddings):
+    return ALEPHBERT_MEAN_POOL_SIMILARITY.compute(alephbert_embeddings)
+
+
+@pytest.fixture(scope="session")
+def alephbert_mean_pool_clustering(alephbert_mean_pool_result):
+    return ALEPHBERT_MEAN_POOL_CLUSTERING.compute(alephbert_mean_pool_result)
+
+
+@pytest.fixture(scope="session")
+def alephbert_soft_alignment_result(alephbert_embeddings):
+    return ALEPHBERT_SOFT_ALIGNMENT_SIMILARITY.compute(alephbert_embeddings)
+
+
+@pytest.fixture(scope="session")
+def alephbert_soft_alignment_clustering(alephbert_soft_alignment_result):
+    return ALEPHBERT_SOFT_ALIGNMENT_CLUSTERING.compute(alephbert_soft_alignment_result)

@@ -17,6 +17,10 @@ const FEATURE_NAMES: Record<string, string> = {
   "text-type": "Clause Structure (Text Type)",
   "clause-relation": "Clause Structure (Clause Relation)",
   "verb-sense": "Clause Structure (Verb Sense)",
+  "alephbert-mean-pool": "Semantic Similarity (AlephBERT, Mean-Pool)",
+  "alephbert-soft-alignment": "Semantic Similarity (AlephBERT, Soft-Alignment)",
+  "miqrabert-mean-pool": "Semantic Similarity (MiqraBERT, Mean-Pool)",
+  "miqrabert-soft-alignment": "Semantic Similarity (MiqraBERT, Soft-Alignment)",
 };
 
 /** Strips a method id's page-specific suffix, leaving the shared signal id. */

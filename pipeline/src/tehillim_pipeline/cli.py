@@ -11,6 +11,8 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
+import numpy as np
+
 from tehillim_pipeline.clause_relation_profile import build_clause_relation_feature_matrix
 from tehillim_pipeline.clause_type_profile import build_clause_type_feature_matrix
 from tehillim_pipeline.cluster_methods import (
@@ -51,6 +53,21 @@ from tehillim_pipeline.named_entity_identity import build_named_entity_identity_
 from tehillim_pipeline.named_entity_profile import build_named_entity_profile_feature_matrix
 from tehillim_pipeline.person_profile import build_person_profile_feature_matrix
 from tehillim_pipeline.root_similarity import build_root_feature_matrix
+from tehillim_pipeline.semantic_embedding import (
+    ALEPHBERT_MEAN_POOL_CLUSTERING,
+    ALEPHBERT_MEAN_POOL_SIMILARITY,
+    ALEPHBERT_MODEL,
+    ALEPHBERT_SOFT_ALIGNMENT_CLUSTERING,
+    ALEPHBERT_SOFT_ALIGNMENT_SIMILARITY,
+    MIQRABERT_MEAN_POOL_CLUSTERING,
+    MIQRABERT_MEAN_POOL_SIMILARITY,
+    MIQRABERT_MODEL,
+    MIQRABERT_SOFT_ALIGNMENT_CLUSTERING,
+    MIQRABERT_SOFT_ALIGNMENT_SIMILARITY,
+    MeanPoolEmbeddingSimilarity,
+    SoftAlignmentEmbeddingSimilarity,
+    compute_half_verse_embeddings,
+)
 from tehillim_pipeline.similarity import SimilarityMethod, tfidf_weights
 from tehillim_pipeline.text_type_profile import build_text_type_feature_matrix
 from tehillim_pipeline.verb_morphology import build_verb_morphology_feature_matrix
@@ -114,8 +131,26 @@ _CLUSTER_METHODS: tuple[tuple[str, ClusteringMethod], ...] = (
     (VERB_SENSE_SIMILARITY.name, VERB_SENSE_CLUSTERING),
 )
 
-#: Default clustering shown on page load: syntactic similarity (person).
-_DEFAULT_CLUSTER_METHOD = PERSON_PROFILE_CLUSTERING.name
+#: Default clustering shown on page load: AlephBERT mean-pool semantic
+#: embedding - the project's strongest signal overall (see README's
+#: "Statistical validation methodology").
+_DEFAULT_CLUSTER_METHOD = ALEPHBERT_MEAN_POOL_CLUSTERING.name
+
+#: The four embedding-based clustering-only signals (see
+#: semantic_embedding.py) - Cluster-page-only, not part of _METHODS/
+#: _CLUSTER_METHODS above since they have no Compare-page term-level
+#: explainability (there's no "shared term" between two embedding
+#: vectors). Grouped by which encoder's embeddings they reuse, computed
+#: once per encoder below rather than once per method.
+_SEMANTIC_METHODS: tuple[
+    tuple[str, MeanPoolEmbeddingSimilarity | SoftAlignmentEmbeddingSimilarity, ClusteringMethod],
+    ...,
+] = (
+    (MIQRABERT_MODEL, MIQRABERT_MEAN_POOL_SIMILARITY, MIQRABERT_MEAN_POOL_CLUSTERING),
+    (MIQRABERT_MODEL, MIQRABERT_SOFT_ALIGNMENT_SIMILARITY, MIQRABERT_SOFT_ALIGNMENT_CLUSTERING),
+    (ALEPHBERT_MODEL, ALEPHBERT_MEAN_POOL_SIMILARITY, ALEPHBERT_MEAN_POOL_CLUSTERING),
+    (ALEPHBERT_MODEL, ALEPHBERT_SOFT_ALIGNMENT_SIMILARITY, ALEPHBERT_SOFT_ALIGNMENT_CLUSTERING),
+)
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -201,6 +236,18 @@ def run(
         similarity = similarity_by_name[similarity_name]
         cluster_results.append(cluster_method.compute(similarity))
         cluster_embeddings.append(compute_embedding(similarity))
+
+    print("Computing semantic-embedding signals (MiqraBERT, AlephBERT)...", file=sys.stderr)
+    embeddings_by_model: dict[str, dict[int, np.ndarray]] = {}
+    for model_name in (MIQRABERT_MODEL, ALEPHBERT_MODEL):
+        print(f"  Encoding half-verses with {model_name}...", file=sys.stderr)
+        embeddings_by_model[model_name] = compute_half_verse_embeddings(psalms, model_name)
+
+    for model_name, semantic_similarity_method, semantic_cluster_method in _SEMANTIC_METHODS:
+        print(f"Clustering {semantic_cluster_method.name}...", file=sys.stderr)
+        semantic_similarity = semantic_similarity_method.compute(embeddings_by_model[model_name])
+        cluster_results.append(semantic_cluster_method.compute(semantic_similarity))
+        cluster_embeddings.append(compute_embedding(semantic_similarity))
 
     print("Building clustering payload...", file=sys.stderr)
     cluster_payload = build_clustering_payload(

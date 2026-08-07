@@ -10,6 +10,7 @@ dependencies = [
     "numpy>=1.26",
     "scikit-learn>=1.4",
     "scipy>=1.11",
+    "sentence-transformers>=3.0",
 ]
 
 [project.optional-dependencies]

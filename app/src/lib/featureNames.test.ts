@@ -24,6 +24,21 @@ describe("featureNameFromMethodId", () => {
   it("falls back to the raw id for an unknown method", () => {
     expect(featureNameFromMethodId("mystery-method")).toBe("mystery-method");
   });
+
+  it("labels the four Cluster-page-only semantic-embedding signals", () => {
+    expect(featureNameFromMethodId("alephbert-mean-pool-spectral")).toBe(
+      "Semantic Similarity (AlephBERT, Mean-Pool)",
+    );
+    expect(featureNameFromMethodId("alephbert-soft-alignment-spectral")).toBe(
+      "Semantic Similarity (AlephBERT, Soft-Alignment)",
+    );
+    expect(featureNameFromMethodId("miqrabert-mean-pool-spectral")).toBe(
+      "Semantic Similarity (MiqraBERT, Mean-Pool)",
+    );
+    expect(featureNameFromMethodId("miqrabert-soft-alignment-spectral")).toBe(
+      "Semantic Similarity (MiqraBERT, Soft-Alignment)",
+    );
+  });
 });
 
 describe("similarityIdForClusterMethodId", () => {

@@ -113,7 +113,7 @@ Sentence-BERT Finetuning for Biblical Hebrew Parallel Detection*
 (arXiv:2606.19638), is that recommended next step carried out: it
 fine-tunes AlephBERT via cosine-similarity regression on 1,650 labeled
 Hebrew Bible verse pairs (825 true parallels, 825 negatives) to move past
-lexical overlap toward genuinely semantic, paraphrase-tolerant matching.
+lexical overlap toward semantic, paraphrase-tolerant matching.
 
 MiqraBERT reports a real, substantial gain over the pretrained
 baseline (a 2.7-fold improvement in distributional separation between
@@ -228,11 +228,11 @@ alone, not a claim to have recovered Gattung in Gunkel's full sense.
 | **Clause relation and verb sense**: TF-IDF cosine over clause-relation tags (`rela`) and ETCBC/valence verb argument-realization codes | **Implemented, validated** | Two further independent syntactic/semantic signals (sparse but real: 22.5% and 12.6% word coverage respectively) that survived the same discriminativeness screening six other clause/phrase-level candidates failed |
 | **Per-signal spectral clustering**: spectral clustering run independently over each of the eleven shipped similarity signals (the six syntactic/clause-structure signals above, plus the five lexical/vocabulary signals from the textual & structural track) | **Implemented** | The literature gap named above, directly, for the syntactic family: validated against Gunkel's exemplars (e.g. individual and communal laments separate cleanly under person-profile clustering). The lexical family's clusters are thematic rather than generic, surfaced side by side for comparison rather than silently omitted |
 | **Data-driven cluster count**: silhouette score (and, computed but not yet wired in as an alternative selector, spectral eigengap) across a range of k, replacing a shared fixed k=6 that had been chosen by analogy to Gunkel's genre count rather than by anything about the data | **Implemented** | A principled answer to "is 6 the right number": checked against real data, it wasn't, for either validated genre-fingerprint signal. Every one of the eleven shipped clustering methods now picks its own k from its own similarity matrix (`pipeline/k_selection.py`) |
-| Gaussian-mixture soft clustering and Random Forest proximity as independent cross-checks against the spectral partitions above | **Next** | Soft cluster membership, and a structurally different affinity (Random Forest proximity) to see whether it agrees with spectral clustering's data-chosen k |
+| Gaussian-mixture soft clustering and Random Forest proximity as independent cross-checks against the spectral partitions above | **Tried, not useful** | Random Forest proximity's downstream spectral clustering saturated the k-search ceiling (k=10) for 10 of the 13 eligible signals - the same failure signature this project already retired other near-degenerate methods for - and for person-profile, the one signal most visible in the UI, converged to a partition nearly identical to spectral's own (ARI 0.75), adding complexity without new information. GMM soft clustering showed the same pattern (k pinned at 8-10 for several signals), producing an uninterpretable, heavily overlapping partition on the 2D layout. Code kept on `feature/random-forest-gmm`, not merged |
 | Sub-psalm segmentation via BHSA's half-verse (`label`) division | Planned (infrastructure) | Already-annotated in BHSA, no need to derive Masoretic colometry from scratch to get sub-verse units |
 | **Intra-psalm genre trajectory and shift detection**: derivative-based edge detection on a single smoothed signal first, checked against the two already-known shift cases (Psalms 13, 22). Then, corpus-wide, functional PCA (with a pre-registered minimum-length threshold and an explicit absolute-vs-normalized-position choice, since fPCA's components mean different things under each and psalm length spans 2–176 verses) and robust PCA (low-rank "steady genre" + sparse "shift"), run alongside (not instead of) a single Hidden Markov Model fit jointly across all eligible psalms' half-verse sequences (Baum–Welch pools across the whole corpus. Fitting it on only the 2 known cases would starve it of data). Any corpus-wide changepoint scan needs the same Benjamini–Hochberg correction already built for the exemplar-cohesion tests (`pipeline/analysis.py`), not a per-psalm p-value taken in isolation | Planned | The specific, most novel deliverable: mapping *where* a psalm moves from one genre to another: two independently-motivated methods (continuous-trajectory FDA vs. discrete-regime HMM) cross-checked against each other, not just one pipeline taken on faith |
 | Tensor decomposition (CP/Tucker/HOSVD) over a psalm × psalm × signal tensor: stacking the eleven already-computed similarity matrices, *not* a psalm × feature × signal tensor (which would first require harmonizing four incompatible tag vocabularies) | Planned | A principled way to combine independently-validated signals, rather than an ad hoc weighted average |
-| Multi-relational graph fusion with spectral/Louvain–Leiden community detection, over sub-psalm nodes | Planned (capstone) | Unifies clustering and shift detection into one computation: which community a psalm's own ordered nodes fall into, and where that community changes, *is* the shift map. Gated on two unresolved risks: whether half-verse-level (3–8 word) similarity carries any discriminative structure at all (checked the same way every whole-psalm signal was, % of pairs below 0.5, before reaching for denoising machinery), and how the graph weighs within-psalm adjacency against cross-psalm similarity, a free parameter that should be tuned by cross-validating against the already-validated whole-psalm partitions rather than set by hand |
+| Multi-relational graph fusion with spectral/Louvain–Leiden community detection, over sub-psalm nodes | Planned | Unifies clustering and shift detection into one computation: which community a psalm's own ordered nodes fall into, and where that community changes, *is* the shift map. Gated on two unresolved risks: whether half-verse-level (3–8 word) similarity carries any discriminative structure at all (checked the same way every whole-psalm signal was, % of pairs below 0.5, before reaching for denoising machinery), and how the graph weighs within-psalm adjacency against cross-psalm similarity, a free parameter that should be tuned by cross-validating against the already-validated whole-psalm partitions rather than set by hand |
 
 ### Textual & structural track
 
@@ -245,7 +245,8 @@ literature review above.
 | **Lexical similarity**: TF-IDF weighted cosine similarity over content-word lexemes | **Implemented, validated** | Standard IR baseline. The most legible sanity check in the whole project (Psalm 14/53, Psalm 108/57/60) |
 | **Root similarity and named-entity identity**: TF-IDF cosine over triliteral roots, and over proper-noun lexemes only | **Implemented, validated** | Root similarity credits shared thematic vocabulary across derivationally related words that plain lexeme-matching misses. Named-entity identity isolates *which* names two psalms share (e.g. both naming Zion), a sharper, more discriminative version of the type-only onomastic signal below |
 | Classical distance ensemble: character n-gram edit distance + root-level Dice/Jaccard, combined via logistic regression | Planned | A stronger, still fully interpretable classical baseline for near-verbatim reuse, in the same territory as Naaijer & Roorda and the *Religions* 2026 paper |
-| Transformer embeddings (E5, AlephBERT, MiqraBERT) at psalm *and* half-verse level | Planned | A direct, testable extension of MiqraBERT's own diagnosed weakness: does finer-grained pooling close its poetic-recall gap? |
+| **Transformer embeddings (AlephBERT, MiqraBERT) at half-verse level, mean-pool and soft-alignment aggregation compared** | **Implemented, live on the Cluster page** | Tested MiqraBERT's own diagnosed pooling weakness directly. Result ran against the working hypothesis in both directions: unfinetuned AlephBERT, not MiqraBERT, is the project's strongest signal overall, and mean-pooling beat soft-alignment. All four ship, including MiqraBERT's negative (k=1) result. See "Statistical validation methodology" |
+| E5 as a further embedding-model comparison point | Planned | Not yet run; would extend the same encoder-ablation logic to a non-Hebrew-specific multilingual model |
 | Anisotropy correction (whitening / top-PC removal / kernel PCA) before cosine comparison | Planned | Both transformer papers diagnose this geometric flaw but only ever address it via fine-tuning |
 | Optimal transport (Word-Mover's-Distance-style) between token embedding sets, replacing mean-pooling | Planned | The highest-leverage fix for the pooling-erasure failure. Both papers already use Wasserstein distance for *evaluation* but never as the similarity metric itself |
 | Alignment kernels (Smith–Waterman / Needleman–Wunsch) at half-verse level, for chiasmus and refrain detection | Planned | A direct benchmark against the chiasmus paper's embedding-only approach |
@@ -324,7 +325,7 @@ formal register.
 The same test applied to the other five exemplar sets,
 corrected for running all six as one family (Benjamini-Hochberg,
 `analysis.py`'s `benjamini_hochberg`) rather than reading each p-value in
-isolation, is a genuinely negative picture: none of the six genres reach
+isolation, is a negative picture: none of the six genres reach
 significance under verb-morphology cohesion. Communal lament and
 thanksgiving look suggestive in isolation (raw p = 0.030, 0.076) but do
 not survive correction (BH-adjusted p = 0.18, 0.23). Individual lament,
@@ -343,7 +344,7 @@ individual lament (Psalm 88: 0.003) or a quiet creation hymn (Psalm 8:
 0.008), and, in the live app, Psalm 150's single closest match under this
 method is Psalm 117 (0.980), the Psalter's other short, pure
 "Hallelujah, praise the LORD, all nations" hymn. A direct check confirms
-this is a genuinely independent signal rather than lexical similarity in
+this is an independent signal rather than lexical similarity in
 disguise: Pearson correlation between the two methods' full similarity
 matrices is 0.19.
 
@@ -423,7 +424,7 @@ pairs score below 0.5, versus 15%+ for every shipped method).
 The pattern
 that emerged, and now documents itself in `pipeline/methods.py`:
 TF-IDF-cosine over a tag-frequency profile is only discriminative when a
-tag is either high-cardinality or genuinely *sparse* (fires on a minority
+tag is either high-cardinality or *sparse* (fires on a minority
 of words). Dense features, even with good category balance (phrase
 function has 27 well-balanced codes and still only clears 2.8%), produce
 nearly identical profile shapes across the whole Psalter, since every
@@ -438,7 +439,35 @@ All eleven shipped methods, and the interactive heatmap / network-graph /
 ranked-match visualization built on top of them, are live in the app.
 See `app/README.md`.
 
-534 pipeline tests and 208 frontend tests currently
+**Semantic-embedding signal (Cluster page only, no Compare-page
+counterpart).** Every method above is a morphosyntactic tag-frequency
+profile or a lexical-overlap measure, neither of which can represent
+Stimmung, the mood/attitude leg of Gunkel's Gattung (see "Genre track"
+above). `pipeline/semantic_embedding.py` is the first attempt at a signal
+built on meaning rather than grammatical form: sentence embeddings over
+BHSA's own `half_verse` sectional division (the Masoretic verse-internal
+caesura), from MiqraBERT (David M. Smiley, arXiv:2606.19638), a
+Sentence-BERT model fine-tuned from AlephBERT for Biblical Hebrew
+parallel-passage detection, and from AlephBERT itself, unfinetuned, as an
+ablation baseline. Two psalm-to-psalm aggregations are computed and
+compared rather than one assumed correct: mean-pooling a psalm's
+half-verse vectors into one, and a symmetric best-match ("soft-alignment")
+comparison of each psalm's full half-verse set, the latter aimed directly
+at the mean-pooling-erasure weakness MiqraBERT's own paper diagnoses for
+poetic parallelism. Real results, and why the outcome ran against this
+method's own working hypothesis, are reported in "Statistical validation
+methodology" below. Half-verse granularity was chosen to match the unit
+MiqraBERT's own training pairs used, not an arbitrary finer split. All
+four variants (both encoders, both aggregations) are live on the Cluster
+page, including MiqraBERT's negative (k=1, no structure found) result -
+this project's standing practice is to ship a validated negative finding
+plainly rather than omit it, the same precedent text-type's own k=1 set.
+There is no Compare-page (`similarity.json`) counterpart: that page's
+"why are these similar" explainability is built entirely around shared
+TF-IDF terms, which has no embedding analogue - extending it is a
+separate, larger question this phase didn't take on.
+
+559 pipeline tests and 211 frontend tests currently
 pass. `pipeline/ground_truth.py` and its integration tests are the
 executable form of the "validate every phase against known scholarship"
 discipline above.
@@ -477,10 +506,10 @@ inferential/diagnostic machinery close that gap, all in `pipeline/`:
   per-genre tests) is person-profile's individual-vs-communal separation
   (p = 0.0033), which holds up cleanly on its own. Read together, this is
   a materially more cautious picture than the raw score gaps alone
-  suggested: the project's one fully rigorous flagship claim is the
-  individual/communal-lament distinction specifically (cohesion of the
-  first group, plus the separation between the two), not a general
-  "every exemplar genre coheres" result.
+  suggested: the one claim in this section that holds up fully under
+  correction is the individual/communal-lament distinction specifically
+  (cohesion of the first group, plus the separation between the two),
+  not a general "every exemplar genre coheres" result.
 - **Gap statistic** (`k_selection.py`'s `gap_statistic`, citing Tibshirani,
   Walther & Hastie, 2001): silhouette score, used below to choose k, is
   mathematically undefined for a single cluster, so a silhouette-only
@@ -550,6 +579,47 @@ inferential/diagnostic machinery close that gap, all in `pipeline/`:
   named-entity below significance while leaving the other four
   unchanged, another reason the family view is offered as a genuinely
   different lens rather than a cleaned-up version of the genre one.
+- **Semantic-embedding AMI, run through the same battery** (`pipeline/
+  semantic_embedding.py`, evaluated at the 6-family level, joint BH
+  correction across all fifteen signals together, not run in isolation):
+  the honest result cuts against this method's own working hypothesis in
+  two separate ways. First, **unfinetuned AlephBERT, not MiqraBERT, is the
+  strongest signal in the entire project** - mean-pooled AlephBERT reaches
+  AMI ≈ 0.24 (BH-adjusted p ≈ 0.0015), ahead of person-profile (≈ 0.15),
+  clause-type (≈ 0.14), and every other signal tested, syntactic or
+  lexical. Second, **MiqraBERT collapses to k=1 for both aggregations** -
+  the gap statistic finds no cluster structure at all, AMI = 0. The most
+  plausible reading: MiqraBERT was fine-tuned specifically to separate
+  *textual parallels* from *random unrelated pairs*, and the overwhelming
+  majority of psalm-pairs are neither, so that fine-tuning objective
+  likely collapsed exactly the general-semantic variation among
+  non-parallel psalms that genre discrimination depends on, while
+  AlephBERT's unfinetuned space still preserves it. Third, contrary to
+  this method's own design rationale (see the paragraph above), **mean-
+  pooling beat soft-alignment** for AlephBERT (0.24 vs. 0.20) - soft-
+  alignment's local best-match matching, built to fix a poetic-parallelism
+  problem specific to phrase-level correspondence, appears to import more
+  noise than signal when the target is a whole-psalm property like genre
+  rather than a local textual echo. None of this is circular: neither
+  model was ever exposed to Gunkel's genre labels, unlike a hypothetical
+  fine-tune against them directly (see the "could we fine-tune AlephBERT
+  on our own labels" question this method's design already rejects, for
+  exactly that reason, in favor of testing an independently-built
+  representation). Two further findings from the immediate scholarly
+  lineage this result sits in, worth citing directly rather than assumed:
+  Wido van Peursen and Eep Talstra's prior computational work on
+  parallel-passage detection in 2 Kings 18-19 (*Vetus Testamentum* 57/1,
+  2007) is the methodological precedent MiqraBERT's own paper cites, and
+  Bert Lobbezoo's 2015 TU Delft thesis, testing the same 162-feature
+  WIVU/ETCBC grammatical family this project's own syntactic signals are
+  built from against a 10,788-pair parallel-detection ground truth, found
+  those grammatical features scored close to random guessing (best
+  individual feature AUC 0.577, all 162 combined only 0.646) while string/
+  lexical-distance features reached AUC 0.937 - an independent
+  confirmation, on a different task and a different dataset, of the same
+  qualitative pattern this project's own AMI results show: ETCBC
+  morphosyntax is a weak signal for this kind of question, and lexical/
+  semantic content carries the real one.
 - **Spectral-embedding structure-captured** (`embedding.py`): the
   Cluster page's scatter plot used to lay psalms out via classical
   (Torgerson) MDS, which optimizes a different objective entirely
@@ -757,5 +827,7 @@ at the repo root.
 - "Detection and Typology of Psalmic Text Reuses in the New Testament." *Religions* 17, no. 1 (2026): 88. Special Issue: Computational Approaches to Ancient Jewish and Christian Texts. <https://www.mdpi.com/2077-1444/17/1/88>
 - Smiley, David M. "Intertextual Parallel Detection in Biblical Hebrew: A Transformer-Based Benchmark." arXiv:2506.24117. <https://arxiv.org/pdf/2506.24117>
 - Smiley, David M. "MiqraBERT: Regression-Based Sentence-BERT Finetuning for Biblical Hebrew Parallel Detection." arXiv:2606.19638. <https://arxiv.org/pdf/2606.19638>
+- van Peursen, Willem Th., and Eep Talstra. "Computer-Assisted Analysis of Parallel Texts in the Bible: The Case of 2 Kings XVIII-XIX and Its Parallels in Isaiah and Chronicles." *Vetus Testamentum* 57, no. 1 (2007): 45-72.
+- Lobbezoo, Bert. "Computer-Based Recognition of Intertextuality within the Hebrew Bible." MA thesis, Delft University of Technology, 2015.
 - McGovern, Hope, Hale Sirin, and Tom Lippincott. "Computational Discovery of Chiasmus in Ancient Religious Text." Proceedings of NAACL 2025 (short papers). arXiv:2501.10739. <https://arxiv.org/html/2501.10739v1>
 - Sigrist, David J. "Tracking Changes: A Proposal for a Linguistically Sensitive Schema for Categorizing Textual Variation of Hebrew Bible Texts in Light of Variant Scribal Practices Among the Judaean Desert Psalms Witnesses." Trinity Western University. <https://www.academia.edu/6126323/Tracking_Changes_A_Proposal_for_a_Linguistically_Sensitive_Schema_for_Categorizing_Textual_Variation_of_Hebrew_Bible_Texts_in_Light_of_Variant_Scribal_Practices_Among_the_Judaean_Desert_Psalms_Witnesses>

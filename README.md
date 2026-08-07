@@ -17,7 +17,7 @@ running, tested code rather than only a proposal.
 Eleven comparison methods are live in the interactive app today, including 
 a full sweep of BHSA's word-level grammatical annotations plus 
 clause/phrase-level structure and the ETCBC/valence module's verbal-argument 
-data — each kept only where it measurably clears a real discriminativeness 
+data, each kept only where it measurably clears a real discriminativeness 
 bar (see "What's implemented now").
 
 The remaining work splits into two independent tracks: a **genre track**
@@ -54,7 +54,7 @@ Lévi-Straussian *bricolage* to argue that the Psalter's editorial
 arrangement is itself a meaning-making intertextual act, not just a
 container for 150 independent poems. A tradition-historical literature
 also traces the Psalter's relationship to other wisdom and lament
-corpora — e.g. work relating Job's dialogues to psalmic lament form,
+corpora, e.g. work relating Job's dialogues to psalmic lament form,
 arguing (against a purely intertextual account) that shared theological
 *traditions*, not direct literary dependence, better explain parallels
 like Job 7:17–18 / Psalm 8:5.
@@ -65,7 +65,7 @@ the ground truth a computational method needs to be checked against, and,
 as Tanner's and Botha's work in particular makes clear, it already
 assumes that similarity in the Psalter is plural: lexical, structural,
 formal, and theological similarity are different things that happen to
-co-occur or diverge — the premise this project's layered, multi-method
+co-occur or diverge, the premise this project's layered, multi-method
 architecture is built to take seriously.
 
 ### Computational approaches

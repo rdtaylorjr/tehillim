@@ -6,7 +6,7 @@ groupings) can be recovered computationally from the Masoretic Text, and
 what each representation (lexical, morphosyntactic, embedding-based,
 structural) makes visible or hides.
 
-Built on [ETCBC's](https://etcbc.nl/) infrastructure, the
+It is built on [ETCBC's](https://etcbc.nl/) infrastructure, the
 [BHSA](https://github.com/ETCBC/bhsa) database and
 [Text-Fabric](https://annotation.github.io/text-fabric/), as a working
 laboratory for a layered sequence of comparison methods: each motivated by
@@ -14,12 +14,11 @@ a documented gap in the literature, each validated against known
 scholarly landmarks before the next is attempted, each expressed as
 running, tested code rather than only a proposal.
 
-Eleven comparison methods are implemented, tested, and live in the
-interactive app today, including a full sweep of BHSA's word-level
-grammatical annotations plus clause/phrase-level structure and the
-ETCBC/valence module's verbal-argument data — each kept only where it
-measurably clears a real discriminativeness bar (see "What's implemented
-and validated now").
+Eleven comparison methods are live in the interactive app today, including 
+a full sweep of BHSA's word-level grammatical annotations plus 
+clause/phrase-level structure and the ETCBC/valence module's verbal-argument 
+data — each kept only where it measurably clears a real discriminativeness 
+bar (see "What's implemented now").
 
 The remaining work splits into two independent tracks: a **genre track**
 (can these psalms' internal formal patterns be clustered by genre,
@@ -236,7 +235,7 @@ literature review above.
 - **Shrinkage / regularized covariance estimation**: the same small-*n*, high-dimensional problem MiqraBERT's 1,650-pair training set faces, relevant anywhere a model gets fit against `ground_truth.py`'s necessarily small labeled sets.
 - **Continuous validation against scholarly ground truth**: ongoing since phase 0, the same discipline the cited papers use when validating against Samuel–Kings/Chronicles.
 
-## What's implemented and validated now
+## What's implemented now
 
 Eleven methods ship in the live app today, organized into three families:
 **lexical** (which specific words a pair of psalms share), **syntactic**

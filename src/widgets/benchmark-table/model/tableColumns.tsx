@@ -152,10 +152,22 @@ export function trajectoryOverallColumns(
   ];
 }
 
+/** Raw is the length-confounded distance, so it is named as such wherever it is read. */
+const SOURCE_LABELS: Record<string, string> = {
+  raw: "Raw (uncontrolled)",
+  length_controlled: "Length controlled",
+  length_and_content_controlled: "Length + content controlled",
+};
+
 export function trajectoryByGenreColumns(): TableColumn<TrajectoryByGenreRow>[] {
   return [
     nameColumn<TrajectoryByGenreRow>(),
-    { key: "source", label: "Source", type: "text" },
+    {
+      key: "source",
+      label: "Source",
+      type: "text",
+      render: (row) => SOURCE_LABELS[row.source] ?? row.source,
+    },
     { key: "gap", label: "Gap", type: "num", digits: 5 },
     { key: "p_perm", label: "p (perm)", type: "pill", pillPrefix: "p" },
     {

@@ -22,7 +22,7 @@ describe("Footer", () => {
     render(<Footer />);
     expect(screen.getByRole("link", { name: "BHSA" })).toHaveAttribute(
       "href",
-      "https://github.com/ETCBC/bhsa",
+      "https://doi.org/10.17026/dans-z6y-skyh",
     );
     expect(screen.getByRole("link", { name: "Text-Fabric" })).toHaveAttribute(
       "href",

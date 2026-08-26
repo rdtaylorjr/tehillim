@@ -117,7 +117,7 @@ describe("App", () => {
     // Settles the data load first, so its state update lands inside the test rather than after it.
     await screen.findByRole("table");
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Tehillim Computational Analysis of Psalms",
+      "Tehillim · Computational Analysis of Psalms",
     );
     expect(screen.getByText("Hebrew Psalm Representation Benchmarks")).toBeInTheDocument();
   });

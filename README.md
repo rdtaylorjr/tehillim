@@ -1,8 +1,8 @@
 # tehillim-react
 
 The React front end for the Tehillim benchmarks: one page, one toolbar, and a pane beneath it
-that swaps between the results table and a model's visualizations. This repo currently holds a
-prototype of that shell, driven by stand-in rows, with no result data or charts wired in yet.
+that swaps between the results table and a model's visualizations. It renders the exported
+benchmark results for every model family that has been benchmarked.
 
 ## Why the toolbar is shaped the way it is
 
@@ -27,6 +27,12 @@ from its source, so the prototype reproduces it exactly:
 
 Families with no benchmark data stay selectable. Their empty state explains the absence in the
 content area, where there is room to say why, rather than encoding it as a disabled control.
+
+## Sources in the trajectory tables
+
+The overall table omits `raw`, which tracks `length_controlled` at Spearman 0.91 to 0.99 once
+pooled across genres. Per genre it does not: of 140 cells, five fall below 0.50 and three go
+negative. The per-genre table therefore shows it, labelled Raw (uncontrolled).
 
 ## Commands
 
@@ -83,14 +89,11 @@ it swaps, which is the whole point of the single-page structure.
 
 ## Citations
 
-Chicago author-date is used throughout. Each record below was verified against its primary
-source rather than a search result. Note that the Research Data Journal's own article page
-misspells the author's given name as "Drik"; the GitHub and Zenodo records both read "Dirk".
-
 **Hebrew text and linguistic annotations**
 
-> Eep Talstra Centre for Bible and Computer. *Biblia Hebraica Stuttgartensia (Amstelodamensis)*.
-> Amsterdam: DANS. https://doi.org/10.17026/dans-z6y-skyh. Licensed CC BY-NC 4.0.
+> van Peursen, Willem Th., C. J. Sikkel, and Dirk Roorda. *Hebrew Text Database ETCBC4b*.
+> Version 2. Amsterdam: DANS Data Station Social Sciences and Humanities, 2015.
+> https://doi.org/10.17026/dans-z6y-skyh. Licensed CC BY-NC 4.0.
 
 **Software used to read that dataset**
 
@@ -98,20 +101,19 @@ misspells the author's given name as "Drik"; the GitHub and Zenodo records both 
 
 **The data paper describing both**
 
-> Roorda, Dirk. 2018. "Coding the Hebrew Bible." *Research Data Journal for the Humanities and
-> Social Sciences* 3: 1–15. https://doi.org/10.1163/24523666-01000011.
+> Roorda, Dirk. "Coding the Hebrew Bible." *Research Data Journal for the Humanities and Social
+> Sciences* 3 (2018): 1-15. https://doi.org/10.1163/24523666-01000011.
 
-**Psalm form and genre data**
+**Parallelism and genre data**
 
 > Witthoff, David, Kris Lyle, Matt Nerdahl, Jimmy Parks, and Elliot Ritzema. *Psalms Explorer
-> Dataset*.
-> Edited by Eli Evans. Bellingham, WA: Logos Bible Software.
+> Dataset*. Edited by Eli Evans. Bellingham, WA: Logos Bible Software.
 > https://www.logos.com/product/54188/psalms-explorer-dataset.
 
 Used with permission.
 
-The BHSA licence is non-commercial and requires attribution, so any reuse of this work inherits
-that condition.
+The BHSA licence is non-commercial and requires attribution through the persistent identifier
+above, so any reuse of this work inherits that condition.
 
 ## Status
 

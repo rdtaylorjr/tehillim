@@ -8,7 +8,7 @@ import {
   trajectoryByGenreColumns,
   trajectoryOverallColumns,
 } from "./tableColumns";
-import type { TrajectoryOverallRow } from "../../../shared/lib/results";
+import type { TrajectoryByGenreRow, TrajectoryOverallRow } from "../../../shared/lib/results";
 
 /** The CI cells render React nodes now, so assertions read the produced DOM. */
 function cell(node: React.ReactNode): HTMLElement {
@@ -234,5 +234,25 @@ describe("trajectoryByGenreColumns", () => {
       "maxT_q",
     ]);
     expect(columns.find((c) => c.key === "source")?.type).toBe("text");
+  });
+
+  const sourceCell = (source: string): HTMLElement => {
+    const column = trajectoryByGenreColumns().find((c) => c.key === "source");
+    return cell(column?.render?.({ source } as TrajectoryByGenreRow));
+  };
+
+  it("marks the raw source uncontrolled, since it is the length-confounded quantity", () => {
+    expect(sourceCell("raw")).toHaveTextContent("Raw (uncontrolled)");
+  });
+
+  it("names each controlled source by what it controls for", () => {
+    expect(sourceCell("length_controlled")).toHaveTextContent("Length controlled");
+    expect(sourceCell("length_and_content_controlled")).toHaveTextContent(
+      "Length + content controlled",
+    );
+  });
+
+  it("shows an unrecognised source verbatim rather than blanking the cell", () => {
+    expect(sourceCell("something_new")).toHaveTextContent("something_new");
   });
 });

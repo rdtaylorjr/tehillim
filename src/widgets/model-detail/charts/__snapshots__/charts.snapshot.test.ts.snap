@@ -1,0 +1,660 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`chart output is stable > PR curves hand Plotly an unchanging payload 1`] = `
+[
+  {
+    "config": {
+      "displayModeBar": false,
+      "responsive": true,
+    },
+    "layout": {
+      "font": {
+        "color": "#9a9ea5",
+        "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "size": 11,
+      },
+      "height": 380,
+      "hoverlabel": {
+        "bgcolor": "#1a1d21",
+        "bordercolor": "#2c3036",
+        "font": {
+          "color": "#e8e9eb",
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 12,
+        },
+      },
+      "legend": {
+        "font": {
+          "size": 9.5,
+        },
+      },
+      "margin": {
+        "b": 50,
+        "l": 60,
+        "r": 20,
+        "t": 10,
+      },
+      "paper_bgcolor": "#1a1d21",
+      "plot_bgcolor": "#1a1d21",
+      "xaxis": {
+        "gridcolor": "#2c3036",
+        "range": [
+          0,
+          1,
+        ],
+        "title": {
+          "text": "Recall",
+        },
+        "zeroline": false,
+      },
+      "yaxis": {
+        "gridcolor": "#2c3036",
+        "range": [
+          0,
+          1,
+        ],
+        "title": {
+          "text": "Precision",
+        },
+        "zeroline": false,
+      },
+    },
+    "traces": [
+      {
+        "hoverinfo": "skip",
+        "line": {
+          "color": "#6b6f76",
+          "dash": "dot",
+          "width": 1,
+        },
+        "mode": "lines",
+        "showlegend": false,
+        "type": "scatter",
+        "x": [
+          0,
+          1,
+        ],
+        "y": [
+          0.25,
+          0.25,
+        ],
+      },
+      {
+        "hovertemplate": "Combined<br>Recall: %{x:.3f}<br>Precision: %{y:.3f}<extra></extra>",
+        "line": {
+          "color": "#000008",
+          "width": 1.5,
+        },
+        "mode": "lines",
+        "name": "Combined",
+        "type": "scatter",
+        "x": [
+          0,
+          0.5,
+          1,
+        ],
+        "y": [
+          1,
+          0.8,
+          0.4,
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`chart output is stable > ROC curves hand Plotly an unchanging payload 1`] = `
+[
+  {
+    "config": {
+      "displayModeBar": false,
+      "responsive": true,
+    },
+    "layout": {
+      "font": {
+        "color": "#9a9ea5",
+        "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "size": 11,
+      },
+      "height": 380,
+      "hoverlabel": {
+        "bgcolor": "#1a1d21",
+        "bordercolor": "#2c3036",
+        "font": {
+          "color": "#e8e9eb",
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 12,
+        },
+      },
+      "legend": {
+        "font": {
+          "size": 9.5,
+        },
+      },
+      "margin": {
+        "b": 50,
+        "l": 60,
+        "r": 20,
+        "t": 10,
+      },
+      "paper_bgcolor": "#1a1d21",
+      "plot_bgcolor": "#1a1d21",
+      "xaxis": {
+        "gridcolor": "#2c3036",
+        "range": [
+          0,
+          1,
+        ],
+        "title": {
+          "text": "FPR",
+        },
+        "zeroline": false,
+      },
+      "yaxis": {
+        "gridcolor": "#2c3036",
+        "range": [
+          0,
+          1,
+        ],
+        "title": {
+          "text": "TPR",
+        },
+        "zeroline": false,
+      },
+    },
+    "traces": [
+      {
+        "hoverinfo": "skip",
+        "line": {
+          "color": "#6b6f76",
+          "dash": "dot",
+          "width": 1,
+        },
+        "mode": "lines",
+        "showlegend": false,
+        "type": "scatter",
+        "x": [
+          0,
+          1,
+        ],
+        "y": [
+          0,
+          1,
+        ],
+      },
+      {
+        "hovertemplate": "Combined<br>FPR: %{x:.3f}<br>TPR: %{y:.3f}<extra></extra>",
+        "line": {
+          "color": "#000008",
+          "width": 1.5,
+        },
+        "mode": "lines",
+        "name": "Combined",
+        "type": "scatter",
+        "x": [
+          0,
+          0.25,
+          1,
+        ],
+        "y": [
+          0,
+          0.6,
+          1,
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`chart output is stable > rainclouds hand Plotly an unchanging payload 1`] = `
+[
+  {
+    "config": {
+      "displayModeBar": false,
+      "responsive": true,
+    },
+    "layout": {
+      "font": {
+        "color": "#9a9ea5",
+        "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "size": 11,
+      },
+      "height": 230,
+      "hoverlabel": {
+        "bgcolor": "#1a1d21",
+        "bordercolor": "#2c3036",
+        "font": {
+          "color": "#e8e9eb",
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 12,
+        },
+      },
+      "margin": {
+        "b": 50,
+        "l": 190,
+        "r": 20,
+        "t": 10,
+      },
+      "paper_bgcolor": "#1a1d21",
+      "plot_bgcolor": "#1a1d21",
+      "violingap": 0.1,
+      "violinmode": "group",
+      "xaxis": {
+        "gridcolor": "#2c3036",
+        "tickfont": {
+          "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
+          "size": 10,
+        },
+        "title": {
+          "text": "Score",
+        },
+        "zeroline": false,
+      },
+      "yaxis": {
+        "automargin": true,
+        "autorange": "reversed",
+        "tickfont": {
+          "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
+          "size": 10,
+        },
+      },
+    },
+    "traces": [
+      {
+        "box": {
+          "visible": true,
+          "width": 0.42,
+        },
+        "fillcolor": "#00000155",
+        "hoverinfo": "x+name",
+        "hoveron": "points",
+        "jitter": 0.3,
+        "line": {
+          "color": "#000001",
+          "width": 1.5,
+        },
+        "marker": {
+          "color": "#000001",
+          "opacity": 0.45,
+          "size": 3,
+        },
+        "meanline": {
+          "visible": true,
+        },
+        "name": "Alpha",
+        "orientation": "h",
+        "pointpos": 0.5,
+        "points": "all",
+        "showlegend": false,
+        "side": "negative",
+        "type": "violin",
+        "width": 0.78,
+        "x": [
+          0.1,
+          0.4,
+          0.35,
+          0.7,
+          0.22,
+        ],
+        "y0": "Alpha (n=60)",
+      },
+      {
+        "boxpoints": "all",
+        "fillcolor": "#00000133",
+        "hoverinfo": "x+name",
+        "hoveron": "points",
+        "jitter": 0.4,
+        "line": {
+          "color": "#000001",
+          "width": 1.5,
+        },
+        "marker": {
+          "color": "#000001",
+          "opacity": 0.6,
+          "size": 3,
+        },
+        "name": "Beta",
+        "orientation": "h",
+        "pointpos": 0,
+        "showlegend": false,
+        "type": "box",
+        "x": [
+          0.5,
+          0.55,
+          0.6,
+        ],
+        "y0": "Beta (n=8) · raw only, n<25",
+      },
+    ],
+  },
+]
+`;
+
+exports[`chart output is stable > the genre-mean matrix hands Plotly an unchanging payload 1`] = `
+[
+  {
+    "config": {
+      "displayModeBar": false,
+      "responsive": true,
+    },
+    "layout": {
+      "font": {
+        "color": "#9a9ea5",
+        "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "size": 11,
+      },
+      "height": 360,
+      "hoverlabel": {
+        "bgcolor": "#1a1d21",
+        "bordercolor": "#2c3036",
+        "font": {
+          "color": "#e8e9eb",
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 12,
+        },
+      },
+      "margin": {
+        "b": 70,
+        "l": 90,
+        "r": 130,
+        "t": 10,
+      },
+      "paper_bgcolor": "#1a1d21",
+      "plot_bgcolor": "#1a1d21",
+      "width": 500,
+      "xaxis": {
+        "fixedrange": true,
+        "range": [
+          -0.65,
+          1.65,
+        ],
+        "showgrid": false,
+        "tickangle": -40,
+        "tickfont": {
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 10.5,
+        },
+        "ticktext": [
+          "Wisdom",
+          "Royal",
+        ],
+        "tickvals": [
+          0,
+          1,
+        ],
+        "zeroline": false,
+      },
+      "yaxis": {
+        "autorange": "reversed",
+        "fixedrange": true,
+        "range": [
+          -0.65,
+          1.65,
+        ],
+        "showgrid": false,
+        "tickfont": {
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 10.5,
+        },
+        "ticktext": [
+          "Wisdom",
+          "Royal",
+        ],
+        "tickvals": [
+          0,
+          1,
+        ],
+        "zeroline": false,
+      },
+    },
+    "traces": [
+      {
+        "colorbar": {
+          "len": 0.85,
+          "outlinewidth": 0,
+          "tickfont": {
+            "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
+            "size": 9.5,
+          },
+          "title": {
+            "font": {
+              "size": 10.5,
+            },
+            "text": "mean z",
+          },
+        },
+        "colorscale": [
+          [
+            0,
+            "#4d94d4",
+          ],
+          [
+            0.5,
+            "#1a1d21",
+          ],
+          [
+            1,
+            "#e37a2e",
+          ],
+        ],
+        "customdata": [
+          [
+            null,
+            null,
+          ],
+          [
+            [
+              "Wisdom",
+              "Royal",
+            ],
+            [
+              "Royal",
+              "Royal",
+            ],
+          ],
+        ],
+        "hoverongaps": false,
+        "hovertemplate": "%{customdata[0]} vs. %{customdata[1]}<br>mean z: %{z:.3f}<extra></extra>",
+        "type": "heatmap",
+        "xgap": 2,
+        "ygap": 2,
+        "z": [
+          [
+            null,
+            null,
+          ],
+          [
+            0.3,
+            -0.1,
+          ],
+        ],
+        "zmax": 0.3,
+        "zmid": 0,
+        "zmin": -0.3,
+      },
+    ],
+  },
+]
+`;
+
+exports[`chart output is stable > the pairwise heatmap hands Plotly an unchanging payload 1`] = `
+[
+  {
+    "config": {
+      "displayModeBar": false,
+      "responsive": true,
+    },
+    "layout": {
+      "font": {
+        "color": "#9a9ea5",
+        "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "size": 11,
+      },
+      "height": 880,
+      "hoverlabel": {
+        "bgcolor": "#1a1d21",
+        "bordercolor": "#2c3036",
+        "font": {
+          "color": "#e8e9eb",
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 12,
+        },
+      },
+      "margin": {
+        "b": 70,
+        "l": 90,
+        "r": 130,
+        "t": 10,
+      },
+      "paper_bgcolor": "#1a1d21",
+      "plot_bgcolor": "#1a1d21",
+      "shapes": [
+        {
+          "line": {
+            "color": "#1a1d21",
+            "width": 2,
+          },
+          "type": "line",
+          "x0": 0.5,
+          "x1": 0.5,
+          "xref": "x",
+          "y0": 0,
+          "y1": 1,
+          "yref": "paper",
+        },
+        {
+          "line": {
+            "color": "#1a1d21",
+            "width": 2,
+          },
+          "type": "line",
+          "x0": 0,
+          "x1": 1,
+          "xref": "paper",
+          "y0": 0.5,
+          "y1": 0.5,
+          "yref": "y",
+        },
+      ],
+      "width": 1020,
+      "xaxis": {
+        "fixedrange": true,
+        "range": [
+          -0.65,
+          2.65,
+        ],
+        "showgrid": false,
+        "tickangle": -40,
+        "tickfont": {
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 10.5,
+        },
+        "ticktext": [
+          "Wisdom",
+          "Royal",
+        ],
+        "tickvals": [
+          0,
+          1,
+        ],
+        "zeroline": false,
+      },
+      "yaxis": {
+        "autorange": "reversed",
+        "fixedrange": true,
+        "range": [
+          -0.65,
+          2.65,
+        ],
+        "showgrid": false,
+        "tickfont": {
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 10.5,
+        },
+        "ticktext": [
+          "Wisdom",
+          "Royal",
+        ],
+        "tickvals": [
+          0,
+          1,
+        ],
+        "zeroline": false,
+      },
+    },
+    "traces": [
+      {
+        "colorbar": {
+          "len": 0.85,
+          "outlinewidth": 0,
+          "tickfont": {
+            "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
+            "size": 9.5,
+          },
+          "title": {
+            "font": {
+              "size": 10.5,
+            },
+            "text": "z",
+          },
+        },
+        "colorscale": [
+          [
+            0,
+            "#4d94d4",
+          ],
+          [
+            0.5,
+            "#1a1d21",
+          ],
+          [
+            1,
+            "#e37a2e",
+          ],
+        ],
+        "hovertemplate": "%{text}<extra></extra>",
+        "text": [
+          [
+            "Psalm 1",
+            "Psalm 1 vs 2<br>z: 0.400",
+            "Psalm 1 vs 3<br>z: 0.900",
+          ],
+          [
+            "Psalm 1 vs 2<br>z: 0.400",
+            "Psalm 2",
+            "Psalm 2 vs 3<br>z: -0.200",
+          ],
+          [
+            "Psalm 1 vs 3<br>z: 0.900",
+            "Psalm 2 vs 3<br>z: -0.200",
+            "Psalm 3",
+          ],
+        ],
+        "type": "heatmap",
+        "z": [
+          [
+            0,
+            0.4,
+            0.9,
+          ],
+          [
+            0.4,
+            0,
+            -0.2,
+          ],
+          [
+            0.9,
+            -0.2,
+            0,
+          ],
+        ],
+        "zmax": 0.9,
+        "zmid": 0,
+        "zmin": -0.9,
+      },
+    ],
+  },
+]
+`;

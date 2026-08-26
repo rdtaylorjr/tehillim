@@ -103,14 +103,12 @@ misspells the author's given name as "Drik"; the GitHub and Zenodo records both 
 
 **Psalm form and genre data**
 
-> Witthoff, David, Kris Lyle, Matt Nerdahl, Jimmy Parks, and Elliot Ritzema. *Psalms Explorer*.
+> Witthoff, David, Kris Lyle, Matt Nerdahl, Jimmy Parks, and Elliot Ritzema. *Psalms Explorer
+> Dataset*.
 > Edited by Eli Evans. Bellingham, WA: Logos Bible Software.
 > https://www.logos.com/product/54188/psalms-explorer-dataset.
 
-Used with permission. The resource carries the internal title "Psalms Form and Structure" in
-its own front matter; Logos publishes it as Psalms Explorer, which is the name used here and in
-the footer. These form and genre classifications reflect one interpretive scheme among several
-in Hebrew Bible scholarship.
+Used with permission.
 
 The BHSA licence is non-commercial and requires attribution, so any reuse of this work inherits
 that condition.

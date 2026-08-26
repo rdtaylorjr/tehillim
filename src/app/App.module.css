@@ -1,0 +1,86 @@
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 24px 28px 48px;
+}
+
+/* Panel */
+.panel {
+  container-type: inline-size;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* App header: a sticky full-bleed bar, matching tehillim v1's proportions. */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 28px;
+  background: rgb(26 29 33 / 94%);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 1.9rem;
+}
+
+.title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.title-block h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title-scope {
+  font-weight: 400;
+  color: var(--ink-dim);
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 0.86rem;
+  color: var(--ink-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Narrow enough that the phrase would ellipsize mid-word, so the subtitle carries the meaning. */
+@media (max-width: 760px) {
+  .title-scope {
+    display: none;
+  }
+}
+
+/* The name holds full weight so the explaining phrase reads as a second tier, not a rival. */
+.title-name {
+  font-weight: 700;
+  color: var(--ink);
+}

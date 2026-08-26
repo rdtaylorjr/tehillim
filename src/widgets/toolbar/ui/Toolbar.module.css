@@ -1,0 +1,232 @@
+/* Toolbar: the path heads it, each branch's filters sit on a shared right rail. */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Path strip keeps the panel ground; the two branch rows drop to the page black. */
+.summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 3px 7px;
+  padding: 9px 16px;
+  background: var(--bg-inset);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* display:contents so every crumb wraps and truncates on its own, not as one block. */
+.path {
+  display: contents;
+  cursor: pointer;
+  font: inherit;
+}
+
+.path:focus-visible .crumb {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.crumbs {
+  flex: 0 0 auto;
+  min-width: 0;
+  color: var(--ink-dim);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: var(--control-h);
+}
+
+.crumb,
+.crumb-x,
+.crumb-sep {
+  margin-right: 5px;
+  font-size: 12.5px;
+}
+
+.crumbs :last-child {
+  margin-right: 0;
+}
+
+.crumb {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* The two crossed trees head the path, so they outrank the filters hanging off them. */
+.crumb:not(.dim) {
+  font-size: 15.5px;
+  letter-spacing: -0.01em;
+}
+
+.crumb.dim {
+  color: var(--ink-dim);
+  font-weight: 500;
+}
+
+.crumb-sep {
+  color: var(--ink-faint);
+}
+
+.crumb-x {
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.crumb-model {
+  margin-right: 5px;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+/* Whole filters drop out rather than being cut mid-word. */
+.summary.hide-minor .crumb.dim,
+.summary.hide-minor .crumb-sep:not(.keep) {
+  display: none;
+}
+
+.path-toggle {
+  flex: 0 0 auto;
+  margin-left: 5px;
+  color: var(--ink-faint);
+  transition:
+    transform 0.16s,
+    color 0.14s;
+}
+
+.path:hover .path-toggle {
+  color: var(--ink);
+}
+
+.is-collapsed .path-toggle {
+  transform: rotate(-90deg);
+}
+
+/* Detail: nothing left to fold or filter, so the path ends in the model and offers the way back. */
+.is-detail .branches {
+  display: none;
+}
+
+.is-detail .path {
+  cursor: default;
+}
+
+/* Last resort in detail: the model name truncates, the floor keeping the two trees whole. */
+.is-detail .crumbs {
+  flex: 0 1 auto;
+  min-width: 192px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  height: var(--control-h);
+  margin-left: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.back:hover {
+  color: var(--ink);
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.branches {
+  display: flex;
+  flex-direction: column;
+}
+
+.is-collapsed .branches {
+  display: none;
+}
+
+.branch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 6px;
+  padding: 13px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* The two branches read as one zone, so only the last is ruled off from the table. */
+.branch:not(:last-child) {
+  padding-bottom: 7px;
+  border-bottom: none;
+}
+
+.branch + .branch {
+  padding-top: 7px;
+}
+
+.branch-head {
+  flex-shrink: 0;
+  margin-right: 10px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* The filters share one right rail, wrapping among themselves and staying against the edge. */
+.branch-yield {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px 6px;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.summary .summary-control {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: auto;
+}
+
+/* A step below its own row, so the field reads as a well rather than a flat patch. */
+.summary .summary-control input[type="text"] {
+  flex: 0 1 auto;
+  width: 200px;
+  min-width: 110px;
+  background: var(--bg-panel);
+  font-weight: 400;
+}
+
+@container (max-width: 400px) {
+  .summary .control label {
+    display: none;
+  }
+}
+
+@container (max-width: 320px) {
+  .summary .summary-control input[type="text"] {
+    min-width: 40px;
+  }
+}
+
+/* Keyed to the panel, not the window, so the order holds whatever the row is given. */
+@container (max-width: 430px) {
+  .summary .summary-control input[type="text"] {
+    min-width: 96px;
+  }
+}

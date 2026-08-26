@@ -1,0 +1,43 @@
+.control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+.control label {
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.control select,
+.control input[type="text"] {
+  height: var(--control-h);
+  padding: 0 9px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--bg-inset);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.control input[type="text"]::placeholder {
+  color: var(--ink-faint);
+}
+
+.control select:hover,
+.control input[type="text"]:hover {
+  border-color: var(--accent-dim);
+}
+
+.control select:focus-visible,
+.control input[type="text"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

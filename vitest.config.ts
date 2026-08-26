@@ -20,7 +20,8 @@ export default defineConfig({
         "src/**/*.test.{ts,tsx}",
         "src/test/**",
         "src/main.tsx",
-        "src/vite-env.d.ts",
+        // Declarations emit no code, generated ones least of all.
+        "src/**/*.d.ts",
         // Types only: nothing is emitted, so there is nothing to execute.
         "src/shared/lib/results/tableColumn.ts",
         "src/shared/lib/results/resultRows.ts",

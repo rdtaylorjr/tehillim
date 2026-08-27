@@ -27,5 +27,5 @@ export const LINKS = {
   bhsa: "https://doi.org/10.17026/dans-z6y-skyh",
   textFabric: "https://doi.org/10.5281/zenodo.592193",
   psalmsExplorer: "https://www.logos.com/product/54188/psalms-explorer-dataset",
-  repository: "https://github.com/rdtaylorjr/tehillim-react",
+  repository: "https://github.com/rdtaylorjr/tehillim",
 } as const;

@@ -5,6 +5,7 @@ import type { Data } from "plotly.js";
 import { TOKENS } from "../model/tokens";
 import type { CurveSeries } from "../model/types";
 import { baseLayout, PLOTLY_CONFIG } from "./baseLayout";
+import { createHoverFade } from "./hoverFade";
 
 /** Mounts an ROC or PR curve (one dotted reference line plus one line per series, hover-dimming the rest). */
 export function mountMultiCurve(
@@ -17,6 +18,7 @@ export function mountMultiCurve(
   yTitle: string,
   colorFn: (name: string) => string,
   refPoints: { x: number; y: number }[],
+  showLegend = true,
   plot: PlotFn = plotly,
 ): void {
   const traces: Data[] = [
@@ -54,19 +56,28 @@ export function mountMultiCurve(
       gridcolor: TOKENS.rule,
     },
     legend: { font: { size: 9.5 } },
+    showlegend: showLegend,
     height: 380,
   });
 
   void plot(mount, traces, layout, PLOTLY_CONFIG);
   const gd = mount as unknown as Plotly.PlotlyHTMLElement;
   const full = traces.map(() => 1);
+  const fade = createHoverFade(
+    (active) => {
+      const opacity = traces.map((_, i) => (i === 0 || i === active ? 1 : 0.15));
+      void Plotly.restyle(gd, { opacity } as unknown as Data);
+    },
+    () => {
+      void Plotly.restyle(gd, { opacity: full } as unknown as Data);
+    },
+  );
   gd.on("plotly_hover", (evt) => {
     const active = evt.points[0]?.curveNumber;
     if (active === undefined || active === 0) return;
-    const opacity = traces.map((_, i) => (i === 0 || i === active ? 1 : 0.15));
-    void Plotly.restyle(gd, { opacity } as unknown as Data);
+    fade.enter(active);
   });
   gd.on("plotly_unhover", () => {
-    void Plotly.restyle(gd, { opacity: full } as unknown as Data);
+    fade.leave();
   });
 }

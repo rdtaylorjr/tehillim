@@ -86,6 +86,7 @@ describe("chart output is stable", () => {
         { x: 0, y: 0 },
         { x: 1, y: 1 },
       ],
+      true,
       plot,
     );
     expect(calls).toMatchSnapshot();
@@ -106,6 +107,7 @@ describe("chart output is stable", () => {
         { x: 0, y: 0.25 },
         { x: 1, y: 0.25 },
       ],
+      false,
       plot,
     );
     expect(calls).toMatchSnapshot();

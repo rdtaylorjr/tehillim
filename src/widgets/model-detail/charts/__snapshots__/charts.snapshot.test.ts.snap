@@ -5,7 +5,7 @@ exports[`chart output is stable > PR curves hand Plotly an unchanging payload 1`
   {
     "config": {
       "displayModeBar": false,
-      "responsive": true,
+      "responsive": false,
     },
     "layout": {
       "font": {
@@ -36,6 +36,7 @@ exports[`chart output is stable > PR curves hand Plotly an unchanging payload 1`
       },
       "paper_bgcolor": "#1a1d21",
       "plot_bgcolor": "#1a1d21",
+      "showlegend": false,
       "xaxis": {
         "gridcolor": "#2c3036",
         "range": [
@@ -109,7 +110,7 @@ exports[`chart output is stable > ROC curves hand Plotly an unchanging payload 1
   {
     "config": {
       "displayModeBar": false,
-      "responsive": true,
+      "responsive": false,
     },
     "layout": {
       "font": {
@@ -140,6 +141,7 @@ exports[`chart output is stable > ROC curves hand Plotly an unchanging payload 1
       },
       "paper_bgcolor": "#1a1d21",
       "plot_bgcolor": "#1a1d21",
+      "showlegend": true,
       "xaxis": {
         "gridcolor": "#2c3036",
         "range": [
@@ -213,7 +215,7 @@ exports[`chart output is stable > rainclouds hand Plotly an unchanging payload 1
   {
     "config": {
       "displayModeBar": false,
-      "responsive": true,
+      "responsive": false,
     },
     "layout": {
       "font": {
@@ -269,7 +271,7 @@ exports[`chart output is stable > rainclouds hand Plotly an unchanging payload 1
         },
         "fillcolor": "#00000155",
         "hoverinfo": "x+name",
-        "hoveron": "points",
+        "hoveron": "violins+points",
         "jitter": 0.3,
         "line": {
           "color": "#000001",
@@ -304,7 +306,7 @@ exports[`chart output is stable > rainclouds hand Plotly an unchanging payload 1
         "boxpoints": "all",
         "fillcolor": "#00000133",
         "hoverinfo": "x+name",
-        "hoveron": "points",
+        "hoveron": "boxes+points",
         "jitter": 0.4,
         "line": {
           "color": "#000001",
@@ -337,7 +339,7 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
   {
     "config": {
       "displayModeBar": false,
-      "responsive": true,
+      "responsive": false,
     },
     "layout": {
       "font": {
@@ -428,7 +430,7 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
         "colorscale": [
           [
             0,
-            "#4d94d4",
+            "#3981aa",
           ],
           [
             0.5,
@@ -436,7 +438,7 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
           ],
           [
             1,
-            "#e37a2e",
+            "#bb753e",
           ],
         ],
         "customdata": [
@@ -484,7 +486,7 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
   {
     "config": {
       "displayModeBar": false,
-      "responsive": true,
+      "responsive": false,
     },
     "layout": {
       "font": {
@@ -603,7 +605,7 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "colorscale": [
           [
             0,
-            "#4d94d4",
+            "#3981aa",
           ],
           [
             0.5,
@@ -611,7 +613,7 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
           ],
           [
             1,
-            "#e37a2e",
+            "#bb753e",
           ],
         ],
         "hovertemplate": "%{text}<extra></extra>",

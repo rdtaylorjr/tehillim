@@ -6,6 +6,7 @@ import { TOKENS } from "../model/tokens";
 import { raincloudRowLabel } from "../lib/raincloud";
 import type { RaincloudGroup } from "../model/types";
 import { baseLayout, PLOTLY_CONFIG } from "./baseLayout";
+import { createHoverFade } from "./hoverFade";
 
 /** Mounts a raincloud plot (violin+box+points, or box+points below the density floor) into `mount`. */
 export function mountRainclouds(
@@ -15,7 +16,7 @@ export function mountRainclouds(
   xTitle: string,
   plot: PlotFn = plotly,
 ): void {
-  const traces: Data[] = groups.map((g) => {
+  const traces = groups.map((g) => {
     const color = colorFn(g.key);
     const { thin, y0 } = raincloudRowLabel(g);
     if (thin) {
@@ -32,7 +33,7 @@ export function mountRainclouds(
         line: { color, width: 1.5 },
         fillcolor: `${color}33`,
         hoverinfo: "x+name",
-        hoveron: "points",
+        hoveron: "boxes+points",
         showlegend: false,
       };
     }
@@ -53,10 +54,10 @@ export function mountRainclouds(
       line: { color, width: 1.5 },
       fillcolor: `${color}55`,
       hoverinfo: "x+name",
-      hoveron: "points",
+      hoveron: "violins+points",
       showlegend: false,
     };
-  });
+  }) as unknown as Data[];
 
   const layout = baseLayout({
     xaxis: {
@@ -80,13 +81,21 @@ export function mountRainclouds(
   const gd = mount as unknown as Plotly.PlotlyHTMLElement;
   const dimmed = traces.map(() => 0.15);
   const full = traces.map(() => 1);
+  const fade = createHoverFade(
+    (active) => {
+      const opacity = traces.map((_, i) => (i === active ? 1 : dimmed[i]));
+      void Plotly.restyle(gd, { opacity } as unknown as Data);
+    },
+    () => {
+      void Plotly.restyle(gd, { opacity: full } as unknown as Data);
+    },
+  );
   gd.on("plotly_hover", (evt) => {
     const active = evt.points[0]?.curveNumber;
     if (active === undefined) return;
-    const opacity = traces.map((_, i) => (i === active ? 1 : dimmed[i]));
-    void Plotly.restyle(gd, { opacity } as unknown as Data);
+    fade.enter(active);
   });
   gd.on("plotly_unhover", () => {
-    void Plotly.restyle(gd, { opacity: full } as unknown as Data);
+    fade.leave();
   });
 }

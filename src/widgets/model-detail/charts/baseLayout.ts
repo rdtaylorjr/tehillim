@@ -1,7 +1,7 @@
 import { TOKENS } from "../model/tokens";
 
-/** Plotly config shared by every chart on this route: no mode bar chrome, responsive to its container. */
-export const PLOTLY_CONFIG = { displayModeBar: false, responsive: true };
+/** Plotly config shared by every chart: no mode bar, and resizing driven by the mount, not Plotly. */
+export const PLOTLY_CONFIG = { displayModeBar: false, responsive: false };
 
 /**
  * Layout fields shared by every chart on this route (panel colors, font, hover label), merged with

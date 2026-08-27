@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "./App";
+import type { DetailLoad } from "../widgets/model-detail";
 import { EMPTY_DOMAIN_DATA } from "../shared/lib/results";
 import type { DomainData } from "../shared/lib/results";
 import type { DomainLoad } from "../shared/api";
@@ -38,7 +39,28 @@ const load = (family: FamilyId): Promise<DomainLoad> =>
     family === "semantic" ? { status: "loaded", data: SEMANTIC } : { status: "absent" },
   );
 
-const renderApp = (): ReturnType<typeof render> => render(<App load={load} />);
+/** The detail pane fetches its own payload, so tests hand it one rather than a network. */
+const PARALLELISM_STATS = {
+  auc: 0.69,
+  auc_ci_low: 0.66,
+  auc_ci_high: 0.72,
+  ap: 0.34,
+  ap_ci_low: 0.31,
+  ap_ci_high: 0.37,
+};
+
+const loadDetail = (): Promise<DetailLoad> =>
+  Promise.resolve({
+    status: "loaded",
+    data: {
+      model: "alephbert_consonantal",
+      domain: "semantic",
+      parallelism: { raincloud_groups: [], series: [], auc_ap_stats: PARALLELISM_STATS },
+    },
+  });
+
+const renderApp = (): ReturnType<typeof render> =>
+  render(<App load={load} loadDetail={loadDetail} />);
 
 describe("App", () => {
   it("keeps one toolbar mounted while the pane beneath it swaps", async () => {
@@ -50,7 +72,7 @@ describe("App", () => {
 
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     expect(
-      screen.getByText("Charts for the current selection render here."),
+      await screen.findByText("ROC curve", undefined, { timeout: 5000 }),
     ).toBeInTheDocument();
     // The same node, so the toolbar was never unmounted and remounted.
     expect(screen.getByRole("radiogroup", { name: "Models" })).toBe(toolbar);
@@ -61,7 +83,10 @@ describe("App", () => {
     await userEvent.click(await screen.findByRole("button", { name: "alephbert consonantal" }));
 
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
-    expect(screen.getByText(/charts for the current selection/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText("ROC curve", undefined, { timeout: 5000 }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Precision–Recall curve")).toBeInTheDocument();
     expect(screen.getAllByText("alephbert_consonantal").length).toBeGreaterThan(0);
   });
 
@@ -117,7 +142,7 @@ describe("App", () => {
     // Settles the data load first, so its state update lands inside the test rather than after it.
     await screen.findByRole("table");
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Tehillim Computational Analysis of Psalms",
+      "Tehillim · Computational Analysis of Psalms",
     );
     expect(screen.getByText("Hebrew Psalm Representation Benchmarks")).toBeInTheDocument();
   });

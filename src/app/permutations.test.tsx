@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "./App";
 import type { DomainData } from "../shared/lib/results";
@@ -121,10 +121,14 @@ async function open(): Promise<void> {
 
 /** Every rendered row must have exactly one cell per header, or the two have gone out of step. */
 function expectCellsMatchHeaders(context: string): void {
-  const headers = screen.getAllByRole("columnheader").length;
-  for (const row of screen.getAllByRole("row").slice(1)) {
-    expect(within(row).getAllByRole("cell").length, context).toBe(headers);
-  }
+  const table = document.querySelector("table");
+  const headers = table?.querySelectorAll("thead th").length ?? 0;
+  const widths = [...(table?.querySelectorAll("tbody tr") ?? [])].map(
+    (row) => row.children.length,
+  );
+  expect(headers, `${context}: no headers`).toBeGreaterThan(0);
+  expect(widths, `${context}: no rows`).not.toHaveLength(0);
+  expect(new Set(widths), context).toEqual(new Set([headers]));
 }
 
 describe("every toolbar permutation renders a coherent table", () => {

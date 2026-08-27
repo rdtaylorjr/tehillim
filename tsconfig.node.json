@@ -11,5 +11,5 @@
     "strict": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "vitest.config.ts", "vite.shared.ts"]
+  "include": ["vite.config.ts", "vitest.config.ts", "vite.shared.ts", "detailFile.ts", "detailFile.test.ts"]
 }

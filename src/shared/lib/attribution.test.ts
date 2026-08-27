@@ -24,8 +24,8 @@ describe("LINKS", () => {
     expect(LINKS.textFabric).toBe("https://doi.org/10.5281/zenodo.592193");
   });
 
-  it("sends BHSA to the repository, the DANS DOI being unreachable from a browser", () => {
-    expect(LINKS.bhsa).toBe("https://github.com/ETCBC/bhsa");
+  it("cites BHSA through the identifier its licence requires for attribution", () => {
+    expect(LINKS.bhsa).toBe("https://doi.org/10.17026/dans-z6y-skyh");
   });
 
   it("points at the publisher's page for the dataset that has no DOI", () => {
@@ -46,7 +46,7 @@ describe("SITE", () => {
   });
 
   it("reads as one phrase once joined, the weight contrast standing in for punctuation", () => {
-    expect(SITE.title).toBe("Tehillim Computational Analysis of Psalms");
+    expect(SITE.title).toBe("Tehillim · Computational Analysis of Psalms");
   });
 
   it("keeps benchmarks in the subtitle, the line a later phase replaces", () => {

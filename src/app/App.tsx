@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { lazy, Suspense, useEffect, useReducer, useState } from "react";
 import styles from "./App.module.css";
 import { Message } from "../shared/ui/Message";
 import { SITE } from "../shared/lib/attribution";
@@ -10,14 +10,27 @@ import type { DomainData } from "../shared/lib/results";
 import { familyFor } from "../shared/lib/catalog";
 import type { FamilyId } from "../shared/lib/catalog";
 import { Toolbar } from "../widgets/toolbar";
-import { BenchmarkTable } from "../widgets/benchmark-table";
-import { ModelDetail } from "../widgets/model-detail";
+import { BenchmarkTable, clickedRow } from "../widgets/benchmark-table";
+// Plotly is several megabytes, and the table needs none of it, so the charts load on first use.
+interface ModelDetailModule {
+  readonly ModelDetail: (props: ModelDetailProps) => React.ReactElement;
+}
+
+const importModelDetail = async (): Promise<ModelDetailModule> =>
+  import("../widgets/model-detail");
+
+const ModelDetail = lazy(async () => {
+  const loaded = await importModelDetail();
+  return { default: loaded.ModelDetail };
+});
+import type { DetailLoader, ModelDetailProps } from "../widgets/model-detail";
 import { Footer } from "../widgets/footer";
 
 export interface AppProps {
   /** Injected in tests so the page can be driven without a server. */
   readonly load?: (family: FamilyId) => Promise<DomainLoad>;
   readonly loadSlice?: TrajectorySliceLoader;
+  readonly loadDetail?: DetailLoader;
 }
 
 /** Only the per-genre trajectory view reads the rows that ship separately. */
@@ -63,7 +76,7 @@ function ResultsPane({
 }
 
 /** The whole page: one persistent toolbar, and one pane below it that swaps. */
-export function App({ load, loadSlice }: AppProps = {}): React.ReactElement {
+export function App({ load, loadSlice, loadDetail }: AppProps = {}): React.ReactElement {
   const [selection, dispatch] = useReducer(selectionReducer, INITIAL_SELECTION);
   // One cache per mounted page rather than a module-level singleton outliving it.
   const [fallbackLoad] = useState(() => createDomainCache());
@@ -101,9 +114,30 @@ export function App({ load, loadSlice }: AppProps = {}): React.ReactElement {
     };
   }, [loadTrajectory, selection.family, selection.metric, sliceKey, wantsSlice]);
 
+  // The charts weigh far more than the table, so they are fetched while the reader reads the table.
+  useEffect(() => {
+    const warm = (): void => {
+      void importModelDetail();
+    };
+    // Safari only gained requestIdleCallback recently, so a timer stands in where it is absent.
+    if (typeof requestIdleCallback !== "function") {
+      const timer = setTimeout(warm, 300);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+    const idle = requestIdleCallback(warm);
+    return () => {
+      cancelIdleCallback(idle);
+    };
+  }, []);
+
   // Carrying the family with its result makes a previous family's rows unusable rather than stale.
   const result = loaded?.family === selection.family ? loaded.result : null;
   const sliceRows = slice?.key === sliceKey ? slice.rows : [];
+  // The detail view restates the row's numbers, so they are derived here rather than duplicated in state.
+  const opened =
+    result?.status === "loaded" ? clickedRow(result.data, selection, sliceRows) : null;
 
   return (
     <>
@@ -114,7 +148,7 @@ export function App({ load, loadSlice }: AppProps = {}): React.ReactElement {
         <div className={styles.titleBlock}>
           <h1>
             <span className={styles.titleName}>{SITE.name}</span>
-            <span className={styles.titleScope}> {SITE.scope}</span>
+            <span className={styles.titleScope}> · {SITE.scope}</span>
           </h1>
           <p className={styles.subtitle}>{SITE.subtitle}</p>
         </div>
@@ -124,7 +158,15 @@ export function App({ load, loadSlice }: AppProps = {}): React.ReactElement {
         <main className={styles.panel}>
           <Toolbar selection={selection} dispatch={dispatch} />
           {selection.model !== null ? (
-            <ModelDetail model={selection.model} benchmark={selection.benchmark} />
+            <Suspense fallback={<Message>Loading charts…</Message>}>
+              <ModelDetail
+                selection={selection}
+                model={selection.model}
+                row={opened?.row ?? null}
+                columns={opened?.columns ?? []}
+                {...(loadDetail === undefined ? {} : { load: loadDetail })}
+              />
+            </Suspense>
           ) : (
             <ResultsPane
               result={result}

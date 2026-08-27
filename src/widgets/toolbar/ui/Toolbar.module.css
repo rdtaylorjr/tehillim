@@ -54,9 +54,10 @@
   font-weight: 600;
 }
 
-/* The two crossed trees head the path, so they outrank the filters hanging off them. */
+/* The two crossed trees head the path, so they carry the title's face at a lower rank. */
 .crumb:not(.dim) {
-  font-size: 15.5px;
+  font-family: var(--serif);
+  font-size: 17px;
   letter-spacing: -0.01em;
 }
 
@@ -179,7 +180,7 @@
 .branch-head {
   flex-shrink: 0;
   margin-right: 10px;
-  color: var(--accent);
+  color: var(--ink-faint);
   font-family: var(--mono);
   font-size: 9.5px;
   letter-spacing: 0.09em;

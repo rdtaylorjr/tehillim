@@ -10,3 +10,7 @@ class InertResizeObserver {
 }
 
 globalThis.ResizeObserver = InertResizeObserver;
+
+/** jsdom implements no object URLs, which Plotly touches on import. */
+globalThis.URL.createObjectURL = () => "blob:inert";
+globalThis.URL.revokeObjectURL = noop;

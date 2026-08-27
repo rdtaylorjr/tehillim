@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import styles from "./ResultsTable.module.css";
-import { formatNumber, sortRows } from "../../../shared/lib/results";
+import { sortRows } from "../../../shared/lib/results";
 import type { SortDir, TableColumn } from "../../../shared/lib/results";
-import { significancePill } from "../../../shared/ui/Pill";
+import { cellContent } from "../../../shared/ui/cellContent";
 
 export interface ResultsTableProps<T extends object> {
   /** States which selection produced these rows, for a reader who cannot see the toolbar. */
@@ -51,14 +51,6 @@ function asText(raw: unknown): string {
 function cellClass<T>(column: TableColumn<T>): string {
   if (column.type === "num" || column.type === "pill") return styles.num;
   return isModelColumn(column.key) ? styles.modelCell : "";
-}
-
-function cellContent<T extends object>(row: T, column: TableColumn<T>): React.ReactNode {
-  if (column.render) return column.render(row);
-  const raw = (row as Record<string, unknown>)[column.key];
-  if (column.type === "pill") return significancePill(raw as number, column.pillPrefix);
-  if (column.type === "num") return formatNumber(raw as number, column.digits);
-  return asText(raw);
 }
 
 /** One results table: sorted rows, sort-indicator classes, and each column's cell rule. */

@@ -62,6 +62,8 @@ export function mountMultiCurve(
 
   void plot(mount, traces, layout, PLOTLY_CONFIG);
   const gd = mount as unknown as Plotly.PlotlyHTMLElement;
+  // Hover binding needs a Plotly-initialised element; a substituted plot function leaves none.
+  if (typeof gd.on !== "function") return;
   const full = traces.map(() => 1);
   const fade = createHoverFade(
     (active) => {

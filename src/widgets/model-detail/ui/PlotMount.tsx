@@ -39,8 +39,12 @@ export function PlotMount({ draw, purge, resize }: PlotMountProps): React.ReactE
     return () => {
       clearTimeout(timer);
       observer.disconnect();
-      if (purge === undefined) Plotly.purge(mount);
-      else purge(mount);
+      if (purge !== undefined) {
+        purge(mount);
+        return;
+      }
+      // Purging a node Plotly never drew into throws, so only a real plot is torn down.
+      if ("_fullLayout" in mount) Plotly.purge(mount);
     };
   }, [draw, purge, resize]);
 

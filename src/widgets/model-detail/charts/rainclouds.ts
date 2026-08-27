@@ -79,6 +79,8 @@ export function mountRainclouds(
 
   void plot(mount, traces, layout, PLOTLY_CONFIG);
   const gd = mount as unknown as Plotly.PlotlyHTMLElement;
+  // Hover binding needs a Plotly-initialised element; a substituted plot function leaves none.
+  if (typeof gd.on !== "function") return;
   const dimmed = traces.map(() => 0.15);
   const full = traces.map(() => 1);
   const fade = createHoverFade(

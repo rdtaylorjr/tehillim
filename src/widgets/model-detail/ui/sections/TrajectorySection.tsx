@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import styles from "../ModelDetail.module.css";
 import { Card } from "./Card";
 import { PlotMount } from "../PlotMount";
+import type { PlotFn } from "../../charts/plot";
 import { ScaledPlot } from "../ScaledPlot";
 import { GapStat } from "../StatLine";
 import { mountRainclouds } from "../../charts/rainclouds";
@@ -29,12 +30,14 @@ function SourceCharts({
   order,
   suffix,
   heading,
+  plot,
 }: {
   readonly source: TrajectorySourceData;
   readonly metric: string;
   readonly order: PsalmOrderEntry[];
   readonly suffix: string;
   readonly heading: string;
+  readonly plot?: PlotFn;
 }): React.ReactElement {
   const drawRaincloud = useCallback(
     (el: HTMLElement) => {
@@ -42,23 +45,23 @@ function SourceCharts({
         { ...source.raincloud.different, key: "different", label: "Across genre" },
         { ...source.raincloud.same, key: "combined", label: "Within genre" },
       ];
-      mountRainclouds(el, groups, sourceColor, `${metric} (${suffix}-ctrl residual)`);
+      mountRainclouds(el, groups, sourceColor, `${metric} (${suffix}-ctrl residual)`, plot);
     },
-    [source.raincloud, metric, suffix],
+    [source.raincloud, metric, suffix, plot],
   );
 
   const drawMean = useCallback(
     (el: HTMLElement) => {
-      mountGenreMeanMatrix(el, source.heatmap_genre_mean, GENRE_LIST, "residual");
+      mountGenreMeanMatrix(el, source.heatmap_genre_mean, GENRE_LIST, "residual", plot);
     },
-    [source.heatmap_genre_mean],
+    [source.heatmap_genre_mean, plot],
   );
 
   const drawFull = useCallback(
     (el: HTMLElement) => {
-      mountHeatmap(el, source.heatmap, order, "residual");
+      mountHeatmap(el, source.heatmap, order, "residual", plot);
     },
-    [source.heatmap, order],
+    [source.heatmap, order, plot],
   );
 
   return (
@@ -82,8 +85,11 @@ function SourceCharts({
 /** Within- against across-genre distance, for both controlled sources. */
 export function TrajectorySection({
   section,
+  plot,
 }: {
   readonly section: Section;
+  /** Injected in tests so a section renders without a real Plotly canvas. */
+  readonly plot?: PlotFn;
 }): React.ReactElement {
   return (
     <div className={styles.grid}>
@@ -95,6 +101,7 @@ export function TrajectorySection({
           order={section.order}
           suffix={s.suffix}
           heading={s.heading}
+          {...(plot === undefined ? {} : { plot })}
         />
       ))}
     </div>

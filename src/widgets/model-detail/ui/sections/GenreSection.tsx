@@ -3,6 +3,7 @@ import styles from "../ModelDetail.module.css";
 import { Card } from "./Card";
 import { SeriesKey } from "../SeriesKey";
 import { PlotMount } from "../PlotMount";
+import type { PlotFn } from "../../charts/plot";
 import { ScaledPlot } from "../ScaledPlot";
 import { ScalarStat } from "../StatLine";
 import { mountMultiCurve } from "../../charts/curves";
@@ -22,7 +23,14 @@ const groupColor = (key: string): string => {
 };
 
 /** Same- against different-genre separation, then the full pairwise structure behind it. */
-export function GenreSection({ section }: { readonly section: Section }): React.ReactElement {
+export function GenreSection({
+  section,
+  plot,
+}: {
+  readonly section: Section;
+  /** Injected in tests so a section renders without a real Plotly canvas. */
+  readonly plot?: PlotFn;
+}): React.ReactElement {
   const curveColor = useCallback(
     (name: string): string => seriesColor(name, GENRE_COLORS, TOKENS.accent, TOKENS.inkFaint),
     [],
@@ -44,9 +52,10 @@ export function GenreSection({ section }: { readonly section: Section }): React.
           { x: 1, y: 1 },
         ],
         false,
+        plot,
       );
     },
-    [section.series, curveColor],
+    [section.series, curveColor, plot],
   );
 
   // The PR chance line is the positive-class prevalence, not the achieved AP.
@@ -70,9 +79,10 @@ export function GenreSection({ section }: { readonly section: Section }): React.
           { x: 1, y: prevalence },
         ],
         false,
+        plot,
       );
     },
-    [section.series, curveColor, prevalence],
+    [section.series, curveColor, prevalence, plot],
   );
 
   const drawRaincloud = useCallback(
@@ -81,23 +91,23 @@ export function GenreSection({ section }: { readonly section: Section }): React.
         section.raincloud_groups,
         section.series.map((s) => s.name),
       );
-      mountRainclouds(el, groups, groupColor, "calibrated_z");
+      mountRainclouds(el, groups, groupColor, "calibrated_z", plot);
     },
-    [section.raincloud_groups, section.series],
+    [section.raincloud_groups, section.series, plot],
   );
 
   const drawMean = useCallback(
     (el: HTMLElement) => {
-      mountGenreMeanMatrix(el, section.heatmap_genre_mean, GENRE_LIST, "calibrated_z");
+      mountGenreMeanMatrix(el, section.heatmap_genre_mean, GENRE_LIST, "calibrated_z", plot);
     },
-    [section.heatmap_genre_mean],
+    [section.heatmap_genre_mean, plot],
   );
 
   const drawFull = useCallback(
     (el: HTMLElement) => {
-      mountHeatmap(el, section.heatmap, section.genre_order, "calibrated_z");
+      mountHeatmap(el, section.heatmap, section.genre_order, "calibrated_z", plot);
     },
-    [section.heatmap, section.genre_order],
+    [section.heatmap, section.genre_order, plot],
   );
 
   const stats = section.auc_ap_stats;

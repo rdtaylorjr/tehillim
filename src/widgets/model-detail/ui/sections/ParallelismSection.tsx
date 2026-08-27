@@ -3,6 +3,7 @@ import styles from "../ModelDetail.module.css";
 import { Card } from "./Card";
 import { SeriesKey } from "../SeriesKey";
 import { PlotMount } from "../PlotMount";
+import type { PlotFn } from "../../charts/plot";
 import { mountMultiCurve } from "../../charts/curves";
 import { mountRainclouds } from "../../charts/rainclouds";
 import { orderGroups, seriesColor } from "../../lib/curveStyle";
@@ -20,8 +21,11 @@ const groupColor = (key: string): string => {
 /** Marked-parallel against baseline: the discrimination claim, then the scores behind it. */
 export function ParallelismSection({
   section,
+  plot,
 }: {
   readonly section: Section;
+  /** Injected in tests so a section renders without a real Plotly canvas. */
+  readonly plot?: PlotFn;
 }): React.ReactElement {
   const curveColor = useCallback(
     (name: string): string =>
@@ -49,9 +53,10 @@ export function ParallelismSection({
           { x: 1, y: 1 },
         ],
         false,
+        plot,
       );
     },
-    [section.series, curveColor],
+    [section.series, curveColor, plot],
   );
 
   const drawPr = useCallback(
@@ -70,9 +75,10 @@ export function ParallelismSection({
           { x: 1, y: prevalence },
         ],
         false,
+        plot,
       );
     },
-    [section.series, curveColor, prevalence],
+    [section.series, curveColor, prevalence, plot],
   );
 
   const drawRaincloud = useCallback(
@@ -81,9 +87,9 @@ export function ParallelismSection({
         section.raincloud_groups,
         section.series.map((s) => s.name),
       );
-      mountRainclouds(el, groups, groupColor, "calibrated_z");
+      mountRainclouds(el, groups, groupColor, "calibrated_z", plot);
     },
-    [section.raincloud_groups, section.series],
+    [section.raincloud_groups, section.series, plot],
   );
 
   const stats = section.auc_ap_stats;

@@ -147,8 +147,8 @@ export function App({ load, loadSlice, loadDetail }: AppProps = {}): React.React
         </span>
         <div className={styles.titleBlock}>
           <h1>
-            <span className={styles.titleName}>{SITE.name}</span>
-            <span className={styles.titleScope}> · {SITE.scope}</span>
+            <span className={styles.titleName}>{SITE.name}</span>{" "}
+            <span className={styles.titleScope}>{SITE.scope}</span>
           </h1>
           <p className={styles.subtitle}>{SITE.subtitle}</p>
         </div>

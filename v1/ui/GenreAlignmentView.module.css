@@ -1,0 +1,169 @@
+/* The purity/AMI/ARI scorecard: the same stat-tile shape the benchmarks detail
+   view uses for a row's headline numbers. */
+.alignment-stat-tiles {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.alignment-stat-tile {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--bg-inset);
+  text-align: center;
+}
+
+.alignment-stat-value {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+
+.alignment-stat-label {
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.alignment-detail {
+  margin-top: 8px;
+}
+
+.alignment-detail summary {
+  padding: 6px 0;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.alignment-detail summary:hover {
+  color: var(--ink);
+}
+
+.alignment-detail[open] summary {
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+/* Spells out the table's two visual channels right next to the table, so it
+   doesn't depend on the reader having read the prose above the section. */
+.alignment-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 12px;
+  color: var(--ink-dim);
+  font-size: 11.5px;
+}
+
+.alignment-legend-shade {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.alignment-legend-bar {
+  display: inline-flex;
+  width: 120px;
+  height: 10px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.alignment-legend-bar span {
+  flex: 1;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.alignment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.alignment-table th,
+.alignment-table td {
+  padding: 6px 8px;
+  border: 1px solid var(--rule);
+  text-align: center;
+}
+
+.alignment-corner {
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.alignment-cluster-header {
+  color: var(--ink);
+  font-size: 11.5px;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.alignment-cluster-number {
+  font-weight: 700;
+}
+
+.alignment-cluster-genre {
+  max-width: 110px;
+  color: var(--ink-dim);
+  font-size: 10.5px;
+  font-weight: 400;
+  white-space: normal;
+}
+
+.alignment-table th.alignment-row-header {
+  color: var(--ink);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.alignment-genre-name {
+  margin-right: 6px;
+}
+
+.alignment-genre-total {
+  color: var(--ink-dim);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.alignment-table td {
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+/* Past this share the cell's own fill carries enough weight to take dark ink. */
+.alignment-table td.is-dark {
+  color: #121417;
+}
+
+.alignment-table td.is-selected-cell {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}

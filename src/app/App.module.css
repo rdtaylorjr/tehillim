@@ -58,7 +58,13 @@
   text-overflow: ellipsis;
 }
 
+/* No separator character: the weight drop and the color change already mark
+   where the name ends, so the gap alone carries it. A margin rather than spaces,
+   since HTML collapses whitespace and this can be tuned in em to track the
+   title's own size. The real space in the markup stays, so the heading still
+   reads as two words to a screen reader. */
 .title-scope {
+  margin-left: 0.5em;
   font-weight: 400;
   color: var(--ink-dim);
 }

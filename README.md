@@ -1,121 +1,129 @@
-# tehillim-react
+# tehillim
 
-The React front end for the Tehillim benchmarks: one page, one toolbar, and a pane beneath it
-that swaps between the results table and a model's visualizations. It renders the exported
-benchmark results for every model family that has been benchmarked.
+## Overview
 
-## Why the toolbar is shaped the way it is
+This repository is the public entry point for Tehillim, a linked research project on the Hebrew Psalms. The project registers formal, lexical, syntactic, contextual, and textual-critical patterns in specified textual representations, then asks what each representation can and cannot make visible. It brings together the seven active repositories that produce, evaluate, preserve, and qualify those records:
 
-Two selectors govern the page, and they are not steps in a sequence. Every combination of the
-six model families and the two benchmarks is valid, so they read as crossed factors rather
-than a path. Each one owns the filters below it, and nothing else:
+| Repository | Function in the project |
+| --- | --- |
+| [tehillim-embeddings](https://github.com/rdtaylorjr/tehillim-embeddings) | Builds lexical, morphological, syntactic, and semantic representations. |
+| [tehillim-benchmarks](https://github.com/rdtaylorjr/tehillim-benchmarks) | Evaluates representations against bounded parallelism and genre tasks. |
+| [tehillim-clustering](https://github.com/rdtaylorjr/tehillim-clustering) | Compares psalm-similarity graphs and partitions induced by selected representations. |
+| [tehillim-data](https://github.com/rdtaylorjr/tehillim-data) | Preserves materialized benchmark reports, observation-level records, profile shards, and interface payloads. |
+| [tehillim-trublet](https://github.com/rdtaylorjr/tehillim-trublet) | Replicates and tests a published computational account of wisdom vocabulary in the Hebrew Psalms. |
+| [tehillim-texttype](https://github.com/rdtaylorjr/tehillim-texttype) | Audits the ETCBC text-type analysis across the Hebrew Psalms and its historical versions. |
+| [tehillim-dss2etcbc](https://github.com/rdtaylorjr/tehillim-dss2etcbc) | Transfers selected BHSA structural annotations to Dead Sea Scroll witnesses through explicit alignment. |
 
-- **Models** governs **Unit** or **Level**, and **Text**.
-- **Benchmarks** governs **Type**, or **Genre** and **Metric**.
+The project does not treat a score, cluster, or database field as a literary judgment. A computational result records the behavior of an encoding under a stated operation. Interpretation remains answerable to the text, the source material, the unit of analysis, and the decisions that made the result possible.
 
-Which filters appear was taken from the live behaviour of the previous interface rather than
-from its source, so the prototype reproduces it exactly:
+## Data
 
-| Family     | Facet selector    | Text selector          |
-| ---------- | ----------------- | ---------------------- |
-| Semantic   | none              | always                 |
-| Lexical    | Unit              | only when Unit is Word |
-| Phonology  | none              | never                  |
-| Morphology | none              | never                  |
-| Syntax     | Level             | never                  |
-| Discourse  | none              | never                  |
+Tehillim works at several levels of textual organization. The shared Masoretic base is the 2021 ETCBC Biblia Hebraica Stuttgartensia Amstelodamensis in Text-Fabric form. Its word, phrase, phrase-atom, clause, clause-atom, and section nodes make a hierarchy available for calculation. Each level carries an ETCBC analysis of Hebrew form. Fields such as `typ`, `function`, `rela`, `det`, `vs`, and `vt` are evidence supplied by a linguistic database. They require philological review when a result depends on them.
 
-Families with no benchmark data stay selectable. Their empty state explains the absence in the
-content area, where there is room to say why, rather than encoding it as a disabled control.
+The representation and parallelism work uses the BHSA `half_verse` section node. This follows the Masoretic accentual division and supplies a stable computational address across vector files and annotations. It is not established here as a theory-neutral poetic colon. Clause boundaries, phrase atoms, prosodic division, and annotated parallel members can coincide or diverge. That divergence is part of the research problem.
 
-## Sources in the trajectory tables
+The project also uses received classifications and external annotations. The benchmark suite evaluates licensed parallelism and seven-class genre materials. The clustering work compares selected partitions with a 14-category historical form-critical index. The text-type study accepts a runtime genre CSV for a separate test. The Trublet replication uses published wisdom lists. These targets record prior scholarly decisions. They organize comparison and falsification. They do not supply a final taxonomy of the Hebrew Psalms.
 
-The overall table omits `raw`, which tracks `length_controlled` at Spearman 0.91 to 0.99 once
-pooled across genres. Per genre it does not: of 140 cells, five fall below 0.50 and three go
-negative. The per-genre table therefore shows it, labelled Raw (uncontrolled).
+`tehillim-dss2etcbc` introduces a second textual witness. Its 11Q5 work retains glyphs, reconstruction, uncertainty, correction, removal, fragment, and morphology information beside each proposed correspondence with BHSA. A transferred clause or phrase boundary therefore remains conditional on a reading, a normalization, an alignment, and the Masoretic source structure.
 
-## Commands
+The project separates representations from derived results. `tehillim-embeddings` currently holds 24,226 Parquet artifacts across lexical, morphology, syntax, and semantic domains. `tehillim-data` holds 322 CSV, Parquet, and JSON result artifacts. Some source annotations and copyrighted materials remain unavailable for redistribution. Public access therefore permits inspection of many operations and outputs while leaving some input judgments inaccessible.
+
+## Methodology
+
+The project begins by registering material before extending a claim about genre, parallelism, literary relation, or textual history. It keeps graphic form, lexeme, morphology, syntactic annotation, source label, and derived score distinct wherever the data permit. Missingness, ambiguity, reconstruction, and disagreement are retained as conditions of a result.
+
+`tehillim-embeddings` constructs multiple representations from the same BHSA material. Lexical representations distinguish consonantal word forms, homographs, and disambiguated lexemes. Morphological and syntactic representations use closed vocabularies and preserve non-applicability as part of a distribution. Semantic representations pool or align half-verse vectors. Each representation therefore states a different question. Shared lexical material, grammatical profile, and contextual-vector proximity cannot be treated as interchangeable evidence.
+
+`tehillim-benchmarks` evaluates these representations on two limited tasks. Parallelism evaluation retains 1,110 eligible cross-`half_verse` pairs derived from 2,292 annotation groups. It uses retrieval metrics, pair-separation measures, local controls, permutation procedures, and order-shuffle controls. Genre evaluation compares psalm-pair similarities inside and across received labels. The metrics test a representation against the selected target and control construction. They do not settle whether a given pair is parallel or whether a psalm belongs to a genre.
+
+`tehillim-clustering` turns similarity matrices into spectral partitions after a gap-style screen, silhouette selection, eigengap diagnostics, label permutations, and subsampling stability checks. It compares resulting partitions with the historical index through contingency tables, purity, adjusted mutual information, and adjusted Rand index. These statistics record correspondence between two constructed partitions. The underlying category systems remain open to criticism.
+
+`tehillim-texttype` reads the full BHSA `txt` string for each clause, including embedded domains and undecided values. It measures distribution, nesting, transitions, boundary association, and profile similarity before asking whether those formal patterns correspond with divisions or genre labels. `tehillim-trublet` rebuilds a published lexical study, exposes unresolved reconstruction points, and removes specified vocabulary before recalculating lexical, syntactic, and contextual comparisons. `tehillim-dss2etcbc` applies string alignment with an evidential mask, rejects disagreement among independent passes, and reports textual variation only over fully legible aligned opportunities.
+
+`tehillim-data` retains the reports, detail tables, and trajectory profiles produced by these procedures. It allows an aggregate claim to be traced to a row or a set of observations where the relevant artifact is present. It does not yet provide a complete release-level provenance chain across every input and output.
+
+## Results
+
+The project has produced findings about its representations and targets. These findings are bounded results. They are not conclusions about the essence of Hebrew poetry or the history of an individual text.
+
+| Question | Registered result | Scope and consequence |
+| --- | --- | --- |
+| Parallelism retrieval | The current public exports contain 148 variants. Semantic representations reach the highest retained average precision, 0.3951. | The result applies to 1,110 eligible pairs. The eligibility rule excludes many annotated members at the `half_verse` grain. |
+| Genre-label separation | The current public exports contain 222 variants. A lexical representation reaches the highest retained average precision, 0.4595. | No representation family leads both benchmark tasks. The difference prevents a single account of similarity. |
+| Received `Hymn` label | Across 43 semantic genre rows, the mean AUC is 0.3852 and the maximum is 0.4694. | This is evidence against the coherence of this supplied label under these representations. It requires review of label construction and representation scope. |
+| Clause-level text type | The 2021 Hebrew Psalms contain 7,283 clauses, 37 attested text-type strings, 706 transitions, and 12 uniform psalms. Full-profile genre separation reaches AUC 0.537 with permutation p 0.059. | The reported profile signal is weak. Depth and transition-rate summaries provide weaker results. |
+| Wisdom-vocabulary replication | Removing 729 of 5,096 colons containing a published wisdom vocabulary removes lexical cohesion from all three received lists. Contextual cohesion remains, while tested syntactic profiles recover lament and no wisdom list. | The result separates lexical, contextual, and syntactic behavior. It does not identify the residual contextual signal as a literary property. |
+| 11Q5 collation | The included table contains 2,685 fully legible aligned opportunities across 400 verses. It records 658 variants, 24.5 percent, and 149 consonantally substantive variants, 5.5 percent. | These rates describe an alignment and legibility rule. They do not estimate the textual history of 11Q5 as a whole. |
+| Psalm clustering | The versioned baseline contains 79 cluster methods over 150 psalms. | A partition can be nonuniform, stable under subsampling, and weakly aligned with a historical index. These observations have separate warrants. |
+
+Negative and mixed results are retained. The Trublet replication leaves published density and inertia calculations unresolved because the required denominators and transformations are absent. The text-type study records a changed BHSA value at Psalm 64:8 across versions. The 11Q5 work distinguishes confirmation of cited readings from validation of projected boundaries. These constraints prevent a result from acquiring a stronger claim through display alone.
+
+## Limitations
+
+The project has no theory-free layer. BHSA features, Masoretic section nodes, received genre lists, parallelism annotations, inherited section inventories, and published editions carry analytical commitments. The work makes many of these commitments inspectable. It cannot remove them from the evidence.
+
+The `half_verse` unit is a major current constraint. It gives the representation and benchmark work a common address, while it can be coarser or differently organized than syntactic clauses and finer-grained annotations. The retained parallelism benchmark measures an eligible subset formed by this unit, signature decomposition, ambiguity rules, and control selection. Its outcomes cannot be generalized to every annotated relation.
+
+Several targets remain partly opaque. The licensed parallelism and genre materials have no public annotation manual, adjudication record, or inter-annotator agreement measure. The clustering index assigns one primary category to 144 psalms after excluding six composite or partial cases. Thirteen cross-listed psalms and four hedged cases remain as primary labels. Agreement with any of these targets describes source consistency under a procedure. It does not validate the source.
+
+The project also has a provenance problem. The public interface contains 148 parallelism and 222 genre variants. `tehillim-data` stores 766 parallelism model rows across historical and intermediate outputs, alongside 222 genre models. No manifest maps each interface payload to exact inputs, code revisions, configuration values, seeds, and checksums. A numerical result can therefore be inspected without yet being fully reconstructed from a release record.
+
+The representation families share a corpus and several linguistic decisions. Their results are not independent replications. Semantic vectors add model-specific opacity. The clustering pipeline has no independent confirmation set. The Trublet deletion control has 24 random draws and no correction across its exploratory comparison family. Boundary transfer to 11Q5 has no independent reference set for clause and phrase boundaries. These limits identify the next empirical work. They do not disappear through a larger table or a more polished interface.
+
+## Reproducibility
+
+Each active repository records its dependencies, inputs, operations, and unresolved conditions in its README. `tehillim-embeddings` supplies representations. `tehillim-benchmarks` supplies scoring procedures. `tehillim-data` preserves result artifacts. The studies of text type, Trublet, and 11Q5 provide separate scripts and source-specific data requirements. `tehillim-clustering` records a baseline payload, while generated production JSON is excluded from its source checkout.
+
+There is no single public command that regenerates the project. Complete benchmark reconstruction requires permitted source annotations, matching embedding artifacts, runtime label files, and the corresponding code revisions. The public interface is repeatable as a client application. It does not rebuild the research outputs it displays. A complete research release requires a versioned manifest for every emitted partition, including corpus revision, source access condition, transformation, configuration, seed, input fingerprint, and output hash.
+
+Reproducible computation and transparent interpretation remain distinct. Fixed seeds can repeat a procedure. They cannot replace a published rule for a genre label, a textual division, a correspondence judgment, or a reading of a damaged witness.
+
+## Installation
+
+The public interface requires Node.js and npm:
 
 ```bash
 npm install
-npm run dev       # Vite dev server
-npm run verify    # typecheck, lint, format check, architecture lint, tests with coverage
-npm run build     # production build
 ```
 
-`verify` is the gate. It runs everything below and is the single command to trust.
+Research dependencies and source-access requirements are documented in the linked repositories.
 
-## What enforces quality
+## Usage
 
-Nothing here relies on remembering a convention.
+Run the public interface locally:
 
-- **TypeScript** in strict mode, plus `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`
-  and `noPropertyAccessFromIndexSignature`, so indexing and optional properties cannot lie.
-- **typescript-eslint** `strictTypeChecked` and `stylisticTypeChecked`: type-aware rules that
-  a syntax-only pass cannot reach, including `no-unnecessary-condition` and
-  `switch-exhaustiveness-check`.
-- **eslint-plugin-react-hooks** for the rules of hooks and exhaustive dependencies.
-- **eslint-plugin-jsx-a11y** so accessibility regressions fail the build.
-- **eslint-plugin-react-refresh** to keep fast refresh sound.
-- **Prettier**, checked in CI rather than merely available.
-- **Steiger** enforcing Feature-Sliced Design: layers, slices, and segments, with each widget
-  reached only through its public API.
-- **Vitest** with React Testing Library, at coverage thresholds that fail the run when unmet.
-
-## Architecture
-
-Feature-Sliced Design, with imports flowing in one direction only:
-
-```
-src/
-  app/        the page shell, holding selection state
-  widgets/    toolbar, benchmark-table, model-detail  (each: ui/ + index.ts)
-  shared/
-    lib/      catalog (the option sets), selection (the reducer)
-    ui/       PillGroup, SelectControl
+```bash
+npm run dev
 ```
 
-Selection lives in one reducer rather than scattered `useState` calls, because the rules are
-about relationships between fields: changing the family clears its facet, text and query, and
-changing the metric resets the genre scope. A reducer keeps those cascades in one tested place,
-and every action returns the identical object when nothing would change, so React can skip
-re-rendering.
+Run its client checks:
 
-## Testing
+```bash
+npm run verify
+```
 
-Tests exercise behaviour through the DOM the way a reader would use it: roles and labels, not
-class names or internal state. They assert the toolbar is never unmounted when the pane below
-it swaps, which is the whole point of the single-page structure.
+The interface reads committed summary files and configured detail artifacts. Use the linked repositories to inspect the representations, benchmark procedures, data tables, and study-specific outputs behind a displayed result.
 
-## Citations
+## References
 
-**Hebrew text and linguistic annotations**
+Eep Talstra Centre for Bible and Computer. [*Biblia Hebraica Stuttgartensia Amstelodamensis*](https://github.com/ETCBC/bhsa). 2021.
 
-> van Peursen, Willem Th., C. J. Sikkel, and Dirk Roorda. *Hebrew Text Database ETCBC4b*.
-> Version 2. Amsterdam: DANS Data Station Social Sciences and Humanities, 2015.
-> https://doi.org/10.17026/dans-z6y-skyh. Licensed CC BY-NC 4.0.
+Gillmayr-Bucher, Susanne. [“Relecture of Biblical Psalms: A Computer Aided Analysis of Textual Relations Based on Semantic Domains.”](https://doi.org/10.1163/9789004493339_021) Pages 309-321 in *Bible and Computer: The Stellenbosch AIBI-6 Conference*. Leiden: Brill, 2002.
 
-**Software used to read that dataset**
+Gunkel, Hermann, and Joachim Begrich. *Einleitung in die Psalmen: Die Gattungen der religiösen Lyrik Israels*. Vandenhoeck & Ruprecht, 1933.
 
-> Roorda, Dirk. *Text-Fabric*. Zenodo. https://doi.org/10.5281/zenodo.592193.
+Logos Bible Software. [*Psalms Explorer Dataset*](https://www.logos.com/product/54188/psalms-explorer-dataset).
 
-**The data paper describing both**
+Montaner, Luis Vegas. “Masoretic Tradition and Syntactic Analysis of the Psalms.” Pages 317-335 in *Tradition and Innovation in Biblical Interpretation: Studies Presented to Professor Eep Talstra on the Occasion of His Sixty-Fifth Birthday*, 2011.
 
-> Roorda, Dirk. "Coding the Hebrew Bible." *Research Data Journal for the Humanities and Social
-> Sciences* 3 (2018): 1-15. https://doi.org/10.1163/24523666-01000011.
+Naaijer, Martijn, and Dirk Roorda. [“Parallel Texts in the Hebrew Bible, New Methods and Visualizations.”](https://doi.org/10.48550/arXiv.1603.01541) 2016.
 
-**Parallelism and genre data**
+Roorda, Dirk. [“Text-Fabric: Handling Biblical Data with IKEA Logistics.”](https://doi.org/10.7146/hn.v5i2.142740) *HIPHIL Novum* 5.2 (2019): 126-135.
 
-> Witthoff, David, Kris Lyle, Matt Nerdahl, Jimmy Parks, and Elliot Ritzema. *Psalms Explorer
-> Dataset*. Edited by Eli Evans. Bellingham, WA: Logos Bible Software.
-> https://www.logos.com/product/54188/psalms-explorer-dataset.
+Talstra, Eep. “Singers and Syntax: On the Balance of Grammar and Poetry in Psalm 8.” Pages 11-22 in *Give Ear to My Words: Psalms and Other Poetry in and around the Hebrew Bible*, 1996.
 
-Used with permission.
+Trublet, Jacques. “Le corpus sapientiel et le Psautier: approche informatique du lexique.” In *Congress Volume Leuven 1989*, 248-263. Brill, 1991.
 
-The BHSA licence is non-commercial and requires attribution through the persistent identifier
-above, so any reuse of this work inherits that condition.
+## License
 
-## Status
-
-Prototype. The result data, the real table columns, and the Plotly visualizations are not
-wired in yet.
+MIT. Source corpora, licensed annotations, commercial inputs, and external model artifacts have separate terms of use.

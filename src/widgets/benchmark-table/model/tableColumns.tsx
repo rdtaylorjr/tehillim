@@ -11,7 +11,7 @@ import type {
 import { ciPill } from "../../../shared/ui/Pill";
 import type { TableColumn } from "../../../shared/lib/results";
 
-/** AUC's chance level is fixed at 0.5; AP's is the positive-class prevalence, which varies per row. */
+/** AUC's chance level is fixed at 0.5, and AP's varies per row with prevalence. */
 const AUC_CHANCE_LEVEL = 0.5;
 
 function nameColumn<

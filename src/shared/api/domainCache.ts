@@ -1,7 +1,7 @@
-import { loadDomainData, loadTrajectorySlice } from "./domainData";
-import type { DomainLoad, Fetcher } from "./domainData";
+import { loadDomainData, loadTrajectorySlice } from "./loadDomainData";
+import type { DomainLoad, Fetcher } from "./loadDomainData";
 import type { DomainData } from "../lib/results";
-import type { FamilyId } from "../lib/catalog";
+import type { FamilyId } from "../lib/corpus";
 
 /** Remembers each family's outcome, so moving between families does not refetch megabytes. */
 export function createDomainCache(
@@ -12,7 +12,7 @@ export function createDomainCache(
     const cached = inFlight.get(family);
     if (cached) return cached;
     const pending = loadDomainData(family, fetcher).then((result) => {
-      // A failure is worth retrying; a loaded or absent family will not change under us.
+      // A failure is worth retrying, while a loaded or absent family will not change.
       if (result.status === "failed") inFlight.delete(family);
       return result;
     });

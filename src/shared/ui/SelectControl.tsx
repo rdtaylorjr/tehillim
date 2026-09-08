@@ -13,10 +13,7 @@ export interface SelectControlProps<V extends string> {
   readonly onSelect: (value: V) => void;
 }
 
-/**
- * A labelled select, its id generated so the same control can appear more than once. The chosen
- * value is read back off the options rather than cast, so the callback keeps their exact type.
- */
+/** A labelled select whose chosen value is read back off the options, never cast. */
 export function SelectControl<V extends string>({
   label,
   options,

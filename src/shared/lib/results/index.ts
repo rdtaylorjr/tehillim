@@ -4,3 +4,7 @@ export * from "./numberFormat";
 export * from "./resultRows";
 export * from "./sortRows";
 export * from "./tableColumn";
+export * from "./alluvial";
+export * from "./clusterColumnOrder";
+export * from "./alignmentCell";
+export * from "./matrix";

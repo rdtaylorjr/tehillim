@@ -13,7 +13,7 @@ const camel = (name) =>
  * Declares each stylesheet's exact class names, so a typo at a call site fails typecheck
  * rather than silently rendering an unstyled element.
  */
-for (const file of globSync("{src,v1,shell}/**/*.module.css")) {
+for (const file of globSync("{src,shell}/**/*.module.css")) {
   const css = readFileSync(file, "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
   const names = [...new Set([...css.matchAll(CLASS)].map((m) => camel(m[1])))].sort();
   const body = names.map((n) => `  readonly ${n}: string;`).join("\n");

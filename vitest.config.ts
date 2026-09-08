@@ -9,23 +9,24 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts", "./v1/test/setup.ts"],
+    // The toolbar permutation tests run 2s alone and several times that when 64 files compete for cores.
+    testTimeout: 20000,
+    setupFiles: ["./src/test/setup.ts", "./src/test/psalm-picker-setup.ts"],
     // Class names come back unscoped, so assertions read the stylesheet's own vocabulary.
     css: { modules: { classNameStrategy: "non-scoped" } },
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
-      include: ["src/**/*.{ts,tsx}", "v1/**/*.{ts,tsx}", "shell/**/*.{ts,tsx}"],
+      include: ["src/**/*.{ts,tsx}", "shell/**/*.{ts,tsx}"],
       exclude: [
         "**/*.test.{ts,tsx}",
         "src/test/**",
-        "v1/test/**",
         "src/main.tsx",
         // The d3 and canvas plots. jsdom implements neither layout nor a canvas
         // context, so a test here could assert that a chart was constructed but
         // never that it drew anything right - the browser check is what covers
-        // these. Their pure geometry lives in v1/lib and is fully covered there.
-        "v1/viz/**",
+        // these. Their pure geometry lives in the page lib folders and is fully covered there.
+        "src/pages/*/charts/**",
         // Composition only: which page a path resolves to is covered by
         // shell/route.test.ts, and both branches are lazy imports.
         "shell/Root.tsx",

@@ -9,13 +9,15 @@
     "preview": "vite preview",
     "typecheck": "tsc --build --force",
     "lint": "eslint .",
-    "format": "prettier --write src v1 shell",
-    "format:check": "prettier --check src v1 shell",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "arch-lint": "steiger src",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
-    "verify": "npm run styles:types && npm run typecheck && npm run lint && npm run format:check && npm run arch-lint && npm run test",
-    "styles:types": "node scripts/css-module-types.mjs"
+    "verify": "npm run styles:types && npm run typecheck && npm run lint && npm run format:check && npm run arch-lint && npm run test && npm run build",
+    "styles:types": "node scripts/css-module-types.mjs",
+    "references": "node scripts/zotero-references.mjs",
+    "home-figures": "node scripts/home-figures.mjs"
   },
   "dependencies": {
     "d3": "^7.9.0",

@@ -7,10 +7,7 @@ export interface HoverFade {
   dispose: () => void;
 }
 
-/**
- * Dims the traces a reader is not pointing at. The restore waits, so moving from one trace straight
- * to the next never flashes every trace back to full on the way past.
- */
+/** Dims the traces not pointed at, the restore waiting so passing never flashes. */
 export function createHoverFade(
   dim: (active: number) => void,
   restore: () => void,

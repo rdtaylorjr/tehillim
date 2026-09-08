@@ -1,70 +1,34 @@
 import { Fragment } from "react";
 import styles from "./Toolbar.module.css";
-import { selectionPath } from "../../../shared/lib/path";
-import type { Crumb } from "../../../shared/lib/path";
-import type { Selection } from "../../../shared/lib/selection";
+import { selectionPath } from "../../../shared/lib/navigation";
+import type { Crumb } from "../../../shared/lib/navigation";
+import type { Selection } from "../../../shared/lib/navigation";
 
 export interface SelectionPathProps {
   readonly selection: Selection;
-  readonly onToggle: () => void;
 }
 
-const CLASS: Record<Crumb["kind"], string> = {
-  major: styles.crumb,
-  minor: `${styles.crumb} ${styles.dim}`,
-  model: styles.crumbModel,
-};
-
-/** The crossed operator heads the path; every filter after it is introduced by a slash. */
-function separator(kind: Crumb["kind"], first: boolean): React.ReactElement | null {
-  if (first) return null;
-  if (kind === "major") return <span className={styles.crumbX}>&times;</span>;
-  // The model's slash is kept when the minors are culled, so two names never run together.
-  return (
-    <span className={`${styles.crumbSep}${kind === "model" ? ` ${styles.keep}` : ""}`}>/</span>
-  );
-}
-
-/** The selection as one line, doubling as the control that folds the branch rows away. */
-export function SelectionPath({ selection, onToggle }: SelectionPathProps): React.ReactElement {
+/** What qualifies the page name: the crossed trees, or the model on a detail page. */
+function shownIn(selection: Selection): Crumb[] {
   const crumbs = selectionPath(selection);
-  const isDetail = selection.model !== null;
+  const model = crumbs.find((crumb) => crumb.kind === "model");
+  return model === undefined ? crumbs.filter((crumb) => crumb.kind === "major") : [model];
+}
+
+/** The selection as one line, stating what is on screen and nothing more. */
+export function SelectionPath({ selection }: SelectionPathProps): React.ReactElement {
   return (
-    <button
-      type="button"
-      className={styles.path}
-      aria-expanded={isDetail ? undefined : !selection.collapsed}
-      aria-label={isDetail ? undefined : "Toggle the model and benchmark rows"}
-      onClick={() => {
-        if (!isDetail) onToggle();
-      }}
-    >
-      <span className={styles.crumbs}>
-        {crumbs.map((crumb, index) => (
-          <Fragment key={`${crumb.kind}-${crumb.label}`}>
-            {separator(crumb.kind, index === 0)}
-            <span className={CLASS[crumb.kind]}>{crumb.label}</span>
-          </Fragment>
-        ))}
-      </span>
-      {isDetail ? null : (
-        <svg
-          className={styles.pathToggle}
-          width="11"
-          height="11"
-          viewBox="0 0 11 11"
-          aria-hidden="true"
-        >
-          <path
-            d="M2 4l3.5 3.5L9 4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
-    </button>
+    <span className={styles.crumbs}>
+      {/* What the page IS leads, in the title face; what is selected qualifies
+          it and is dimmed. The old order put every qualifier in front of the
+          noun - "Semantic x Parallelism Benchmarks" - which reads backwards. */}
+      <span className={styles.pageName}>Benchmark</span>
+      {shownIn(selection).map((crumb, index) => (
+        <Fragment key={`${crumb.kind}-${crumb.label}`}>
+          {index === 0 ? null : <span className={styles.crumbX}>&times;</span>}
+          <span className={styles.crumb}>{crumb.label}</span>
+        </Fragment>
+      ))}
+    </span>
   );
 }

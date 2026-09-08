@@ -1,8 +1,8 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { parseRoute, routePath, routeTitle } from "./route";
-import type { Route } from "./route";
+import { locationPath, locationTitle, parseLocation } from "./route";
+import type { Location, Route } from "./route";
 
-// Each branch is loaded on demand: the benchmarks table pulls Plotly, the v1
+// Each branch is loaded on demand: the benchmarks table pulls Plotly, the similarity
 // pages pull d3, and a reader who opens one should never pay for the other.
 const BenchmarksApp = lazy(async () => {
   const loaded = await import("../src/app/App");
@@ -10,13 +10,23 @@ const BenchmarksApp = lazy(async () => {
 });
 
 const ComparePage = lazy(async () => {
-  const loaded = await import("../v1/pages/ComparePage");
+  const loaded = await import("../src/pages/compare/ui/ComparePage");
   return { default: loaded.ComparePage };
 });
 
 const ClusterPage = lazy(async () => {
-  const loaded = await import("../v1/pages/ClusterPage");
+  const loaded = await import("../src/pages/cluster/ui/ClusterPage");
   return { default: loaded.ClusterPage };
+});
+
+const ReferencesPage = lazy(async () => {
+  const loaded = await import("../src/pages/references/ui/ReferencesPage");
+  return { default: loaded.ReferencesPage };
+});
+
+const HomePage = lazy(async () => {
+  const loaded = await import("../src/pages/home/ui/HomePage");
+  return { default: loaded.HomePage };
 });
 
 /** True for a plain left-click with no modifier keys - anything else
@@ -32,20 +42,24 @@ function isPlainLeftClick(event: React.MouseEvent): boolean {
 export type NavigateHandler = (route: Route, event: React.MouseEvent) => void;
 
 /**
- * The whole site's router: the v1 Compare and Cluster pages at their original
- * paths, and the benchmarks app at /benchmark. Client-side only, three
- * routes, no nesting - a routing library would be more machinery than that
- * needs, so this is `history` plus a `popstate` listener.
+ * The whole site's router: the Compare and Cluster pages at their original
+ * paths, the benchmarks app at /benchmark, and the bibliography at
+ * /references. Client-side only, four routes, no nesting - a routing library
+ * would be more machinery than that needs, so this is `history` plus a
+ * `popstate` listener.
  */
 export function Root(): React.ReactElement {
-  const [route, setRoute] = useState<Route>(() => parseRoute(window.location.pathname));
+  const [location, setLocation] = useState<Location>(() =>
+    parseLocation(window.location.pathname),
+  );
+  const { route } = location;
 
   // Canonicalize on load: a bare "/" (or any other path that doesn't match its
   // own route's canonical URL - no trailing slash, or an unknown path that fell
   // back to compare) is rewritten in place, so the address bar always reflects
   // an actual route rather than a path that merely happened to resolve to one.
   useEffect(() => {
-    const canonical = routePath(parseRoute(window.location.pathname));
+    const canonical = locationPath(parseLocation(window.location.pathname));
     if (window.location.pathname !== canonical) {
       window.history.replaceState(
         null,
@@ -57,7 +71,7 @@ export function Root(): React.ReactElement {
 
   useEffect(() => {
     const onPopState = (): void => {
-      setRoute(parseRoute(window.location.pathname));
+      setLocation(parseLocation(window.location.pathname));
     };
     window.addEventListener("popstate", onPopState);
     return () => {
@@ -66,26 +80,49 @@ export function Root(): React.ReactElement {
   }, []);
 
   useEffect(() => {
-    document.title = routeTitle(route);
-  }, [route]);
+    document.title = locationTitle(location);
+  }, [location]);
 
-  const navigate = useCallback<NavigateHandler>((next, event) => {
-    if (!isPlainLeftClick(event)) return;
-    event.preventDefault();
-    if (next === parseRoute(window.location.pathname)) return;
-    window.history.pushState(null, "", routePath(next));
-    setRoute(next);
-    window.scrollTo(0, 0);
+  /** Pushes a Location and moves to it, unless it is the one already showing. */
+  const go = useCallback((next: Location, scrollToTop: boolean): void => {
+    const path = locationPath(next);
+    if (path === locationPath(parseLocation(window.location.pathname))) return;
+    window.history.pushState(null, "", path);
+    setLocation(next);
+    if (scrollToTop) window.scrollTo(0, 0);
   }, []);
+
+  const navigate = useCallback<NavigateHandler>(
+    (next, event) => {
+      if (!isPlainLeftClick(event)) return;
+      event.preventDefault();
+      go({ route: next, model: null }, true);
+    },
+    [go],
+  );
+
+  /** Opening a model, and backing out of one, are ordinary navigations: each
+   * gets a URL and a history entry, so the browser's own Back returns to the
+   * table the reader came from. */
+  const openModel = useCallback(
+    (model: string | null): void => {
+      go({ route: "benchmark", model }, true);
+    },
+    [go],
+  );
 
   return (
     <Suspense fallback={<div className="route-pending" />}>
       {route === "benchmark" ? (
-        <BenchmarksApp />
+        <BenchmarksApp navigate={navigate} model={location.model} onOpenModel={openModel} />
       ) : route === "cluster" ? (
         <ClusterPage navigate={navigate} />
-      ) : (
+      ) : route === "references" ? (
+        <ReferencesPage navigate={navigate} />
+      ) : route === "compare" ? (
         <ComparePage navigate={navigate} />
+      ) : (
+        <HomePage navigate={navigate} />
       )}
     </Suspense>
   );

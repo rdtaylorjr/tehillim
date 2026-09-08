@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { INITIAL_SELECTION } from "../../../shared/lib/selection";
-import type { Selection } from "../../../shared/lib/selection";
+import { INITIAL_SELECTION } from "../../../shared/lib/navigation";
+import type { Selection } from "../../../shared/lib/navigation";
 import { EMPTY_DOMAIN_DATA } from "../../../shared/lib/results";
 import type { DomainData } from "../../../shared/lib/results";
 import { resolveTableView } from "./tableView";

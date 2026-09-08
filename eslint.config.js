@@ -77,4 +77,10 @@ export default tseslint.config(
   },
 
   { files: ["**/*.{js,cjs,mjs}"], extends: [tseslint.configs.disableTypeChecked] },
+
+  // Build-time scripts run under Node, not in a page.
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: { globals: globals.node },
+  },
 );

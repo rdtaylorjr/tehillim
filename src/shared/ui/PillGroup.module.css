@@ -1,4 +1,4 @@
-/* display:contents promotes each pill to a direct flex child, so each wraps on its own. */
+/* display:contents promotes each pill to a direct flex child, so each wraps by itself. */
 .pill-group-loose {
   display: contents;
 }

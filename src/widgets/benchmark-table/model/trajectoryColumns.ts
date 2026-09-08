@@ -9,21 +9,14 @@ export interface Column {
   pillPrefix?: "p" | "q";
 }
 
-/**
- * Every displayed source is length-controlled (stated once in the section-note prose instead of
- * repeating it in every header), so only `length_and_content_controlled` needs a label prefix to
- * mark the one respect in which it differs.
- */
+/** Every displayed source is length-controlled, so only one needs a label prefix. */
 const SOURCE_PREFIX: Record<Source, string> = {
   raw: "Raw",
   length_controlled: "",
   length_and_content_controlled: "Content-ctrl",
 };
 
-/**
- * `raw` is never shown: its gap tracks `length_controlled`'s almost exactly (Spearman r=0.91-0.99
- * across every domain and metric checked), so it adds no independent evidence, only extra columns.
- */
+/** `raw` is never shown, since its gap tracks `length_controlled` at r=0.91-0.99. */
 const DISPLAYED_SOURCES: readonly Source[] = [
   "length_controlled",
   "length_and_content_controlled",

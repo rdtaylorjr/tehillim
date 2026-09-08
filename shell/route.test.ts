@@ -1,12 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { parseRoute, routePath, routeSubtitle, routeTitle } from "./route";
-import type { Route } from "./route";
-
-const ROUTES: readonly Route[] = ["compare", "cluster", "benchmark"];
+import {
+  NAV_ROUTES,
+  ROUTES,
+  locationPath,
+  locationTitle,
+  parseLocation,
+  parseRoute,
+  routeLabel,
+  routePath,
+  routeTitle,
+} from "./route";
 
 describe("parseRoute", () => {
-  it("maps the root path to compare", () => {
-    expect(parseRoute("/")).toBe("compare");
+  it("maps the root path to the landing page", () => {
+    expect(parseRoute("/")).toBe("home");
   });
 
   it("maps /compare/ to compare", () => {
@@ -33,26 +40,41 @@ describe("parseRoute", () => {
     expect(parseRoute("/benchmark")).toBe("benchmark");
   });
 
+  it("maps /references/ to references", () => {
+    expect(parseRoute("/references/")).toBe("references");
+  });
+
+  it("maps /references (no trailing slash) to references", () => {
+    expect(parseRoute("/references")).toBe("references");
+  });
+
+  it("does not answer to the singular /reference", () => {
+    // The route is plural, naming a body of works rather than one of them.
+    expect(parseRoute("/reference")).toBe("home");
+  });
+
   it("does not answer to the plural /benchmarks", () => {
     // The route is singular. The plural is not an alias, it is simply unknown,
     // and unknown paths land on compare like any other.
-    expect(parseRoute("/benchmarks")).toBe("compare");
+    expect(parseRoute("/benchmarks")).toBe("home");
   });
 
-  it("falls back to compare for an empty path", () => {
-    expect(parseRoute("")).toBe("compare");
+  it("falls back to the landing page for an empty path", () => {
+    expect(parseRoute("")).toBe("home");
   });
 
-  it("falls back to compare for an unknown path", () => {
-    expect(parseRoute("/nonexistent")).toBe("compare");
+  it("falls back to the landing page for an unknown path", () => {
+    // A mistyped URL is better answered by the page that explains what this is
+    // than by dropping the reader into one of the tools.
+    expect(parseRoute("/nonexistent")).toBe("home");
   });
 
-  it("falls back to compare for the legacy /genre/ path", () => {
-    expect(parseRoute("/genre/")).toBe("compare");
+  it("falls back to the landing page for the legacy /genre/ path", () => {
+    expect(parseRoute("/genre/")).toBe("home");
   });
 
   it("is case-sensitive - /Cluster/ is not /cluster/", () => {
-    expect(parseRoute("/Cluster/")).toBe("compare");
+    expect(parseRoute("/Cluster/")).toBe("home");
   });
 
   it("ignores a trailing query string", () => {
@@ -73,6 +95,11 @@ describe("routePath", () => {
     expect(routePath("compare")).toBe("/compare/");
     expect(routePath("cluster")).toBe("/cluster/");
     expect(routePath("benchmark")).toBe("/benchmark/");
+    expect(routePath("references")).toBe("/references/");
+  });
+
+  it("gives the landing page the root itself, not a second address", () => {
+    expect(routePath("home")).toBe("/");
   });
 });
 
@@ -91,7 +118,7 @@ describe("routeTitle", () => {
     }
   });
 
-  it("gives the three routes three distinct titles", () => {
+  it("gives every route its own title", () => {
     expect(new Set(ROUTES.map(routeTitle)).size).toBe(ROUTES.length);
   });
 });
@@ -104,39 +131,99 @@ describe("routeTitle vs the rendered heading", () => {
   });
 });
 
-describe("routeSubtitle", () => {
-  const SUBTITLES = ROUTES.map(routeSubtitle);
-
-  it("gives every route its own subtitle", () => {
-    expect(new Set(SUBTITLES).size).toBe(ROUTES.length);
+describe("NAV_ROUTES", () => {
+  it("lists every route except home exactly once, so the nav can never omit one", () => {
+    expect([...NAV_ROUTES].sort()).toEqual([...ROUTES].filter((r) => r !== "home").sort());
   });
 
-  it("names the page's own body of work", () => {
-    expect(routeSubtitle("compare")).toBe("Hebrew Psalm Pairwise Similarity");
-    expect(routeSubtitle("cluster")).toBe("Hebrew Psalm Unsupervised Clustering");
-    expect(routeSubtitle("benchmark")).toBe("Hebrew Psalm Representation Benchmarks");
+  it("leaves home out, the masthead being the way back to it", () => {
+    expect(NAV_ROUTES).not.toContain("home");
   });
 
-  it("opens each on the corpus, so the three read as one series", () => {
-    for (const subtitle of SUBTITLES) {
-      expect(subtitle.startsWith("Hebrew Psalm ")).toBe(true);
+  it("leads with the measurements the other two pages are built on", () => {
+    expect(NAV_ROUTES[0]).toBe("benchmark");
+  });
+});
+
+describe("routeLabel", () => {
+  it("names every route in one word, the subtitle carrying the rest", () => {
+    for (const route of ROUTES) {
+      expect(routeLabel(route).split(" ")).toHaveLength(1);
     }
   });
 
-  it("keeps all three in title case, each naming a body of work", () => {
-    for (const subtitle of SUBTITLES) {
-      expect(subtitle.split(" ").filter((w) => !/^[A-Z]/.test(w))).toEqual([]);
+  it("gives every route its own label", () => {
+    expect(new Set(ROUTES.map(routeLabel)).size).toBe(ROUTES.length);
+  });
+
+  it("names the page rather than the path, where the two differ", () => {
+    // Every label happens to be its path capitalized today. That is a fact
+    // about the current names, not a rule the nav enforces, so this pins the
+    // labels themselves rather than deriving them.
+    expect(NAV_ROUTES.map(routeLabel)).toEqual([
+      "Benchmark",
+      "Compare",
+      "Cluster",
+      "References",
+    ]);
+  });
+});
+
+describe("parseLocation on the benchmark page", () => {
+  it("reads the model out of the path", () => {
+    expect(parseLocation("/benchmark/alephbert_consonantal/")).toEqual({
+      route: "benchmark",
+      model: "alephbert_consonantal",
+    });
+  });
+
+  it("leaves the model null for the bare table", () => {
+    expect(parseLocation("/benchmark/")).toEqual({ route: "benchmark", model: null });
+  });
+
+  it("decodes a model whose id needed escaping", () => {
+    expect(parseLocation("/benchmark/bge%2Fm3/").model).toBe("bge/m3");
+  });
+
+  it("opens the table rather than throwing on a malformed escape", () => {
+    // No URL this app produces looks like this, and a page that crashes is a
+    // worse answer than a page that shows the table.
+    expect(parseLocation("/benchmark/%/")).toEqual({ route: "benchmark", model: null });
+  });
+
+  it("ignores a model segment under any other route", () => {
+    expect(parseLocation("/cluster/anything/").model).toBeNull();
+  });
+});
+
+describe("locationPath", () => {
+  it("round-trips every route with no model", () => {
+    for (const route of ROUTES) {
+      const location = { route, model: null };
+      expect(parseLocation(locationPath(location))).toEqual(location);
     }
   });
 
-  it("gives each the same three-part shape: corpus, modifier, head noun", () => {
-    for (const subtitle of SUBTITLES) {
-      expect(subtitle.split(" ")).toHaveLength(4);
-    }
+  it("round-trips a model whose id needs escaping", () => {
+    const location = { route: "benchmark" as const, model: "a/b c" };
+    expect(parseLocation(locationPath(location))).toEqual(location);
   });
 
-  it("keeps them close enough in length that none is the odd one out", () => {
-    const lengths = SUBTITLES.map((s) => s.length);
-    expect(Math.max(...lengths) - Math.min(...lengths)).toBeLessThanOrEqual(8);
+  it("drops a model that no route but benchmark can carry", () => {
+    expect(locationPath({ route: "cluster", model: "ignored" })).toBe("/cluster/");
+  });
+});
+
+describe("locationTitle", () => {
+  it("names the open model in the page's place, for a row of restored tabs", () => {
+    expect(locationTitle({ route: "benchmark", model: "berel_vocalized" })).toBe(
+      "berel_vocalized \u00b7 Tehillim",
+    );
+  });
+
+  it("falls back to the page's own title with no model open", () => {
+    for (const route of ROUTES) {
+      expect(locationTitle({ route, model: null })).toBe(routeTitle(route));
+    }
   });
 });

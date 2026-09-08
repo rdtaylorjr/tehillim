@@ -42,14 +42,14 @@ describe("LINKS", () => {
 describe("SITE", () => {
   it("splits the permanent name from the phrase that explains it", () => {
     expect(SITE.name).toBe("Tehillim");
-    expect(SITE.scope).toBe("Computational Analysis of Psalms");
+    expect(SITE.scope).toBe("Computational Analysis of Hebrew Psalms");
   });
 
   it("reads as one phrase once joined, the weight contrast standing in for punctuation", () => {
-    expect(SITE.title).toBe("Tehillim · Computational Analysis of Psalms");
+    expect(SITE.title).toBe("Tehillim · Computational Analysis of Hebrew Psalms");
   });
 
-  it("keeps benchmarks in the subtitle, the line a later phase replaces", () => {
-    expect(SITE.subtitle).toBe("Hebrew Psalm Representation Benchmarks");
+  it("names the benchmark page in the slot the scope heads home with", () => {
+    expect(SITE.subtitle).toBe("Hebrew Psalms Representation Benchmarks");
   });
 });

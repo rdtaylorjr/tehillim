@@ -26,5 +26,5 @@
     "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true
   },
-  "include": ["src", "v1", "shell"]
+  "include": ["src", "shell"]
 }

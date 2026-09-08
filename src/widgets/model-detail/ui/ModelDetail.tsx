@@ -8,7 +8,7 @@ import { TrajectorySection } from "./sections/TrajectorySection";
 import { createDetailLoader } from "../api/loadDetail";
 import type { DetailLoad, DetailLoader } from "../api/loadDetail";
 import { sectionFor } from "../lib/sectionFor";
-import type { Selection } from "../../../shared/lib/selection";
+import type { Selection } from "../../../shared/lib/navigation";
 import type { TableColumn } from "../../../shared/lib/results";
 
 const defaultLoader = createDetailLoader();
@@ -23,7 +23,7 @@ export interface ModelDetailProps {
   readonly load?: DetailLoader;
 }
 
-/** One model's charts: only the section the toolbar already chose, never a chooser of its own. */
+/** One model's charts: only the section the toolbar already chose, never a second chooser. */
 export function ModelDetail({
   selection,
   model,

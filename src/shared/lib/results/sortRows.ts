@@ -7,11 +7,7 @@ function asNumber(value: unknown): number {
   return typeof value === "number" && !Number.isNaN(value) ? value : MISSING;
 }
 
-/**
- * Sorts a copy of rows by one field. The comparison is chosen per column rather than per cell:
- * a comparator that switched on each value could return NaN for a mixed column, which leaves
- * Array.prototype.sort's result undefined.
- */
+/** Sorts a copy by one field, the comparison chosen per column rather than per cell. */
 export function sortRows<T extends object>(rows: readonly T[], key: string, dir: SortDir): T[] {
   const read = (row: T): unknown => (row as Record<string, unknown>)[key];
   const textual = rows.some((row) => typeof read(row) === "string");

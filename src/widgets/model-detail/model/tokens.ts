@@ -19,11 +19,7 @@ export const TOKENS = {
   mono: "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
 } as const;
 
-/**
- * Okabe & Ito (2008) qualitative palette, retuned to the site's register: saturation capped at the
- * level index.css uses, lightness pulled toward it while keeping the spread that separates the two
- * blues. Closest pair sits at CIE ΔE 17.
- */
+/** The Okabe and Ito palette retuned to this site's register, closest pair at dE 17. */
 export const GENRE_COLORS: Record<string, string> = {
   Hymn: "#c19a44",
   Lament: "#6faccf",

@@ -1,0 +1,37 @@
+/* The band of controls under a panel's head, shared by all three pages. */
+.bands {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A column gap rather than a margin, which would survive a line break. */
+.band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+  padding: 13px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+
+.band + .band {
+  padding-top: 7px;
+}
+
+/* The bands read as one zone, so only the last is ruled off from what follows. */
+.band:not(:last-child) {
+  padding-bottom: 7px;
+  border-bottom: none;
+}
+
+/* What the choice on the left yields: the axes that only exist once it is made. */
+.band-yield {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px 6px;
+  min-width: 0;
+  margin-left: auto;
+}

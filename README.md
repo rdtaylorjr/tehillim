@@ -108,6 +108,12 @@ The interface reads committed summary files and configured detail artifacts. Use
 
 Eep Talstra Centre for Bible and Computer. [*Biblia Hebraica Stuttgartensia Amstelodamensis*](https://github.com/ETCBC/bhsa). 2021.
 
+Berlin, Adele. *The Dynamics of Biblical Parallelism*. Bloomington: Indiana University Press, 1985.
+
+Good, Phillip I. [*Permutation Tests: A Practical Guide to Resampling Methods for Testing Hypotheses*](https://doi.org/10.1007/978-1-4757-3235-1). Springer, 2000.
+
+Roorda, Dirk, Christiaan Erwich, Cody Kingham, and SeHoon Park. 2023. [*ETCBC/bhsa*](https://doi.org/10.5281/zenodo.1007624).
+
 Gillmayr-Bucher, Susanne. [“Relecture of Biblical Psalms: A Computer Aided Analysis of Textual Relations Based on Semantic Domains.”](https://doi.org/10.1163/9789004493339_021) Pages 309-321 in *Bible and Computer: The Stellenbosch AIBI-6 Conference*. Leiden: Brill, 2002.
 
 Gunkel, Hermann, and Joachim Begrich. *Einleitung in die Psalmen: Die Gattungen der religiösen Lyrik Israels*. Vandenhoeck & Ruprecht, 1933.
@@ -120,9 +126,13 @@ Naaijer, Martijn, and Dirk Roorda. [“Parallel Texts in the Hebrew Bible, New M
 
 Roorda, Dirk. [“Text-Fabric: Handling Biblical Data with IKEA Logistics.”](https://doi.org/10.7146/hn.v5i2.142740) *HIPHIL Novum* 5.2 (2019): 126-135.
 
+Sanders, James A. *The Psalms Scroll of Qumrân Cave 11 (11QPsa).* Discoveries in the Judaean Desert of Jordan 4. Oxford: Clarendon Press, 1965.
+
 Talstra, Eep. “Singers and Syntax: On the Balance of Grammar and Poetry in Psalm 8.” Pages 11-22 in *Give Ear to My Words: Psalms and Other Poetry in and around the Hebrew Bible*, 1996.
 
 Trublet, Jacques. “Le corpus sapientiel et le Psautier: approche informatique du lexique.” In *Congress Volume Leuven 1989*, 248-263. Brill, 1991.
+
+Van Peursen, Wido. [“Tracing Text Types in Biblical Hebrew.”](https://doi.org/10.1163/15685330-12341430) *Vetus Testamentum* 70.1 (2020): 140-155.
 
 ## License
 

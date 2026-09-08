@@ -1,3 +1,7 @@
 dist
 coverage
 node_modules
+
+# Generated payloads: shipped as emitted, and reformatting them would inflate what the site downloads.
+public/data
+detail-data

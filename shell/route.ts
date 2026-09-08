@@ -1,60 +1,98 @@
 import { SITE } from "../src/shared/lib/attribution";
 
-/** The site's three pages. Client-side only - there is no server-side router,
- * so any URL that reaches this function has already been resolved to
- * index.html by the host's SPA fallback (see wrangler.jsonc's
- * not_found_handling) or by an in-app navigation. */
-export type Route = "compare" | "cluster" | "benchmark";
+/** The site's five pages, resolved client-side by the host's SPA fallback. */
+export type Route = "home" | "compare" | "cluster" | "benchmark" | "references";
 
-/** Maps a URL pathname to a Route. Strips a query string/hash fragment and
- * any trailing slashes before matching, so `/cluster`, `/cluster/`, and
- * `/cluster/?psalm=23` all resolve the same way. Anything unrecognized falls
- * back to `compare` rather than erroring - there is no 404 page, since every
- * reachable path is one of these three. This includes the bare root path `/`,
- * which is always canonicalized to `/compare/` on load (see Root.tsx) rather
- * than treated as its own URL. */
+/** Which page, and on the benchmark page which model's charts are open. */
+export interface Location {
+  readonly route: Route;
+  readonly model: string | null;
+}
+
+/** Path segments with query, hash and empty segments dropped. */
+function segmentsOf(pathname: string): string[] {
+  const path = (pathname.split("?")[0] ?? "").split("#")[0] ?? "";
+  return path.split("/").filter((segment) => segment !== "");
+}
+
+/** Maps a pathname to a Location, per segment, falling back to the landing page. */
+export function parseLocation(pathname: string): Location {
+  const [first, second] = segmentsOf(pathname);
+  if (first === "compare") return { route: "compare", model: null };
+  if (first === "cluster") return { route: "cluster", model: null };
+  if (first === "references") return { route: "references", model: null };
+  if (first === "benchmark") {
+    //: decodeURIComponent throws on a malformed escape, so the table opens instead.
+    let model: string | null = null;
+    if (second !== undefined) {
+      try {
+        model = decodeURIComponent(second);
+      } catch {
+        model = null;
+      }
+    }
+    return { route: "benchmark", model };
+  }
+  return { route: "home", model: null };
+}
+
+/** Just the page, for the header, the tab title and the nav. */
 export function parseRoute(pathname: string): Route {
-  const normalized = (pathname.split("?")[0] ?? "").split("#")[0]?.replace(/\/+$/, "") ?? "";
-  if (normalized === "/cluster") return "cluster";
-  if (normalized === "/benchmark") return "benchmark";
-  return "compare";
+  return parseLocation(pathname).route;
 }
 
-/** The canonical URL for a Route - the inverse of parseRoute, used to build
- * `history.pushState`/`replaceState` targets and nav-link `href`s. */
+/** The canonical URL for a Route. The landing page is the root itself. */
 export function routePath(route: Route): string {
-  return `/${route}/`;
+  return route === "home" ? "/" : `/${route}/`;
 }
 
-/**
- * The line under the title, naming what this page shows. All three share one
- * shape: the corpus, a modifier, and a head noun naming the artifact - "Hebrew
- * Psalm Representation Benchmarks" is the pattern the other two follow. Title
- * case throughout, since each reads as the name of a body of work rather than a
- * description of it. The benchmark page's own copy stays in `attribution.ts`,
- * which the benchmarks app reads directly.
- */
-export function routeSubtitle(route: Route): string {
+/** The canonical URL for a Location, the inverse of parseLocation. */
+export function locationPath(location: Location): string {
+  if (location.route === "benchmark" && location.model !== null) {
+    return `/benchmark/${encodeURIComponent(location.model)}/`;
+  }
+  return routePath(location.route);
+}
+
+/** Every page, in reading order. */
+export const ROUTES: readonly Route[] = [
+  "home",
+  "benchmark",
+  "compare",
+  "cluster",
+  "references",
+];
+
+/** What the header nav lists, in order. Home is absent: the site name is the way back. */
+export const NAV_ROUTES: readonly Route[] = ["benchmark", "compare", "cluster", "references"];
+
+/** What each page is called in the header nav, in a single word. */
+export function routeLabel(route: Route): string {
   switch (route) {
+    case "home":
+      return "Home";
     case "cluster":
-      return "Hebrew Psalm Unsupervised Clustering";
+      return "Cluster";
     case "benchmark":
-      return SITE.subtitle;
+      return "Benchmark";
+    case "references":
+      return "References";
     case "compare":
-      return "Hebrew Psalm Pairwise Similarity";
+      return "Compare";
   }
 }
 
-/** What the tab reads for each page. */
+/** The page's nav name then the site, since a tab truncates from the right. */
 export function routeTitle(route: Route): string {
-  switch (route) {
-    case "cluster":
-      return "Cluster the Psalms";
-    case "benchmark":
-      // A tab title is unstyled text, with no weight or color to mark the break,
-      // so this is the one place the separator character still earns its keep.
-      return SITE.title;
-    case "compare":
-      return "Compare the Psalms";
+  // The front door carries the bare name, with no page name to put first.
+  if (route === "home") return SITE.name;
+  return `${routeLabel(route)} \u00b7 ${SITE.name}`;
+}
+
+/** The page's title, or the open model in its place, so restored tabs differ. */
+export function locationTitle(location: Location): string {
+  if (location.route === "benchmark" && location.model !== null) {
+    return `${location.model} \u00b7 ${SITE.name}`;
   }
+  return routeTitle(location.route);
 }

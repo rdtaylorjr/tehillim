@@ -21,10 +21,7 @@ export interface ScaledPlotProps {
   readonly createObserver?: ObserverFactory;
 }
 
-/**
- * Holds a chart that Plotly sizes in fixed pixels, shrinking it to the width available rather than
- * letting it overflow. The chart itself is untouched: only the box around it scales.
- */
+/** Shrinks a fixed-pixel Plotly chart to the width available, scaling only the box. */
 export function ScaledPlot({
   draw,
   purge,
@@ -50,8 +47,7 @@ export function ScaledPlot({
     if (inner === null) return;
     draw(inner);
     measure();
-    // Scaling is a cheap transform, but re-measuring on every resize event still thrashes; one
-    // measurement once the drag settles is enough.
+    //: One measurement once the drag settles, since re-measuring every event thrashes.
     let timer: ReturnType<typeof setTimeout> | undefined;
     const observer = createObserver(() => {
       clearTimeout(timer);

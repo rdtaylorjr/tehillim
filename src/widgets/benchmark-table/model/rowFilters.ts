@@ -1,12 +1,12 @@
-import { facetFor, facetOf } from "../../../shared/lib/catalog";
-import type { FamilyId } from "../../../shared/lib/catalog";
+import { facetFor, facetOf } from "../../../shared/lib/corpus";
+import type { FamilyId } from "../../../shared/lib/corpus";
 
 export interface FacetableRow {
   model?: string;
   model_base?: string;
 }
 
-/** Rows whose model falls in the domain's chosen facet bucket; passthrough for "all" or a facet-less domain. */
+/** Rows in the chosen facet bucket, passing everything through for "all". */
 export function applyFacetFilter<T extends FacetableRow>(
   rows: readonly T[],
   family: FamilyId,
@@ -22,7 +22,7 @@ export interface TextVariantRow {
   text_variant?: string;
 }
 
-/** Rows matching the chosen text variant; passthrough for "all". */
+/** Rows matching the chosen text variant, passing everything through for "all". */
 export function applyTextFilter<T extends TextVariantRow>(
   rows: readonly T[],
   text: string,
@@ -35,7 +35,7 @@ export interface NamedRow {
   model?: string;
 }
 
-/** Rows whose model name contains the filter text, case-insensitively; passthrough when the filter is empty. */
+/** Rows whose model name contains the filter text, case-insensitively. */
 export function applyNameFilter<T extends NamedRow>(rows: readonly T[], filter: string): T[] {
   if (!filter) return [...rows];
   const needle = filter.toLowerCase();

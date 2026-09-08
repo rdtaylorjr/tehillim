@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { sectionFor } from "./sectionFor";
-import { INITIAL_SELECTION } from "../../../shared/lib/selection";
-import type { Selection } from "../../../shared/lib/selection";
+import { INITIAL_SELECTION } from "../../../shared/lib/navigation";
+import type { Selection } from "../../../shared/lib/navigation";
 
 const at = (over: Partial<Selection>): Selection => ({ ...INITIAL_SELECTION, ...over });
 

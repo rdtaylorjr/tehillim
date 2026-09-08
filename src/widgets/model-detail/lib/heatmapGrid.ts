@@ -54,7 +54,7 @@ export function buildHeatmapGrid(
   const z: number[][] = Array.from({ length: n }, () => new Array<number>(n).fill(0));
   const text: string[][] = Array.from({ length: n }, () => new Array<string>(n).fill(""));
 
-  /** Writes both orientations of a symmetric cell; indices come from psalmToIndex and are in range. */
+  /** Writes both orientations of a symmetric cell, with indices already in range. */
   const putSymmetric = <T>(grid: T[][], a: number, b: number, value: T): void => {
     const rowA = grid[a];
     const rowB = grid[b];

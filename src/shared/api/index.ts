@@ -1,2 +1,3 @@
 export * from "./domainCache";
-export * from "./domainData";
+export * from "./loadDomainData";
+export * from "./loadPayloads";

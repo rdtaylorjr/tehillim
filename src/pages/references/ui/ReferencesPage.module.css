@@ -1,0 +1,305 @@
+/* Two panels: the selector, which holds still, then the citations, which scroll. */
+.layout {
+  display: grid;
+  grid-template-columns: 258px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.selector {
+  padding: 16px;
+  max-height: calc(100dvh - 140px);
+  overflow-y: auto;
+}
+
+/* Every row is a scope, padded alike, so rank shows in type rather than spacing. */
+.scope-all,
+.category,
+.sub {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  padding: 5px 0;
+  border: none;
+  background: none;
+  font-family: var(--sans);
+  color: var(--ink-dim);
+  text-align: left;
+  cursor: pointer;
+}
+
+.scope-all,
+.category {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* One break above every category, so the column is divided alike throughout. */
+.group {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+/* The accent rule marks an indented row. The two top rows are marked by text. */
+.sub {
+  padding-left: 12px;
+  border-left: 2px solid transparent;
+  font-size: 12px;
+}
+
+.scope-all.is-on,
+.category.is-on {
+  color: var(--ink);
+}
+
+.sub.is-on {
+  border-left-color: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.scope-all:hover,
+.category:hover,
+.sub:hover {
+  color: var(--accent);
+}
+
+.scope-all:focus-visible,
+.category:focus-visible,
+.sub:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.count {
+  margin-left: auto;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The head of the citations panel: the page, then the category showing. */
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 16px;
+  background: var(--bg-inset);
+}
+
+/* An ellipsis takes the overflowing box's colour, so the box wears what it cuts. */
+.subject {
+  flex: 0 1 auto;
+  min-width: 0;
+  color: var(--ink-dim);
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: var(--control-h);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subject-name {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.subject-state {
+  margin-left: 10px;
+}
+
+.filter {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.filter input[type="text"] {
+  width: 190px;
+  min-width: 110px;
+  background: var(--bg-panel);
+  font-weight: 400;
+}
+
+/* One indent step, taken on both sides at every level, matching the head's inset. */
+.body {
+  --step: 22px;
+  --edge: 16px;
+  --gutter: 24px;
+
+  padding: var(--gutter) var(--edge);
+}
+
+/* Category and subcategory take the title face, two ranks apart, both dimmed. */
+.category-head {
+  margin: 0 0 16px;
+  color: var(--ink-dim);
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* A pixel under the category's, since citations carry more leading above them. */
+.sub-head {
+  margin: 0 0 15px;
+  color: var(--ink-dim);
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Every level steps in by the same amount, in every state. */
+.run {
+  padding: 0 var(--step);
+}
+
+.run + .run {
+  margin-top: 24px;
+}
+
+/* The one rule the page keeps, between one major category and the next. */
+.block + .block {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+}
+
+.entries {
+  margin: 0;
+  padding: 0 var(--step);
+  list-style: none;
+}
+
+/* A hanging indent, with no measure cap since the selector sets the width. */
+.entry {
+  margin-bottom: 13px;
+  padding-left: 26px;
+  text-indent: -26px;
+  color: var(--ink);
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+.creators {
+  font-weight: 600;
+}
+
+.year {
+  font-variant-numeric: tabular-nums;
+}
+
+.container,
+.work-title {
+  font-style: italic;
+}
+
+.title-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.14s;
+}
+
+.title-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-dim);
+  text-underline-offset: 2px;
+}
+
+.title-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* The mono tag the benchmark table hangs a model's text variant off. */
+.kind {
+  margin-left: 0.4em;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 10.5px;
+}
+
+.kind:first-child {
+  margin-left: 0;
+}
+
+/* The same distance off the right as off the bottom, so it sits in the corner. */
+.colophon {
+  margin: 32px 0 0;
+  padding-right: calc(var(--gutter) - var(--edge));
+  line-height: 1;
+  text-align: right;
+}
+
+.colophon a {
+  /* Cancels the tracking's trailing space. */
+  margin-right: -0.08em;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.14s;
+}
+
+.colophon a:hover {
+  color: var(--accent);
+}
+
+.colophon a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.state {
+  padding: 44px 22px;
+  color: var(--ink-dim);
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .selector {
+    max-height: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .body {
+    padding: 16px;
+  }
+
+  .body {
+    --step: 12px;
+  }
+
+  .entry {
+    padding-left: 0;
+    text-indent: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scope-all,
+  .category,
+  .sub,
+  .title-link,
+  .colophon a {
+    transition: none;
+  }
+}

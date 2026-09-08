@@ -33,7 +33,7 @@ const SEMANTIC: DomainData = {
   genre_overall: [] as never,
 };
 
-/** Families other than semantic were never benchmarked here, as phonology is not. */
+/** Families other than semantic were never benchmarked here, as phonological is not. */
 const load = (family: FamilyId): Promise<DomainLoad> =>
   Promise.resolve(
     family === "semantic" ? { status: "loaded", data: SEMANTIC } : { status: "absent" },

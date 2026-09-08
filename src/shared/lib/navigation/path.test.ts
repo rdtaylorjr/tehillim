@@ -30,7 +30,7 @@ describe("selectionPath", () => {
   });
 
   it("drops the text variant for a family that has none, even when one is set", () => {
-    const path = selectionPath(at({ family: "morphology", text: "vocalized" }));
+    const path = selectionPath(at({ family: "morphological", text: "vocalized" }));
     expect(path.map((crumb) => crumb.label)).toEqual(["Morphological", "Parallelism"]);
   });
 

@@ -12,7 +12,7 @@ function reduce(
 describe("showsFacet", () => {
   it("offers the extra selector to families that are divided into units or levels", () => {
     expect(showsFacet("lexical")).toBe(true);
-    expect(showsFacet("syntax")).toBe(true);
+    expect(showsFacet("syntactic")).toBe(true);
   });
 
   it("withholds it from a family with no such division", () => {
@@ -33,8 +33,8 @@ describe("showsText", () => {
   });
 
   it("withholds them from a family that carries none", () => {
-    expect(showsText("syntax", "word")).toBe(false);
-    expect(showsText("morphology", "all")).toBe(false);
+    expect(showsText("syntactic", "word")).toBe(false);
+    expect(showsText("morphological", "all")).toBe(false);
   });
 });
 
@@ -49,9 +49,9 @@ describe("selectionReducer on family", () => {
       { type: "query/changed", query: "bge" },
       { type: "model/selected", model: "bge_m3_vocalized" },
     );
-    const moved = selectionReducer(dirty, { type: "family/selected", family: "syntax" });
+    const moved = selectionReducer(dirty, { type: "family/selected", family: "syntactic" });
     expect(moved).toMatchObject({
-      family: "syntax",
+      family: "syntactic",
       facet: "all",
       text: "all",
       query: "",

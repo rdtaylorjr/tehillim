@@ -81,7 +81,7 @@ function domain(): DomainData {
   };
 }
 
-const WITH_DATA: FamilyId[] = ["semantic", "lexical", "morphology", "syntax"];
+const WITH_DATA: FamilyId[] = ["semantic", "lexical", "morphological", "syntactic"];
 
 /** The per-genre trajectory rows ship apart from the rest, so the page asks for them separately. */
 const loadSlice = (

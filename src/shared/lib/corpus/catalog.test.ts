@@ -16,16 +16,16 @@ describe("MODEL_FAMILIES", () => {
   it("lists the levels of description in their conventional order", () => {
     // Sound, word form, the words themselves, how they combine, what they mean.
     expect(MODEL_FAMILIES.map((f) => f.id)).toEqual([
-      "phonology",
-      "morphology",
+      "phonological",
+      "morphological",
       "lexical",
-      "syntax",
+      "syntactic",
       "semantic",
     ]);
   });
 
-  it("marks phonology as carrying no benchmark data", () => {
-    expect(MODEL_FAMILIES.filter((f) => !f.hasData).map((f) => f.id)).toEqual(["phonology"]);
+  it("marks phonological as carrying no benchmark data", () => {
+    expect(MODEL_FAMILIES.filter((f) => !f.hasData).map((f) => f.id)).toEqual(["phonological"]);
   });
 });
 
@@ -37,20 +37,20 @@ describe("facetFor", () => {
     });
   });
 
-  it("gives syntax a Level facet of phrase then clause, the smaller unit first", () => {
-    expect(facetFor("syntax")).toEqual({ label: "Level", values: ["phrase", "clause"] });
+  it("gives syntactic a Level facet of phrase then clause, the smaller unit first", () => {
+    expect(facetFor("syntactic")).toEqual({ label: "Level", values: ["phrase", "clause"] });
   });
 
   it("gives every other family no facet", () => {
     expect(facetFor("semantic")).toBeUndefined();
-    expect(facetFor("phonology")).toBeUndefined();
-    expect(facetFor("morphology")).toBeUndefined();
+    expect(facetFor("phonological")).toBeUndefined();
+    expect(facetFor("morphological")).toBeUndefined();
   });
 });
 
 describe("familyFor", () => {
   it("finds a family by id", () => {
-    expect(familyFor("syntax").label).toBe("Syntactic");
+    expect(familyFor("syntactic").label).toBe("Syntactic");
   });
 });
 

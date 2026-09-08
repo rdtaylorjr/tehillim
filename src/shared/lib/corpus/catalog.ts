@@ -6,7 +6,7 @@ export interface ModelFamily {
   readonly hasData: boolean;
 }
 
-export type FamilyId = "phonology" | "morphology" | "lexical" | "syntax" | "semantic";
+export type FamilyId = "phonological" | "morphological" | "lexical" | "syntactic" | "semantic";
 
 export type BenchmarkId = "parallelism" | "genre";
 
@@ -18,10 +18,10 @@ export interface Facet {
 
 /** The levels of linguistic description in order, named as adjectives throughout. */
 export const MODEL_FAMILIES: readonly ModelFamily[] = [
-  { id: "phonology", label: "Phonological", hasData: false },
-  { id: "morphology", label: "Morphological", hasData: true },
+  { id: "phonological", label: "Phonological", hasData: false },
+  { id: "morphological", label: "Morphological", hasData: true },
   { id: "lexical", label: "Lexical", hasData: true },
-  { id: "syntax", label: "Syntactic", hasData: true },
+  { id: "syntactic", label: "Syntactic", hasData: true },
   { id: "semantic", label: "Semantic", hasData: true },
 ];
 
@@ -32,7 +32,7 @@ export const BENCHMARKS: readonly { readonly id: BenchmarkId; readonly label: st
 
 const FACETS: Partial<Record<FamilyId, Facet>> = {
   lexical: { label: "Unit", values: ["homograph", "lexeme", "word"] },
-  syntax: { label: "Level", values: ["phrase", "clause"] },
+  syntactic: { label: "Level", values: ["phrase", "clause"] },
 };
 
 /** Canonical scholarly ordering, which is not alphabetical. */

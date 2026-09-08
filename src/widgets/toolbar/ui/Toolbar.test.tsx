@@ -58,14 +58,14 @@ describe("Toolbar dependent filters", () => {
     expect(screen.getByLabelText("Metric")).toBeInTheDocument();
   });
 
-  it("shows Unit for lexical and Level for syntax, and neither for semantic", () => {
+  it("shows Unit for lexical and Level for syntactic, and neither for semantic", () => {
     renderToolbar({ family: "lexical" });
     expect(screen.getByLabelText("Unit")).toBeInTheDocument();
 
-    renderToolbar({ family: "syntax" });
+    renderToolbar({ family: "syntactic" });
     expect(screen.getByLabelText("Level")).toBeInTheDocument();
 
-    renderToolbar({ family: "morphology" });
+    renderToolbar({ family: "morphological" });
     expect(screen.queryByLabelText("Unit")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Level")).not.toBeInTheDocument();
   });

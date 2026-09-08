@@ -1,6 +1,6 @@
 {
  "collection": "Tehillim",
- "count": 195,
+ "count": 193,
  "sections": [
   {
    "name": "Hebrew Psalms",
@@ -31,7 +31,7 @@
        "date": "2021-05-23",
        "year": 2021,
        "container": "",
-       "detail": "Edmonton, AB",
+       "detail": "Edmonton, Alberta",
        "url": "https://github.com/chaimmetzger/TaameiMiqraMachineLearning"
       },
       {
@@ -89,14 +89,14 @@
       {
        "id": "AZ37LMDK",
        "type": "Conference Paper",
-       "title": "Identifying Patterns of Participant Shifts in the Psalms: Plotting Poetry: On Mechanically Enhanced Reading",
+       "title": "Identifying Patterns of Participant Shifts in Psalm 89",
        "titleStyle": "quoted",
        "containerPrefix": "In ",
        "creators": "Erwich, Christiaan M.",
-       "date": "2017-10",
+       "date": "5-7 October 2017",
        "year": 2017,
-       "container": "",
-       "detail": "",
+       "container": "Plotting Poetry: On Mechanically Enhanced Reading",
+       "detail": "Basel, Switzerland",
        "url": ""
       },
       {
@@ -108,9 +108,9 @@
        "creators": "van Peursen, W. T.",
        "date": "2017",
        "year": 2017,
-       "container": "TUA Inzicht",
+       "container": "Theologische Universiteit Apeldoorn Inzicht",
        "detail": "21.1: 11-13",
-       "url": ""
+       "url": "https://www.tua.nl"
       },
       {
        "id": "JAVAYASK",
@@ -136,7 +136,7 @@
        "year": 2017,
        "container": "Multiple Teachers in Biblical Texts",
        "detail": "29-47",
-       "url": "https://www.peeters-leuven.be/detail.php?search_key=9789042935426&series_number_str=88&lang=en"
+       "url": "https://www.peeters-leuven.be/detail.php?search_key=9789042935426"
       },
       {
        "id": "UAAH32LD",
@@ -239,7 +239,7 @@
        "date": "2013",
        "year": 2013,
        "container": "Energion Publications",
-       "detail": "Gonzalez, FL",
+       "detail": "Gonzalez, Florida",
        "url": "https://energion.co.uk/books/seeing-the-psalter/"
       },
       {
@@ -252,8 +252,8 @@
        "date": "2013",
        "year": 2013,
        "container": "Digital Humanities 2013 Conference Abstracts",
-       "detail": "105–106",
-       "url": "https://energiondirect.com/product/seeing-the-psalter-direct/"
+       "detail": "Lincoln, Nebraska, 105-106",
+       "url": "https://dh-abstracts.library.virginia.edu/works/1782"
       },
       {
        "id": "G8CNQFN6",
@@ -304,7 +304,7 @@
        "date": "2004",
        "year": 2004,
        "container": "Letter en feest: In gesprek met Niek Schuman over bijbel en liturgie",
-       "detail": "173–184",
+       "detail": "Zoetermeer, 173–184",
        "url": ""
       },
       {
@@ -331,7 +331,7 @@
        "year": 2002,
        "container": "Bible and Computer: The Stellenbosch AIBI-6 Conference. Proceedings of the Association Internationale Bible et Informatique \"From Alpha to Byte\" University of Stellenbosch 17-21 July, 2000",
        "detail": "Leiden, 189-208",
-       "url": "https://brill.com/display/book/edcoll/9789004493339/B9789004493339_s021.xml"
+       "url": "https://brill.com/display/book/edcoll/9789004493339/B9789004493339_s014.xml"
       },
       {
        "id": "3Y3JACLB",
@@ -382,7 +382,7 @@
        "date": "1992",
        "year": 1992,
        "container": "Biblical Research Associates",
-       "detail": "Wooster, OH",
+       "detail": "Wooster, Ohio",
        "url": ""
       },
       {
@@ -426,7 +426,7 @@
        "date": "2019",
        "year": 2019,
        "container": "Wipf & Stock",
-       "detail": "Eugene, OR",
+       "detail": "Eugene, Oregon",
        "url": "https://wipfandstock.com/9781532654428/the-design-of-the-psalter/"
       },
       {
@@ -479,7 +479,7 @@
        "year": 2014,
        "container": "PhD diss., New Orleans Baptist Theological Seminary",
        "detail": "",
-       "url": "https://mcmasterdivinity.ca/wp-content/uploads/2018/01/Boda_CV.pdf"
+       "url": ""
       },
       {
        "id": "78I4ARXY",
@@ -505,7 +505,7 @@
        "year": 2013,
        "container": "Routledge",
        "detail": "London",
-       "url": "https://doi.org/10.4324/9780203039168"
+       "url": ""
       },
       {
        "id": "XDTQ4FVF",
@@ -569,7 +569,7 @@
        "date": "2003",
        "year": 2003,
        "container": "Journal of Northwest Semitic Languages",
-       "detail": "29/2: 65-82",
+       "detail": "29.2: 65-82",
        "url": "https://journals.co.za/doi/abs/10.10520/EJC101279"
       },
       {
@@ -582,7 +582,7 @@
        "date": "1995",
        "year": 1995,
        "container": "Jewish Bible Quarterly",
-       "detail": "23:4",
+       "detail": "23.4",
        "url": "https://www.nli.org.il/en/articles/RAMBI990001570790705171/NLI"
       },
       {
@@ -730,15 +730,15 @@
       },
       {
        "id": "K5UBDJTS",
-       "type": "Book",
+       "type": "Journal Article",
        "title": "The Metrical Basis of Hebrew Poetry",
-       "titleStyle": "italic",
+       "titleStyle": "quoted",
        "containerPrefix": "",
        "creators": "Isaacs, Elcanon.",
        "date": "1918-10-01",
        "year": 1918,
-       "container": "The American Journal of Semitic Languages and Literatures",
-       "detail": "",
+       "container": "",
+       "detail": "35.1: 20-54",
        "url": "http://archive.org/details/jstor-528587"
       }
      ]
@@ -800,7 +800,7 @@
        "date": "2025",
        "year": 2025,
        "container": "Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 2: Short Papers",
-       "detail": "154–160",
+       "detail": "Albuquerque, New Mexico, 154–160",
        "url": "https://doi.org/10.18653/v1/2025.naacl-short.13"
       },
       {
@@ -826,7 +826,7 @@
        "date": "2025",
        "year": 2025,
        "container": "Proceedings of the Second Workshop on Ancient Language Processing (ALP 2025)",
-       "detail": "12–21",
+       "detail": "Albuquerque, New Mexico, 12–21",
        "url": "https://aclanthology.org/2025.alp-1.2/"
       },
       {
@@ -852,7 +852,7 @@
        "date": "2025",
        "year": 2025,
        "container": "Proceedings of the Second Workshop on Ancient Language Processing",
-       "detail": "65–70",
+       "detail": "Albuquerque, New Mexico, 53-58",
        "url": "https://aclanthology.org/2025.alp-1.7/"
       },
       {
@@ -879,32 +879,32 @@
        "year": 2024,
        "container": "PhD diss., KU Leuven",
        "detail": "",
-       "url": ""
+       "url": "https://lirias.kuleuven.be/4082449"
       },
       {
        "id": "XW5T3475",
-       "type": "Journal Article",
-       "title": "A Transformer-based Parser for Syriac Morphology: 1st Workshop on Ancient Language Processing, ALP 2023",
+       "type": "Conference Paper",
+       "title": "A Transformer-based Parser for Syriac Morphology",
        "titleStyle": "quoted",
-       "containerPrefix": "",
+       "containerPrefix": "In ",
        "creators": "Naaijer, Martijn, Constantijn J. Sikkel, Mathias Coeckelbergs, and Jisk Attema, et al.",
        "date": "2023",
        "year": 2023,
        "container": "Proceedings of the Ancient Language Processing Workshop",
-       "detail": "23-29",
-       "url": "https://www.scopus.com/pages/publications/85184996522"
+       "detail": "Varna, Bulgaria, 23-29",
+       "url": "https://aclanthology.org/2023.alp-1.3/"
       },
       {
        "id": "NVTEKDAB",
        "type": "Journal Article",
-       "title": "Determining the Significance of Lexical Features as Indicative of CBH and LBH: Insights from the Tiberias Stylistic Classifier for the Hebrew Bible: SBL Annual Meeting 2020 Linguistics and Biblical Hebrew Seminar: Syntax of Late Biblical Hebrew",
+       "title": "Determining the Significance of Lexical Features as Indicative of CBH and LBH: Insights from the Tiberias Stylistic Classifier for the Hebrew Bible",
        "titleStyle": "quoted",
        "containerPrefix": "",
        "creators": "Berman, Joshua.",
        "date": "2022",
        "year": 2022,
        "container": "Journal for Semitics",
-       "detail": "30.2: 2663-6573",
+       "detail": "30.2",
        "url": "https://unisapressjournals.co.za/index.php/JSEM/article/view/9302"
       },
       {
@@ -917,7 +917,7 @@
        "date": "2022",
        "year": 2022,
        "container": "Journal for Semitics",
-       "detail": "2663-6573",
+       "detail": "30.2",
        "url": "https://unisapressjournals.co.za/index.php/JSEM/article/view/9319"
       },
       {
@@ -943,7 +943,7 @@
        "date": "2020",
        "year": 2020,
        "container": "Proceedings of the Twelfth Language Resources and Evaluation Conference",
-       "detail": "4229–4236",
+       "detail": "Marseille, France, 4229–4236",
        "url": "https://aclanthology.org/2020.lrec-1.522/"
       },
       {
@@ -1021,7 +1021,7 @@
        "date": "2018",
        "year": 2018,
        "container": "Journal for Semitics",
-       "detail": "1013-8471",
+       "detail": "27.1",
        "url": "https://www.unisapressjournals.co.za/index.php/JSEM/article/view/2936"
       },
       {
@@ -1053,15 +1053,15 @@
       {
        "id": "NJF2SBJU",
        "type": "Conference Paper",
-       "title": "Modeling the Hebrew Bible: Potential of Topic Modeling Techniques for Semantic Annotation and Historical  Analysis",
+       "title": "Modeling the Hebrew Bible: Potential of Topic Modeling Techniques for Semantic Annotation and Historical Analysis",
        "titleStyle": "quoted",
        "containerPrefix": "In ",
        "creators": "Coeckelbergs, Mathias and Seth van Hooland.",
        "date": "2016",
        "year": 2016,
        "container": "Proceedings of the Second International Workshop on Semantic Web for Scientific Heritage co-located with 13th Extended Semantic Web Conference (ESWC 2016), Heraklion, Greece, May 30th, 2016",
-       "detail": "",
-       "url": ""
+       "detail": "Heraklion, Greece, 47-52",
+       "url": "https://ceur-ws.org/Vol-1595/paper5.pdf"
       },
       {
        "id": "6LQJ4CL5",
@@ -1087,7 +1087,7 @@
        "year": 2015,
        "container": "MA thesis, Delft University of Technology",
        "detail": "",
-       "url": ""
+       "url": "https://resolver.tudelft.nl/uuid:cb0e8409-41f3-4c67-ae28-b9edcc7b42f1"
       },
       {
        "id": "JMXVK84U",
@@ -1164,7 +1164,7 @@
        "date": "2012",
        "year": 2012,
        "container": "Eisenbrauns",
-       "detail": "Winona Lake, IN",
+       "detail": "Winona Lake, Indiana",
        "url": ""
       },
       {
@@ -1255,8 +1255,8 @@
        "date": "2003",
        "year": 2003,
        "container": "TC: A Journal of Biblical Textual Criticism",
-       "detail": "",
-       "url": ""
+       "detail": "8",
+       "url": "https://rosetta.reltech.org/TC/v08/Tov2003.html"
       },
       {
        "id": "7NYJ2G2B",
@@ -1307,7 +1307,7 @@
        "date": "1999",
        "year": 1999,
        "container": "Journal of Northwest Semitic Languages",
-       "detail": "",
+       "detail": "25: 101-126",
        "url": "https://www.semanticscholar.org/paper/Reading-Biblical-Hebrew-Poetry-Linguistic-System-or-Talstra/489281d7e7a01ccdbcd572d56b9981a1770edab8"
       },
       {
@@ -1398,7 +1398,7 @@
        "date": "1992",
        "year": 1992,
        "container": "Eisenbrauns",
-       "detail": "Winona Lake, IN",
+       "detail": "Winona Lake, Indiana",
        "url": ""
       },
       {
@@ -1488,8 +1488,8 @@
        "creators": "Tov, Emanuel.",
        "date": "1986",
        "year": 1986,
-       "container": "",
-       "detail": "",
+       "container": "Journal of Northwest Semitic Languages Supplement 1",
+       "detail": "Stellenbosch",
        "url": ""
       },
       {
@@ -1598,7 +1598,7 @@
        "date": "2006",
        "year": 2006,
        "container": "Paternoster",
-       "detail": "Waynesboro, GA",
+       "detail": "Waynesboro, Georgia",
        "url": "https://global.oup.com/academic/product/word-order-variation-in-biblical-hebrew-poetry-9781842274231"
       },
       {
@@ -1611,7 +1611,7 @@
        "date": "March 2001",
        "year": 2001,
        "container": "Edwin Mellen Press",
-       "detail": "",
+       "detail": "Lewiston, New York",
        "url": ""
       },
       {
@@ -1781,32 +1781,6 @@
        "url": "https://ora.ox.ac.uk/objects/uuid%3Acb0d6cc3-e535-45c6-adcd-3fead5a67a24"
       },
       {
-       "id": "WTKKKK8J",
-       "type": "Book Section",
-       "title": "Quotative Index Phrases in Shenoute’s Canon 6: A Case Study of Quotations from the Psalms",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Miyagawa, So and Heike Behlmer.",
-       "date": "2022",
-       "year": 2022,
-       "container": "Uses and Misuses of Ancient Mediterranean Sources: Erudition, Authority, Manipulation",
-       "detail": "Tübingen, 101–116",
-       "url": ""
-      },
-      {
-       "id": "BAYJP29V",
-       "type": "Thesis",
-       "title": "Shenoute, Besa, and the Bible: Digital Text Reuse Analysis of Selected Monastic Writings from Egypt",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Miyagawa, So.",
-       "date": "2022",
-       "year": 2022,
-       "container": "PhD diss., Georg-August-Universität Göttingen",
-       "detail": "",
-       "url": "https://ediss.uni-goettingen.de/handle/11858/13894"
-      },
-      {
        "id": "G8RE4T5P",
        "type": "Journal Article",
        "title": "Automatic Alignment of the Psalterium Sinaiticum and the Septuagint Psalms",
@@ -1842,8 +1816,21 @@
        "date": "2013",
        "year": 2013,
        "container": "Foundations for Syriac Lexicography V: Colloquia of the International Syriac Language Project",
-       "detail": "Piscataway, NJ, 43–70",
+       "detail": "Piscataway, New Jersey, 43–70",
        "url": "https://www.gorgiaspress.com/foundations-for-syriac-lexicography-v"
+      },
+      {
+       "id": "RWZ2DZ2D",
+       "type": "Book",
+       "title": "The Translational Technique of the Greek Septuagint for the Hebrew Verbs and Participles in Psalms 3-41",
+       "titleStyle": "italic",
+       "containerPrefix": "",
+       "creators": "Sailhamer, John H.",
+       "date": "1991",
+       "year": 1991,
+       "container": "Peter Lang",
+       "detail": "New York, 2",
+       "url": "https://www.peterlang.com/series/sbg"
       },
       {
        "id": "QT3X66NM",
@@ -1857,19 +1844,6 @@
        "container": "PhD diss., McGill University",
        "detail": "",
        "url": "https://www.erudit.org/en/theses/mcgill/1988/?page=11"
-      },
-      {
-       "id": "ISAKGPJ5",
-       "type": "Thesis",
-       "title": "The Translational Technique of the Greek Septuagint for the Hebrew Verbs and Participles in Psalms 3-41",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Sailhamer, John H.",
-       "date": "1981",
-       "year": 1981,
-       "container": "PhD diss., University of California, Los Angeles",
-       "detail": "",
-       "url": ""
       },
       {
        "id": "7X8BCU8Y",
@@ -1900,7 +1874,7 @@
        "year": 2005,
        "container": "Universiteit Leiden",
        "detail": "",
-       "url": "https://research.vu.nl/"
+       "url": "https://www.nwo.nl/en/projects/276-25-001"
       },
       {
        "id": "N7UD3NCG",
@@ -1996,7 +1970,7 @@
      ]
     },
     {
-     "name": "Reception",
+     "name": "Modern",
      "entries": [
       {
        "id": "X4LHRCPV",
@@ -2009,7 +1983,7 @@
        "year": 2025,
        "container": "",
        "detail": "",
-       "url": ""
+       "url": "https://cs.ubc.ca/~tmm/courses/547-25/projects/haeji_yuri/report.pdf"
       },
       {
        "id": "LJDF78IA",
@@ -2099,7 +2073,7 @@
        "date": "2019",
        "year": 2019,
        "container": "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)",
-       "detail": "3978–3987",
+       "detail": "Minneapolis, Minnesota, 3978–3987",
        "url": "https://aclanthology.org/N19-1399/"
       },
       {
@@ -2125,7 +2099,7 @@
        "date": "2017",
        "year": 2017,
        "container": "Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing",
-       "detail": "113–124",
+       "detail": "Copenhagen, Denmark, 113–124",
        "url": "https://doi.org/10.18653/v1/D17-1011"
       },
       {
@@ -2151,7 +2125,7 @@
        "date": "2015",
        "year": 2015,
        "container": "Digital Libraries: Providing Quality Information",
-       "detail": "142–152",
+       "detail": "Seoul, Korea, 142–152",
        "url": "https://doi.org/10.1007/978-3-319-27974-9_14"
       },
       {
@@ -2239,8 +2213,8 @@
        "date": "2017",
        "year": 2017,
        "container": "",
-       "detail": "",
-       "url": ""
+       "detail": "Berlin, Germany",
+       "url": "https://github.com/ETCBC/sbl_berlin17_textfabric"
       },
       {
        "id": "UB6APC4S",
@@ -2253,7 +2227,7 @@
        "year": 2014,
        "container": "",
        "detail": "",
-       "url": ""
+       "url": "https://logos.com/product/54188/psalms-explorer-dataset"
       }
      ]
     },
@@ -2275,16 +2249,16 @@
       },
       {
        "id": "YTKPBTLP",
-       "type": "Software",
-       "title": "Gemini Embedding 2",
-       "titleStyle": "italic",
-       "containerPrefix": "",
+       "type": "Conference Paper",
+       "title": "Gemini Embedding 2: A Native Multimodal Embedding Model from Gemini",
+       "titleStyle": "quoted",
+       "containerPrefix": "In ",
        "creators": "Shanbhogue, Madhuri, Zhe Li, Shanfeng Zhang, and Gustavo Hernández Ábrego, et al.",
        "date": "2026",
        "year": 2026,
        "container": "",
        "detail": "",
-       "url": ""
+       "url": "https://arxiv.org/abs/2605.27295"
       },
       {
        "id": "EI723ZLI",
@@ -2321,9 +2295,9 @@
        "creators": "Zhao, Xinping, Xinshuo Hu, Zifei Shan, and Shouzheng Huang, et al.",
        "date": "2026",
        "year": 2026,
-       "container": "",
+       "container": "Proceedings of the Fourteenth International Conference on Learning Representations",
        "detail": "",
-       "url": ""
+       "url": "https://arxiv.org/abs/2506.20923"
       },
       {
        "id": "VTLV2GLD",
@@ -2386,9 +2360,9 @@
        "creators": "Li, Chaofan, Minghao Qin, Shitao Xiao, and Jianlyu Chen, et al.",
        "date": "2025",
        "year": 2025,
-       "container": "",
+       "container": "The Thirteenth International Conference on Learning Representations",
        "detail": "",
-       "url": ""
+       "url": "https://openreview.net/forum?id=wfLuiDjQ0u"
       },
       {
        "id": "XGPRXYN7",
@@ -2412,9 +2386,9 @@
        "creators": "Chen, Jianlv, Shitao Xiao, Peitian Zhang, and Kun Luo, et al.",
        "date": "2024",
        "year": 2024,
-       "container": "",
+       "container": "Findings of the Association for Computational Linguistics: ACL 2024",
        "detail": "Bangkok, Thailand, 2318-2335",
-       "url": ""
+       "url": "https://aclanthology.org/2024.findings-acl.137/"
       },
       {
        "id": "Q4KNIVPB",
@@ -2425,9 +2399,9 @@
        "creators": "Zhang, Xin, Yanzhao Zhang, Dingkun Long, and Wen Xie, et al.",
        "date": "2024",
        "year": 2024,
-       "container": "",
-       "detail": "1393-1412",
-       "url": ""
+       "container": "Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing: Industry Track",
+       "detail": "Miami, Florida, 1393-1412",
+       "url": "https://aclanthology.org/2024.emnlp-industry.103/"
       },
       {
        "id": "LPNMTIXJ",
@@ -2440,7 +2414,7 @@
        "year": 2024,
        "container": "",
        "detail": "",
-       "url": ""
+       "url": "https://arxiv.org/abs/2402.05672"
       },
       {
        "id": "JPVSZWCL",
@@ -2464,8 +2438,8 @@
        "creators": "Seker, Amit, Elron Bandel, Dan Bareket, and Idan Brusilovsky, et al.",
        "date": "2022",
        "year": 2022,
-       "container": "",
-       "detail": "46-56",
+       "container": "Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+       "detail": "Dublin, Ireland, 46-56",
        "url": "https://doi.org/10.18653/v1/2022.acl-long.4"
       },
       {
@@ -2495,7 +2469,7 @@
        "creators": "Muennighoff, Niklas, Nouamane Tazi, Loïc Magne, and Nils Reimers.",
        "date": "2023",
        "year": 2023,
-       "container": "",
+       "container": "Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics",
        "detail": "Dubrovnik, Croatia, 2014-2037",
        "url": "https://aclanthology.org/2023.eacl-main.148/"
       },
@@ -2510,7 +2484,7 @@
        "year": 2010,
        "container": "Journal of Machine Learning Research",
        "detail": "11: 2837-2854",
-       "url": ""
+       "url": "https://jmlr.org/papers/volume11/vinh10a/vinh10a.pdf"
       },
       {
        "id": "NVFN2645",

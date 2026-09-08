@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tehillim">
+  <title>Tehillim</title>
+  <circle cx="32" cy="32" r="32" fill="#7ba3d9" />
+  <text
+    x="32"
+    y="33"
+    fill="#fff"
+    font-family="Cardo, Georgia, serif"
+    font-size="42"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >ת</text>
+</svg>

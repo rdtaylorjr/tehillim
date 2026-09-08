@@ -4,7 +4,9 @@ import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const SOURCE = "detail-data";
-const STAMP = join(SOURCE, "VERSION");
+
+/** Tracked, unlike the export itself: a CI build has no payloads to hash but must still stamp. */
+const STAMP = "detail-version.json";
 
 /** Short enough to read in a URL, wide enough that a rebuild cannot collide in practice. */
 const LENGTH = 12;
@@ -15,9 +17,11 @@ const names = existsSync(SOURCE)
       .filter((name) => name.startsWith("detail_") && name.endsWith(".json"))
       .sort()
   : [];
+
 if (names.length === 0) {
-  //: A checkout without the export still builds; the stamp stays at its default.
-  console.log(`No detail payloads in ${SOURCE}/, leaving the version unstamped.`);
+  //: Without payloads there is nothing to hash, so the committed stamp stands unchanged.
+  const current = existsSync(STAMP) ? JSON.parse(readFileSync(STAMP, "utf8")).version : "none";
+  console.log(`No payloads in ${SOURCE}/, keeping the committed stamp (${current}).`);
   process.exit(0);
 }
 
@@ -33,5 +37,10 @@ for (const name of names) {
 }
 const version = digest.digest("hex").slice(0, LENGTH);
 
-writeFileSync(STAMP, `${version}\n`);
-console.log(`${version}  (${names.length} payloads)`);
+const previous = existsSync(STAMP) ? JSON.parse(readFileSync(STAMP, "utf8")).version : null;
+writeFileSync(STAMP, `${JSON.stringify({ version, payloads: names.length }, null, 2)}\n`);
+console.log(
+  previous === version
+    ? `${version}  (${names.length} payloads, unchanged)`
+    : `${version}  (${names.length} payloads, was ${previous ?? "unstamped"} \u2014 commit ${STAMP})`,
+);

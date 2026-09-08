@@ -1,5 +1,6 @@
 export * from "./domainData";
 export * from "./format";
+export * from "./listsModel";
 export * from "./numberFormat";
 export * from "./resultRows";
 export * from "./sortRows";

@@ -19,8 +19,10 @@
   padding-top: 7px;
 }
 
-/* The bands read as one zone, so only the last is ruled off from what follows. */
-.band:not(:last-child) {
+/* Stacked bands read as one zone, so only the last is ruled off from what follows.
+   Keyed on a following band rather than any sibling, since a page that puts prose
+   under a single band would otherwise crop that band's bottom padding. */
+.band:has(+ .band) {
   padding-bottom: 7px;
   border-bottom: none;
 }

@@ -12,7 +12,9 @@ describe("createDetailLoader", () => {
       status: "loaded",
       data: payload,
     });
-    expect(fetcher).toHaveBeenCalledWith("/data/detail_semantic_berel_genre.json");
+    expect(fetcher).toHaveBeenCalledWith(
+      `/data/detail_semantic_berel_genre.json?v=${__DETAIL_VERSION__}`,
+    );
   });
 
   it("reports absence rather than throwing when a model has no export", async () => {

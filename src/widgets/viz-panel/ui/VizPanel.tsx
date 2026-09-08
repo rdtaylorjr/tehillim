@@ -95,7 +95,8 @@ export function LoadError({
       <h1>{heading}</h1>
       <p>{error instanceof Error ? error.message : String(error)}</p>
       <p>
-        Run the pipeline (see the tehillim-clustering README) to generate {missingDataFiles}.
+        Run the pipeline (see the tehillim-compare and tehillim-cluster READMEs) to generate{" "}
+        {missingDataFiles}.
       </p>
     </div>
   );

@@ -1,0 +1,64 @@
+/* Inert, so the card's link takes the click rather than the figure. */
+.figure {
+  position: relative;
+  height: var(--figure-h, 200px);
+  margin-bottom: 20px;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--bg-inset);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Drawn at full size and stepped down, so the type stays in proportion. */
+.table-scale {
+  --fit: 0.73;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% / var(--fit));
+  height: calc(100% / var(--fit));
+  transform: scale(var(--fit));
+  transform-origin: top left;
+}
+
+/* A card has nowhere to scroll, so the columns divide the width there is. */
+.table-scale table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table-scale :is(th, td) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Only the first column holds words, so it takes most of the width. */
+.table-scale :is(th, td):first-child {
+  width: 56%;
+}
+
+.table-scale :is(th, td):nth-child(2) {
+  width: 25%;
+}
+
+/* A card's edge is closer than a panel's, so the last column sits nearer it. */
+.table-scale :is(th, td):last-child {
+  width: 19%;
+  padding-right: 6px;
+}
+
+/* Square at the card's full width, showing the top band from Psalm 1. */
+.square {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+/* The renderer requires a tooltip class. Nothing here can hover. */
+.figure-tooltip {
+  display: none;
+}

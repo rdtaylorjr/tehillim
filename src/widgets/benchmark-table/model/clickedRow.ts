@@ -1,6 +1,6 @@
 import { resolveTableView } from "./tableView";
 import type { DomainData, TableColumn } from "../../../shared/lib/results";
-import type { Selection } from "../../../shared/lib/selection";
+import type { Selection } from "../../../shared/lib/navigation";
 
 export interface ClickedRow {
   readonly row: Record<string, unknown>;

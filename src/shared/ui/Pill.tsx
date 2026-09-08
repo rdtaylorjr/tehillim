@@ -13,7 +13,7 @@ function severityClass(value: number): "good" | "warn" | "bad" {
   return "bad";
 }
 
-/** Color-coded significance pill; nothing at all for a non-finite value. */
+/** Color-coded significance pill, showing nothing at all for a non-finite value. */
 export function significancePill(value: number, prefix: PillPrefix = "p"): React.ReactNode {
   if (!Number.isFinite(value)) return "";
   const text =
@@ -25,11 +25,7 @@ export function significancePill(value: number, prefix: PillPrefix = "p"): React
   );
 }
 
-/**
- * Color-coded confidence-interval pill: good when the whole interval sits above `reference`
- * (higher is better throughout this UI), bad otherwise. One CI is the sole source for both the
- * printed range and its color, so it can never disagree with a separately-computed q-value.
- */
+/** A confidence-interval pill, good when the whole interval sits above `reference`. */
 export function ciPill(low: number, high: number, reference: number): React.ReactNode {
   if (!Number.isFinite(low) || !Number.isFinite(high)) return "—";
   return (

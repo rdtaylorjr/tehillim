@@ -1,4 +1,4 @@
-import type { Selection } from "../../../shared/lib/selection";
+import type { Selection } from "../../../shared/lib/navigation";
 import type { DetailSection } from "./dataPath";
 
 /** The section the toolbar already determined, so the detail view never asks the reader again. */

@@ -4,13 +4,10 @@ import userEvent from "@testing-library/user-event";
 import { App } from "./App";
 import type { DomainData } from "../shared/lib/results";
 import type { DomainLoad } from "../shared/api";
-import { GENRES, PARALLELISM_TYPES, TRAJECTORY_METRICS } from "../shared/lib/catalog";
-import type { FamilyId } from "../shared/lib/catalog";
+import { GENRES, PARALLELISM_TYPES, TRAJECTORY_METRICS } from "../shared/lib/corpus";
+import type { FamilyId } from "../shared/lib/corpus";
 
-/**
- * One row per section, shaped like the real export: a trajectory row repeats its model once
- * per source, which is what made a model-only React key collide and strand stale cells.
- */
+/** One row per section, a trajectory row repeating its model once per source. */
 const MODELS = ["alpha", "beta"];
 const SOURCES = ["raw", "length_controlled", "length_and_content_controlled"];
 
@@ -186,25 +183,19 @@ describe("every toolbar permutation renders a coherent table", () => {
   it("shows no rows for a family that was never benchmarked, even after one that was", async () => {
     await open();
 
-    await pill("Phonology");
+    await pill("Phonological");
     expect(
-      await screen.findByText(/no benchmark has been run for phonology/i),
-    ).toBeInTheDocument();
-    expect(screen.queryByRole("table")).not.toBeInTheDocument();
-
-    await pill("Discourse");
-    expect(
-      await screen.findByText(/no benchmark has been run for discourse/i),
+      await screen.findByText(/no benchmark has been run for phonological/i),
     ).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
   it("returns to real rows when a benchmarked family is chosen again", async () => {
     await open();
-    await pill("Phonology");
+    await pill("Phonological");
     await screen.findByText(/no benchmark has been run/i);
 
-    await pill("Syntax");
+    await pill("Syntactic");
     expect(await screen.findByRole("table")).toBeInTheDocument();
   });
 

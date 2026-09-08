@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "./App";
 import type { DetailLoad } from "../widgets/model-detail";
 import { EMPTY_DOMAIN_DATA } from "../shared/lib/results";
 import type { DomainData } from "../shared/lib/results";
 import type { DomainLoad } from "../shared/api";
-import type { FamilyId } from "../shared/lib/catalog";
+import type { FamilyId } from "../shared/lib/corpus";
 
 function parallelismRow(base: string, variant: string): Record<string, unknown> {
   return {
@@ -33,13 +33,13 @@ const SEMANTIC: DomainData = {
   genre_overall: [] as never,
 };
 
-/** Families other than semantic were never benchmarked here, as phonology and discourse are not. */
+/** Families other than semantic were never benchmarked here, as phonology is not. */
 const load = (family: FamilyId): Promise<DomainLoad> =>
   Promise.resolve(
     family === "semantic" ? { status: "loaded", data: SEMANTIC } : { status: "absent" },
   );
 
-/** The detail pane fetches its own payload, so tests hand it one rather than a network. */
+/** The detail pane fetches a second payload, so tests hand it one rather than a network. */
 const PARALLELISM_STATS = {
   auc: 0.69,
   auc_ci_low: 0.66,
@@ -90,10 +90,10 @@ describe("App", () => {
     expect(screen.getAllByText("alephbert_consonantal").length).toBeGreaterThan(0);
   });
 
-  it("returns to the table from Back, clearing the open model", async () => {
+  it("returns to the table from the View switch, clearing the open model", async () => {
     renderApp();
     await userEvent.click(await screen.findByRole("button", { name: "alephbert consonantal" }));
-    await userEvent.click(screen.getByRole("button", { name: /back/i }));
+    await userEvent.click(screen.getByRole("radio", { name: "Table" }));
 
     expect(screen.getByRole("table")).toBeInTheDocument();
     expect(screen.queryByText(/charts for the current selection/i)).not.toBeInTheDocument();
@@ -111,10 +111,10 @@ describe("App", () => {
 
   it("names the family when it was never benchmarked, rather than reporting no matches", async () => {
     renderApp();
-    await userEvent.click(screen.getByRole("radio", { name: "Phonology" }));
+    await userEvent.click(screen.getByRole("radio", { name: "Phonological" }));
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     expect(
-      await screen.findByText(/no benchmark has been run for phonology/i),
+      await screen.findByText(/no benchmark has been run for phonological/i),
     ).toBeInTheDocument();
   });
 
@@ -141,9 +141,29 @@ describe("App", () => {
     renderApp();
     // Settles the data load first, so its state update lands inside the test rather than after it.
     await screen.findByRole("table");
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Tehillim · Computational Analysis of Psalms",
-    );
-    expect(screen.getByText("Hebrew Psalm Representation Benchmarks")).toBeInTheDocument();
+    // The heading is the site name alone, with this page's name under it.
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Tehillim");
+    //: The bar says the same on every page, the panel below says the selection.
+    expect(screen.getByText("Computational Analysis of Hebrew Psalms")).toBeInTheDocument();
+  });
+
+  it("carries the same nav as every other page, marking this one current", async () => {
+    //: This page once headed itself, leaving no way to reach the others.
+    renderApp();
+    await screen.findByRole("table");
+    const nav = screen.getByRole("navigation", { name: "Pages" });
+    expect(
+      within(nav)
+        .getAllByRole("link")
+        .map((a) => a.textContent),
+    ).toEqual(["Benchmark", "Compare", "Cluster", "References"]);
+    expect(within(nav).getByRole("link", { current: "page" })).toHaveTextContent("Benchmark");
+  });
+
+  it("leaves the nav links as plain hrefs when mounted outside the router", async () => {
+    //: No `navigate` prop, so a click falls through to the browser.
+    renderApp();
+    await screen.findByRole("table");
+    expect(screen.getByRole("link", { name: "Cluster" })).toHaveAttribute("href", "/cluster/");
   });
 });

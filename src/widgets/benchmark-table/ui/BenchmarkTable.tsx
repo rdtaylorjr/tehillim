@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import type { Selection } from "../../../shared/lib/selection";
-import { pathSentence } from "../../../shared/lib/path";
+import type { Selection } from "../../../shared/lib/navigation";
+import { pathSentence } from "../../../shared/lib/navigation";
 import type { SortDir } from "../../../shared/lib/results";
 import { applyFacetFilter, applyNameFilter, applyTextFilter } from "../model/rowFilters";
 import type { DomainData } from "../../../shared/lib/results";

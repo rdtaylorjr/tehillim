@@ -40,4 +40,6 @@ export default defineConfig({
   plugins: [react(), detailPayloads()],
   define,
   css,
+  // Plotly is 4.9 MB and already split into its own idle-prefetched chunk, so the limit sits above it to flag real growth.
+  build: { chunkSizeWarningLimit: 5000 },
 });

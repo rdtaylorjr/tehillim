@@ -6,7 +6,7 @@ import styles from "./ModelDetail.module.css";
 const SETTLE_MS = 120;
 
 export interface PlotMountProps {
-  /** Draws one chart into the element; must be stable, or the plot is rebuilt every render. */
+  /** Draws one chart into the element, and must be stable or the plot rebuilds each render. */
   readonly draw: (mount: HTMLElement) => void;
   /** Injected so a test can observe teardown without a real Plotly graph. */
   readonly purge?: (mount: HTMLElement) => void;

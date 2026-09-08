@@ -1,0 +1,237 @@
+/* Page chrome shared by the compare and cluster pages and the widgets they mount, on the same tokens and proportions as src/app/App.module.css. */
+
+/* App header: a sticky full-bleed bar. */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 28px;
+  background: rgb(26 29 33 / 94%);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* Mark and title are one target, so the whole masthead is the way home. */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand:hover .title-name {
+  color: var(--accent);
+}
+
+.brand:hover .brand-mark {
+  background: var(--accent-dim);
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  transition: background 0.14s;
+}
+
+.brand:focus-visible .brand-mark {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Two lines against the 46px mark, the second naming this page. */
+.title-block {
+  display: block;
+  flex: 1;
+  min-width: 0;
+}
+
+/* The name holds full weight, so the page beneath reads as a second tier. */
+.title-name {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.14s;
+}
+
+/* The Hebrew name leads, isolated from the line's direction. */
+.title-hebrew {
+  unicode-bidi: isolate;
+  margin-right: 0.08em;
+  color: var(--ink-dim);
+}
+
+/* Where you are, under who this is. */
+.subtitle {
+  margin: 2px 0 0;
+  color: var(--ink-dim);
+  font-size: 0.86rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Wayfinding, so plain links rather than the pill vocabulary filters use. */
+.page-nav {
+  display: flex;
+  flex-shrink: 0;
+  align-self: stretch;
+  gap: 2px;
+  /* Cancels the header's padding, so a link runs the bar's full height. */
+  margin: -14px 0;
+}
+
+.page-nav a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  color: var(--ink-dim);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.14s;
+}
+
+/* One element for both states, so the label never shifts when the rule appears. */
+.page-nav a::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  left: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: transparent;
+  transition: background 0.14s;
+}
+
+.page-nav a:hover {
+  color: var(--ink);
+}
+
+.page-nav a:hover:not([aria-current="page"])::after {
+  background: var(--rule);
+}
+
+.page-nav a[aria-current="page"] {
+  color: var(--ink);
+}
+
+.page-nav a[aria-current="page"]::after {
+  background: var(--accent);
+}
+
+.page-nav a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+  border-radius: 4px;
+}
+
+/* Three columns on the benchmark page's width and gutters, so both share a grid. */
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 24px 28px 48px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 340px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Each region is a panel on the same ground the benchmarks table sits on. */
+.panel {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* Footer: full width like the header, build detail left and provenance right. */
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  padding: 14px 28px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.9;
+  color: var(--ink-faint);
+}
+
+.footer-sep {
+  opacity: 0.5;
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Narrow enough to ellipsize mid-word, so the name is left whole. */
+@media (max-width: 760px) {
+  .app-header {
+    flex-wrap: wrap;
+    gap: 12px 16px;
+  }
+
+  /* Each takes a whole row, so the masthead wraps rather than shrinking away. */
+  .brand {
+    flex: 1 1 100%;
+  }
+
+  /* The bar wraps, so the nav takes a row and scrolls rather than wrapping. */
+  .page-nav {
+    flex: 1 1 100%;
+    align-self: auto;
+    order: 3;
+    margin: 0 -8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  /* An auto margin, not flex-end, which would push the first tabs beyond scroll. */
+  .page-nav a:first-child {
+    margin-left: auto;
+  }
+
+  /* Tighter gutters, so four labels fit and the scroll stays a fallback. */
+  .page-nav a {
+    height: var(--control-h);
+    padding: 0 8px;
+  }
+
+  .page-nav a::after {
+    right: 8px;
+    left: 8px;
+  }
+}

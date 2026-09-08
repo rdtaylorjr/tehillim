@@ -24,10 +24,7 @@ function headerClass<T>(column: TableColumn<T>, sortKey: string, sortDir: SortDi
 
 const isModelColumn = (key: string): boolean => key === "model" || key === "model_base";
 
-/**
- * Rows are not identified by model alone: a trajectory row repeats one model once per source,
- * and a by-type row once per scope. A duplicate key leaves React reusing the wrong cells.
- */
+/** Rows are keyed by more than model, which repeats per source and per scope. */
 const IDENTITY = ["model", "source", "scope", "genre", "metric"] as const;
 
 function rowKey(row: Record<string, unknown>, index: number): string {
@@ -41,7 +38,7 @@ function rowKey(row: Record<string, unknown>, index: number): string {
   return String(index);
 }
 
-/** Text cells hold plain scalars; anything else has no sensible string form. */
+/** Text cells hold plain scalars, and anything else has no sensible string form. */
 function asText(raw: unknown): string {
   if (typeof raw === "string") return raw;
   if (typeof raw === "number" || typeof raw === "boolean") return String(raw);
@@ -102,17 +99,17 @@ export function ResultsTable<T extends object>({
             const fields = row as Record<string, unknown>;
             const model = asText(fields["model"]);
             return (
-              <tr key={rowKey(fields, index)}>
+              <tr
+                key={rowKey(fields, index)}
+                onClick={() => {
+                  onOpenModel(model);
+                }}
+              >
                 {columns.map((column) => (
                   <td key={column.key} className={cellClass(column)}>
                     {isModelColumn(column.key) ? (
-                      <button
-                        type="button"
-                        className={styles.rowOpen}
-                        onClick={() => {
-                          onOpenModel(model);
-                        }}
-                      >
+                      //: A button so the row stays keyboard-operable, bubbling to the row.
+                      <button type="button" className={styles.rowOpen}>
                         {cellContent(row, column)}
                       </button>
                     ) : (

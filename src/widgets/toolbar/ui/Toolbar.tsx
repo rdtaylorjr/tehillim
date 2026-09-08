@@ -1,6 +1,7 @@
-import { useId, useMemo } from "react";
+import { useId } from "react";
 import styles from "./Toolbar.module.css";
 import field from "../../../shared/ui/Field.module.css";
+import band from "../../../shared/ui/controlBand.module.css";
 import {
   BENCHMARKS,
   GENRES,
@@ -11,23 +12,24 @@ import {
   facetFor,
   sentenceCase,
   titleCase,
-} from "../../../shared/lib/catalog";
-import { selectionPath } from "../../../shared/lib/path";
-import { ALL, showsFacet, showsText } from "../../../shared/lib/selection";
-import type { Selection, SelectionAction } from "../../../shared/lib/selection";
+} from "../../../shared/lib/corpus";
+import { ALL, showsFacet, showsText } from "../../../shared/lib/navigation";
+import type { Selection, SelectionAction } from "../../../shared/lib/navigation";
+import { Dropdown, DropdownPills, DropdownRow } from "../../../shared/ui/Dropdown";
 import { PillGroup } from "../../../shared/ui/PillGroup";
 import type { PillOption } from "../../../shared/ui/PillGroup";
-import { SelectControl } from "../../../shared/ui/SelectControl";
 import type { SelectOption } from "../../../shared/ui/SelectControl";
-import { useMinorCrumbFit } from "../lib/useMinorCrumbFit";
-import type { ObserverFactory } from "../lib/useMinorCrumbFit";
 import { SelectionPath } from "./SelectionPath";
 
 export interface ToolbarProps {
   readonly selection: Selection;
   readonly dispatch: (action: SelectionAction) => void;
-  /** Injected in tests so the fit measurement can be driven without a real observer. */
-  readonly createObserver?: ObserverFactory;
+  /** Every model the selection holds, for the rung below the group. */
+  readonly models?: readonly string[];
+  /** Switching view is the page's to carry out, since entering detail navigates. */
+  readonly onView?: (view: Selection["view"]) => void;
+  /** Choosing a different model within the detail view, likewise. */
+  readonly onOpenModel?: (model: string) => void;
 }
 
 const ALL_OPTION = { value: ALL, label: "All" } as const;
@@ -46,65 +48,56 @@ const BENCHMARK_PILLS: readonly PillOption[] = BENCHMARKS.map((b) => ({
   id: b.id,
   label: b.label,
 }));
+const VIEW_PILLS: readonly PillOption[] = [
+  { id: "table", label: "Table" },
+  { id: "detail", label: "Detail" },
+];
 
-/**
- * The single toolbar. The path heads it and folds the two branches away; each branch owns the
- * filters it yields, right aligned so they share one rail with the field above them.
- */
+/** The single toolbar: the path, then one dropdown per choice and the view switch. */
 export function Toolbar({
   selection,
   dispatch,
-  createObserver,
+  models = [],
+  onView,
+  onOpenModel,
 }: ToolbarProps): React.ReactElement {
   const filterId = useId();
-  const modelsId = useId();
-  const benchmarksId = useId();
   const facet = facetFor(selection.family);
-  const isDetail = selection.model !== null;
-  const pathKey = selectionPath(selection)
-    .map((crumb) => crumb.label)
-    .join("/");
-  const fitNames = useMemo(() => ({ crumbs: styles.crumbs, hideMinor: styles.hideMinor }), []);
-  const rowRef = useMinorCrumbFit(pathKey, fitNames, createObserver);
+  const isDetail = selection.view === "detail";
+  const family = MODEL_FAMILIES.find((f) => f.id === selection.family);
+  const benchmark = BENCHMARKS.find((b) => b.id === selection.benchmark);
+
+  //: With the menu shut the toggle is the only place the choice is legible.
+  const named = (value: string): string | null => (value === ALL ? null : sentenceCase(value));
+  const modelState = [
+    family?.label ?? "",
+    showsFacet(selection.family) ? named(selection.facet) : null,
+    showsText(selection.family, selection.facet) ? named(selection.text) : null,
+    isDetail ? selection.model : null,
+  ]
+    .filter(Boolean)
+    .join(" / ");
+  const benchmarkState = [
+    benchmark?.label ?? "",
+    selection.benchmark === "parallelism"
+      ? named(selection.parallelismType)
+      : named(selection.genre),
+    selection.benchmark === "genre" && selection.metric !== "genre"
+      ? titleCase(selection.metric)
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" / ");
 
   return (
     <div
-      className={[
-        styles.toolbar,
-        selection.collapsed ? styles.isCollapsed : "",
-        isDetail ? styles.isDetail : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={[styles.toolbar, isDetail ? styles.isDetail : ""].filter(Boolean).join(" ")}
     >
-      <div className={styles.summary} ref={rowRef}>
-        <SelectionPath
-          selection={selection}
-          onToggle={() => {
-            dispatch({ type: "collapsed/toggled" });
-          }}
-        />
-        {isDetail ? (
-          <button
-            type="button"
-            className={styles.back}
-            onClick={() => {
-              dispatch({ type: "model/selected", model: null });
-            }}
-          >
-            <svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true">
-              <path
-                d="M7 2L3.5 5.5 7 9"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Back
-          </button>
-        ) : (
+      <div className={styles.summary}>
+        <SelectionPath selection={selection} />
+        {/* No way back here: the Table pill in the band below is the way back,
+            and a second control for the same move is one too many. */}
+        {isDetail ? null : (
           <div className={`${field.control} ${styles.summaryControl}`}>
             <label htmlFor={filterId}>Filter</label>
             <input
@@ -119,89 +112,178 @@ export function Toolbar({
         )}
       </div>
 
-      <div className={styles.branches}>
-        <div className={styles.branch} role="group" aria-labelledby={modelsId}>
-          <span className={styles.branchHead} id={modelsId}>
-            Models
-          </span>
-          <PillGroup
-            label="Models"
-            options={FAMILY_PILLS}
-            value={selection.family}
-            onSelect={(id) => {
-              dispatch({ type: "family/selected", family: id as Selection["family"] });
-            }}
-          />
-          <div className={styles.branchYield}>
-            {showsFacet(selection.family) && facet ? (
-              <SelectControl
-                label={facet.label}
-                options={[ALL_OPTION, ...asOptions(facet.values, sentenceCase)]}
+      {/* One band, one control per choice. It stays mounted on a detail page
+          rather than being replaced, so the filters keep their state and the
+          pane below is the only part that swaps. */}
+      <div className={band.band}>
+        <Dropdown label="Model" current={modelState}>
+          <DropdownRow>
+            <DropdownPills>
+              <PillGroup
+                label="Models"
+                options={FAMILY_PILLS}
+                value={selection.family}
+                onSelect={(id) => {
+                  dispatch({ type: "family/selected", family: id as Selection["family"] });
+                }}
+              />
+            </DropdownPills>
+          </DropdownRow>
+          {showsFacet(selection.family) && facet ? (
+            <DropdownRow label={facet.label}>
+              <select
+                aria-label={facet.label}
                 value={selection.facet}
-                onSelect={(value) => {
-                  dispatch({ type: "facet/selected", facet: value });
+                onChange={(event) => {
+                  dispatch({ type: "facet/selected", facet: event.target.value });
                 }}
-              />
-            ) : null}
-            {showsText(selection.family, selection.facet) ? (
-              <SelectControl
-                label="Text"
-                options={[ALL_OPTION, ...asOptions(TEXT_VARIANTS, sentenceCase)]}
+              >
+                {[ALL_OPTION, ...asOptions(facet.values, sentenceCase)].map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </DropdownRow>
+          ) : null}
+          {showsText(selection.family, selection.facet) ? (
+            <DropdownRow label="Text">
+              <select
+                aria-label="Text"
                 value={selection.text}
-                onSelect={(value) => {
-                  dispatch({ type: "text/selected", text: value });
+                onChange={(event) => {
+                  dispatch({
+                    type: "text/selected",
+                    text: event.target.value as Selection["text"],
+                  });
                 }}
-              />
-            ) : null}
-          </div>
-        </div>
+              >
+                {[ALL_OPTION, ...asOptions(TEXT_VARIANTS, sentenceCase)].map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </DropdownRow>
+          ) : null}
+          {/* The rung below the group. The table shows every model at once, so
+              only a detail page - which shows exactly one - has to ask which. */}
+          {isDetail && models.length > 0 && selection.model !== null ? (
+            <DropdownRow label="Model">
+              <select
+                aria-label="Model"
+                value={selection.model}
+                onChange={(event) => {
+                  if (onOpenModel !== undefined) onOpenModel(event.target.value);
+                  else dispatch({ type: "model/selected", model: event.target.value });
+                }}
+              >
+                {models.map((model) => (
+                  <option key={model} value={model}>
+                    {model}
+                  </option>
+                ))}
+              </select>
+            </DropdownRow>
+          ) : null}
+        </Dropdown>
 
-        <div className={styles.branch} role="group" aria-labelledby={benchmarksId}>
-          <span className={styles.branchHead} id={benchmarksId}>
-            Benchmarks
-          </span>
-          <PillGroup
-            label="Benchmarks"
-            options={BENCHMARK_PILLS}
-            value={selection.benchmark}
-            onSelect={(id) => {
-              dispatch({ type: "benchmark/selected", benchmark: id as Selection["benchmark"] });
-            }}
-          />
-          <div className={styles.branchYield}>
-            {selection.benchmark === "parallelism" ? (
-              <SelectControl
-                label="Type"
-                options={[ALL_OPTION, ...asOptions(PARALLELISM_TYPES, (v) => v)]}
-                value={selection.parallelismType}
-                onSelect={(value) => {
-                  dispatch({ type: "parallelismType/selected", parallelismType: value });
+        <Dropdown label="Benchmark" current={benchmarkState}>
+          <DropdownRow>
+            <DropdownPills>
+              <PillGroup
+                label="Benchmarks"
+                options={BENCHMARK_PILLS}
+                value={selection.benchmark}
+                onSelect={(id) => {
+                  dispatch({
+                    type: "benchmark/selected",
+                    benchmark: id as Selection["benchmark"],
+                  });
                 }}
               />
-            ) : (
-              <>
-                <SelectControl
-                  label="Genre"
-                  options={[ALL_OPTION, ...asOptions(GENRES, (v) => v)]}
+            </DropdownPills>
+          </DropdownRow>
+          {selection.benchmark === "parallelism" ? (
+            <DropdownRow label="Type">
+              <select
+                aria-label="Type"
+                value={selection.parallelismType}
+                onChange={(event) => {
+                  dispatch({
+                    type: "parallelismType/selected",
+                    parallelismType: event.target.value as Selection["parallelismType"],
+                  });
+                }}
+              >
+                {[ALL_OPTION, ...asOptions(PARALLELISM_TYPES, (v) => v)].map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </DropdownRow>
+          ) : (
+            <>
+              <DropdownRow label="Genre">
+                <select
+                  aria-label="Genre"
                   value={selection.genre}
-                  onSelect={(value) => {
-                    dispatch({ type: "genre/selected", genre: value });
+                  onChange={(event) => {
+                    dispatch({
+                      type: "genre/selected",
+                      genre: event.target.value as Selection["genre"],
+                    });
                   }}
-                />
-                <SelectControl
-                  label="Metric"
-                  options={[
+                >
+                  {[ALL_OPTION, ...asOptions(GENRES, (v) => v)].map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </DropdownRow>
+              <DropdownRow label="Metric">
+                <select
+                  aria-label="Metric"
+                  value={selection.metric}
+                  onChange={(event) => {
+                    dispatch({
+                      type: "metric/selected",
+                      metric: event.target.value as Selection["metric"],
+                    });
+                  }}
+                >
+                  {[
                     { value: "genre", label: "Genre Discrimination" } as const,
                     ...asOptions(TRAJECTORY_METRICS, titleCase),
-                  ]}
-                  value={selection.metric}
-                  onSelect={(value) => {
-                    dispatch({ type: "metric/selected", metric: value });
-                  }}
-                />
-              </>
-            )}
-          </div>
+                  ].map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </DropdownRow>
+            </>
+          )}
+        </Dropdown>
+
+        {/* Which of the two views the panel below is showing. A detail page is
+            one model out of the group, so leaving it needs no separate way back. */}
+        <div className={band.bandYield}>
+          <PillGroup
+            label="View"
+            options={VIEW_PILLS}
+            value={selection.view}
+            onSelect={(id) => {
+              const view = id as Selection["view"];
+              if (onView !== undefined) onView(view);
+              else {
+                dispatch({ type: "view/selected", view });
+                if (view === "table") dispatch({ type: "model/selected", model: null });
+              }
+            }}
+          />
         </div>
       </div>
     </div>

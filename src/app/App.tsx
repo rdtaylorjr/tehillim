@@ -1,16 +1,25 @@
-import { lazy, Suspense, useEffect, useReducer, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import styles from "./App.module.css";
 import { Message } from "../shared/ui/Message";
-import { SITE } from "../shared/lib/attribution";
-import { INITIAL_SELECTION, selectionReducer } from "../shared/lib/selection";
-import type { Selection } from "../shared/lib/selection";
+import { INITIAL_SELECTION, selectionReducer } from "../shared/lib/navigation";
+import type { Selection } from "../shared/lib/navigation";
 import { createDomainCache, createTrajectorySliceCache } from "../shared/api";
 import type { DomainLoad, TrajectorySliceLoader } from "../shared/api";
+import { listsModel } from "../shared/lib/results";
 import type { DomainData } from "../shared/lib/results";
-import { familyFor } from "../shared/lib/catalog";
-import type { FamilyId } from "../shared/lib/catalog";
+import { MODEL_FAMILIES, familyFor } from "../shared/lib/corpus";
+import type { FamilyId } from "../shared/lib/corpus";
 import { Toolbar } from "../widgets/toolbar";
-import { BenchmarkTable, clickedRow } from "../widgets/benchmark-table";
+import { BenchmarkTable, clickedRow, modelNames } from "../widgets/benchmark-table";
 // Plotly is several megabytes, and the table needs none of it, so the charts load on first use.
 interface ModelDetailModule {
   readonly ModelDetail: (props: ModelDetailProps) => React.ReactElement;
@@ -25,8 +34,15 @@ const ModelDetail = lazy(async () => {
 });
 import type { DetailLoader, ModelDetailProps } from "../widgets/model-detail";
 import { Footer } from "../widgets/footer";
+import { PageHeader } from "../widgets/layout";
+import type { NavigateHandler } from "../../shell/Root";
 
 export interface AppProps {
+  /** Supplied by the router. Absent when the page is mounted alone. */
+  readonly navigate?: NavigateHandler;
+  /** The model the URL asks for, and the way to change it. */
+  readonly model?: string | null;
+  readonly onOpenModel?: (model: string | null) => void;
   /** Injected in tests so the page can be driven without a server. */
   readonly load?: (family: FamilyId) => Promise<DomainLoad>;
   readonly loadSlice?: TrajectorySliceLoader;
@@ -42,7 +58,7 @@ function needsTrajectorySlice(selection: Selection): boolean {
 
 interface ResultsPaneProps {
   readonly result: DomainLoad | null;
-  /** Fetched apart from the rest of the family, so it arrives on its own schedule. */
+  /** Fetched apart from the rest of the family, so it arrives on a separate schedule. */
   readonly trajectoryByGenre: DomainData["trajectory_by_genre"];
   readonly selection: Selection;
   readonly onOpenModel: (model: string) => void;
@@ -76,8 +92,41 @@ function ResultsPane({
 }
 
 /** The whole page: one persistent toolbar, and one pane below it that swaps. */
-export function App({ load, loadSlice, loadDetail }: AppProps = {}): React.ReactElement {
+export function App({
+  navigate,
+  model: routedModel,
+  onOpenModel,
+  load,
+  loadSlice,
+  loadDetail,
+}: AppProps = {}): React.ReactElement {
   const [selection, dispatch] = useReducer(selectionReducer, INITIAL_SELECTION);
+
+  //: With a router above, the URL owns the choice and this flows it down.
+  const routed = onOpenModel !== undefined;
+
+  useEffect(() => {
+    if (!routed) return;
+    dispatch({ type: "model/selected", model: routedModel ?? null });
+  }, [routed, routedModel]);
+
+  //: Which model, and the URL with it. Leaves the view alone.
+  const setModel = useCallback(
+    (next: string | null): void => {
+      if (onOpenModel !== undefined) onOpenModel(next);
+      else dispatch({ type: "model/selected", model: next });
+    },
+    [onOpenModel],
+  );
+
+  /** Opening a row from the table is both: this model, and the view that shows it. */
+  const openModel = useCallback(
+    (next: string): void => {
+      dispatch({ type: "view/selected", view: "detail" });
+      setModel(next);
+    },
+    [setModel],
+  );
   // One cache per mounted page rather than a module-level singleton outliving it.
   const [fallbackLoad] = useState(() => createDomainCache());
   const [fallbackSlice] = useState(() => createTrajectorySliceCache());
@@ -134,29 +183,82 @@ export function App({ load, loadSlice, loadDetail }: AppProps = {}): React.React
 
   // Carrying the family with its result makes a previous family's rows unusable rather than stale.
   const result = loaded?.family === selection.family ? loaded.result : null;
-  const sliceRows = slice?.key === sliceKey ? slice.rows : [];
+  const sliceRows = useMemo(
+    () => (slice?.key === sliceKey ? slice.rows : []),
+    [slice, sliceKey],
+  );
   // The detail view restates the row's numbers, so they are derived here rather than duplicated in state.
   const opened =
     result?.status === "loaded" ? clickedRow(result.data, selection, sliceRows) : null;
+  // The rung below the group, for the toolbar's Model control on a detail page.
+  const models = useMemo(
+    () => (result?.status === "loaded" ? modelNames(result.data, selection, sliceRows) : []),
+    [result, selection, sliceRows],
+  );
+  const firstModel = models[0];
+  //: What matters is whether the selection still holds the model, not whether it was cleared.
+  const openStillListed = selection.model !== null && models.includes(selection.model);
+
+  //: Which models a selection holds is unknown until its rows are in.
+  const settled = result !== null && (!wantsSlice || sliceRows.length > 0);
+
+  //: A model URL names no family, so a direct load searches the others for the one listing it.
+  //: Held in a ref: writing it as state would re-run this effect and cancel its own search.
+  const probedModel = useRef<string | null>(null);
+  const [placing, setPlacing] = useState(false);
+  useEffect(() => {
+    const target = routedModel;
+    if (!routed || target === null || target === undefined || !settled) return;
+    if (models.includes(target) || probedModel.current === target) return;
+    probedModel.current = target;
+    //: An object rather than a boolean, so the cleanup's write is visible to the closure.
+    const run = { live: true };
+    setPlacing(true);
+    void (async () => {
+      for (const { id } of MODEL_FAMILIES) {
+        if (id === selection.family) continue;
+        const found = await loadFamily(id);
+        if (!run.live) return;
+        if (found.status === "loaded" && listsModel(found.data, target)) {
+          dispatch({ type: "family/selected", family: id });
+          break;
+        }
+      }
+      if (run.live) setPlacing(false);
+    })();
+    return () => {
+      run.live = false;
+      //: An abandoned search must not leave the fallback disabled, so it is retryable.
+      if (probedModel.current === target) probedModel.current = null;
+      setPlacing(false);
+    };
+  }, [routed, routedModel, settled, models, loadFamily, selection.family]);
+
+  //: The open model belonged to the selection just left, so the new one opens its first.
+  useEffect(() => {
+    if (selection.view !== "detail" || openStillListed || !settled) return;
+    //: A routed model still being placed in its family must not be replaced mid-search.
+    if (placing) return;
+    //: The view is left alone, and the URL is cleared so it names nothing stale.
+    setModel(firstModel ?? null);
+  }, [selection.view, openStillListed, firstModel, settled, setModel, placing]);
 
   return (
     <>
-      <header className={styles.appHeader}>
-        <span className={styles.brandMark} aria-hidden="true">
-          ת
-        </span>
-        <div className={styles.titleBlock}>
-          <h1>
-            <span className={styles.titleName}>{SITE.name}</span>
-            <span className={styles.titleScope}> · {SITE.scope}</span>
-          </h1>
-          <p className={styles.subtitle}>{SITE.subtitle}</p>
-        </div>
-      </header>
+      <PageHeader current="benchmark" {...(navigate === undefined ? {} : { navigate })} />
 
       <div className={styles.page}>
         <main className={styles.panel}>
-          <Toolbar selection={selection} dispatch={dispatch} />
+          <Toolbar
+            selection={selection}
+            dispatch={dispatch}
+            models={models}
+            onView={(view) => {
+              //: The effect above opens the first model the selection holds.
+              dispatch({ type: "view/selected", view });
+              if (view === "table") setModel(null);
+            }}
+          />
           {selection.model !== null ? (
             <Suspense fallback={<Message>Loading charts…</Message>}>
               <ModelDetail
@@ -172,9 +274,7 @@ export function App({ load, loadSlice, loadDetail }: AppProps = {}): React.React
               result={result}
               trajectoryByGenre={sliceRows}
               selection={selection}
-              onOpenModel={(model) => {
-                dispatch({ type: "model/selected", model });
-              }}
+              onOpenModel={openModel}
             />
           )}
         </main>

@@ -1,4 +1,4 @@
-import type { Selection } from "../../../shared/lib/selection";
+import type { Selection } from "../../../shared/lib/navigation";
 import type { TableColumn } from "../../../shared/lib/results";
 import {
   genreByGenreColumns,
@@ -28,10 +28,7 @@ const view = <T extends object>(
   defaultSortKey: sortKey,
 });
 
-/**
- * The section, columns and headline metric for one toolbar permutation. The genre benchmark
- * splits by metric: "genre" reads the discrimination tables, any other metric the trajectory ones.
- */
+/** The section, columns and headline metric for one toolbar permutation. */
 export function resolveTableView(data: DomainData, selection: Selection): TableView {
   if (selection.benchmark === "parallelism") {
     if (selection.parallelismType === "all") {

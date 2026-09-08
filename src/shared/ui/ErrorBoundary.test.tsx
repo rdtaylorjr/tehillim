@@ -8,7 +8,7 @@ function Boom(): React.ReactElement {
 
 describe("ErrorBoundary", () => {
   beforeEach(() => {
-    // React logs the caught error itself; the test asserts behaviour, not console noise.
+    // React logs the caught error itself, and this asserts behaviour rather than console noise.
     vi.spyOn(console, "error").mockImplementation(() => undefined);
   });
 

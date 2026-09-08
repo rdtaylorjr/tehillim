@@ -2,14 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Toolbar } from "./Toolbar";
-import { INITIAL_SELECTION } from "../../../shared/lib/selection";
-import type { Selection } from "../../../shared/lib/selection";
-
-/** No real observer in jsdom, which reports every width as zero anyway. */
-const noObserver = (): { observe: () => void; disconnect: () => void } => ({
-  observe: () => undefined,
-  disconnect: () => undefined,
-});
+import { INITIAL_SELECTION } from "../../../shared/lib/navigation";
+import type { Selection } from "../../../shared/lib/navigation";
 
 /** Cleans up first so a test may render several selections without duplicate matches. */
 function renderToolbar(overrides: Partial<Selection> = {}): {
@@ -18,7 +12,7 @@ function renderToolbar(overrides: Partial<Selection> = {}): {
   cleanup();
   const dispatch = vi.fn();
   const selection = { ...INITIAL_SELECTION, ...overrides };
-  render(<Toolbar selection={selection} dispatch={dispatch} createObserver={noObserver} />);
+  render(<Toolbar selection={selection} dispatch={dispatch} />);
   return { dispatch };
 }
 
@@ -31,19 +25,17 @@ describe("Toolbar model families", () => {
       .getAllByRole("radio")
       .map((b) => b.textContent);
     expect(names).toEqual([
-      "Semantic",
+      "Phonological",
+      "Morphological",
       "Lexical",
-      "Phonology",
-      "Morphology",
-      "Syntax",
-      "Discourse",
+      "Syntactic",
+      "Semantic",
     ]);
   });
 
   it("leaves families without data enabled, so their empty state can explain itself", () => {
     renderToolbar();
-    expect(within(modelsGroup()).getByRole("radio", { name: "Phonology" })).toBeEnabled();
-    expect(within(modelsGroup()).getByRole("radio", { name: "Discourse" })).toBeEnabled();
+    expect(within(modelsGroup()).getByRole("radio", { name: "Phonological" })).toBeEnabled();
   });
 
   it("marks the selected family and dispatches when another is chosen", async () => {
@@ -129,37 +121,52 @@ describe("Toolbar path row", () => {
     expect(dispatch).toHaveBeenCalledWith({ type: "query/changed", query: "b" });
   });
 
-  it("folds the branch rows away when the path is clicked", async () => {
-    const { dispatch } = renderToolbar();
-    await userEvent.click(screen.getByRole("button", { name: /toggle the model/i }));
-    expect(dispatch).toHaveBeenCalledWith({ type: "collapsed/toggled" });
+  it("gives each choice its own control, each naming what is chosen", () => {
+    //: Two choices, so two dropdowns, each legible with its menu shut.
+    renderToolbar();
+    expect(screen.getByRole("button", { name: "Semantic" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    expect(screen.getByRole("button", { name: "Parallelism" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+  });
+
+  it("carries the narrowing filters into the toggle that owns them", () => {
+    renderToolbar({ family: "lexical", facet: "word", text: "consonantal" });
+    expect(
+      screen.getByRole("button", { name: "Lexical / Word / Consonantal" }),
+    ).toBeInTheDocument();
   });
 });
 
 describe("Toolbar detail state", () => {
   it("hides the filter box, which only ever narrowed the table", () => {
-    renderToolbar({ model: "bge_m3_vocalized" });
+    renderToolbar({ model: "bge_m3_vocalized", view: "detail" });
     expect(screen.queryByLabelText("Filter")).not.toBeInTheDocument();
   });
 
   it("ends the path with the open model", () => {
-    renderToolbar({ model: "bge_m3_vocalized" });
+    renderToolbar({ model: "bge_m3_vocalized", view: "detail" });
     expect(screen.getByText("bge_m3_vocalized")).toBeInTheDocument();
   });
 
-  it("offers Back, which clears the open model", async () => {
-    const { dispatch } = renderToolbar({ model: "bge_m3_vocalized" });
-    await userEvent.click(screen.getByRole("button", { name: /back/i }));
+  it("returns to the table from the View switch, with no separate way back", async () => {
+    const { dispatch } = renderToolbar({ model: "bge_m3_vocalized", view: "detail" });
+    expect(screen.queryByRole("button", { name: /back/i })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("radio", { name: "Table" }));
     expect(dispatch).toHaveBeenCalledWith({ type: "model/selected", model: null });
   });
 
   it("drops the fold control, since there is nothing left to fold", () => {
-    renderToolbar({ model: "bge_m3_vocalized" });
+    renderToolbar({ model: "bge_m3_vocalized", view: "detail" });
     expect(screen.queryByRole("button", { name: /toggle the model/i })).not.toBeInTheDocument();
   });
 
   it("leaves the path inert rather than advertising a click that does nothing", async () => {
-    const { dispatch } = renderToolbar({ model: "bge_m3_vocalized" });
+    const { dispatch } = renderToolbar({ model: "bge_m3_vocalized", view: "detail" });
     await userEvent.click(screen.getByText("bge_m3_vocalized"));
     expect(dispatch).not.toHaveBeenCalled();
   });

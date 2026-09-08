@@ -1,9 +1,19 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+*claude*
+AGENTS.md
+
+# Node
 node_modules
 dist
-coverage
+coverage/
 *.local
-.DS_Store
-*claude*
 
-# Detail payloads are served from R2, not shipped with the site.
+# Repo-specific
 detail-data/

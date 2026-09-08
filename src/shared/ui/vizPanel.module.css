@@ -1,0 +1,152 @@
+/* Separate chrome rather than panel.module.css's, whose overflow would clip the menu. */
+.viz-panel {
+  min-width: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow);
+}
+
+/* The page name in the title face, then what is selected, dimmed. */
+.viz-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 16px;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+  background: var(--bg-inset);
+}
+
+/* An ellipsis takes the overflowing box's colour, so the box wears what it cuts. */
+.viz-subject {
+  min-width: 0;
+  color: var(--ink-dim);
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: var(--control-h);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.viz-name {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.viz-state {
+  margin-left: 10px;
+}
+
+.viz-body {
+  padding: 16px;
+  min-width: 0;
+}
+
+/* The method's one-line description, above everything it describes. */
+.view-hint {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+}
+
+.view-caption {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+}
+
+/* Levels giving a chart's unreliability the same weight as the chart. */
+.view-caption.is-moderate {
+  color: var(--warn);
+}
+
+.view-caption.is-low {
+  color: var(--bad);
+}
+
+/* The shared callout for a caution the numbers below must be read with. */
+.caveat-badge {
+  margin: 0 0 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--warn);
+  border-radius: 8px;
+  background: var(--warn-wash);
+  color: var(--warn);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* The same pill vocabulary everything else that picks one of a few uses. */
+.view-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.view-tab {
+  flex-shrink: 0;
+  height: var(--control-h);
+  padding: 0 13px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--bg-inset);
+  color: var(--ink-dim);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.14s,
+    background 0.14s,
+    border-color 0.14s;
+}
+
+.view-tab:hover:not(.is-active) {
+  color: var(--ink);
+  border-color: var(--ink-faint);
+}
+
+.view-tab.is-active {
+  background: rgb(123 163 217 / 12%);
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+
+.view-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* An inset step, so a chart sits in the surface rather than on it. */
+.plot-well {
+  width: 100%;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--bg-inset);
+  overflow: hidden;
+}
+
+.load-error {
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--ink-dim);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.load-error h1 {
+  margin: 0 0 10px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.load-error p {
+  margin: 0 0 6px;
+}

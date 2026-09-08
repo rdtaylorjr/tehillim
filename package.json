@@ -1,7 +1,7 @@
 {
-  "name": "tehillim-react",
+  "name": "tehillim",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,15 +9,23 @@
     "preview": "vite preview",
     "typecheck": "tsc --build --force",
     "lint": "eslint .",
-    "format": "prettier --write src",
-    "format:check": "prettier --check src",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "arch-lint": "steiger src",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
-    "verify": "npm run styles:types && npm run typecheck && npm run lint && npm run format:check && npm run arch-lint && npm run test",
-    "styles:types": "node scripts/css-module-types.mjs"
+    "verify": "npm run styles:types && npm run typecheck && npm run lint && npm run format:check && npm run arch-lint && npm run test && npm run build",
+    "styles:types": "node scripts/css-module-types.mjs",
+    "references": "node scripts/zotero-references.mjs",
+    "home-figures": "node scripts/home-figures.mjs",
+    "sync-data": "node scripts/sync-data.mjs",
+    "upload-detail": "node scripts/upload-detail.mjs",
+    "detail-version": "node scripts/detail-version.mjs",
+    "prebuild": "node scripts/detail-version.mjs",
+    "preupload-detail": "node scripts/detail-version.mjs"
   },
   "dependencies": {
+    "d3": "^7.9.0",
     "plotly.js-dist-min": "^3.7.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
@@ -29,6 +37,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/d3": "^7.4.3",
     "@types/node": "^26.3.0",
     "@types/plotly.js": "^3.0.13",
     "@types/react": "^19.2.0",

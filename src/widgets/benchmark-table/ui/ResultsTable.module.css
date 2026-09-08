@@ -61,7 +61,7 @@
   color: var(--accent);
 }
 
-/* A real control for the keyboard, wearing none of a button's own chrome. */
+/* A real control for the keyboard, wearing none of a button's chrome. */
 .col-sort,
 .row-open {
   padding: 0;
@@ -83,6 +83,7 @@
 
 .row-open:hover {
   color: var(--accent);
+  text-decoration-color: var(--accent);
 }
 
 .results tbody td {
@@ -100,6 +101,11 @@
 
 .results tbody tr:last-child td {
   border-bottom: none;
+}
+
+/* The whole row opens the model's charts, so the whole row is the target. */
+.results tbody tr {
+  cursor: pointer;
 }
 
 .results tbody tr:hover td {

@@ -1,6 +1,6 @@
 /** Stamps the detail export with a content hash, so a regenerated payload gets a new URL. */
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const SOURCE = "detail-data";
@@ -9,11 +9,14 @@ const STAMP = join(SOURCE, "VERSION");
 /** Short enough to read in a URL, wide enough that a rebuild cannot collide in practice. */
 const LENGTH = 12;
 
-const names = readdirSync(SOURCE)
-  .filter((name) => name.startsWith("detail_") && name.endsWith(".json"))
-  .sort();
+//: The export is gitignored, so a clean checkout has no directory at all, not an empty one.
+const names = existsSync(SOURCE)
+  ? readdirSync(SOURCE)
+      .filter((name) => name.startsWith("detail_") && name.endsWith(".json"))
+      .sort()
+  : [];
 if (names.length === 0) {
-  //: A checkout without the gitignored export still builds; the stamp stays at its default.
+  //: A checkout without the export still builds; the stamp stays at its default.
   console.log(`No detail payloads in ${SOURCE}/, leaving the version unstamped.`);
   process.exit(0);
 }

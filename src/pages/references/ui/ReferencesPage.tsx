@@ -5,20 +5,34 @@ import styles from "./ReferencesPage.module.css";
 import { PageHeader } from "../../../widgets/layout";
 import { Footer } from "../../../widgets/footer";
 import { REFERENCES_BIB_URL, loadReferences } from "../api/loadReferences";
-import { countWorks, filterSections, termsOf } from "../lib/filter";
+import { filterSections, termsOf } from "../lib/filter";
 import type { Reference, ReferenceSection, ReferencesPayload } from "../model/types";
 import type { NavigateHandler } from "../../../../shell/Root";
 
 /** Every work here is published elsewhere, so each link leaves the app. */
 const EXTERNAL = { target: "_blank", rel: "noopener noreferrer" } as const;
 
-/** What the reader asked to see, both null meaning the whole bibliography. */
+/** What the reader asked to see, resolved against whatever the payload turns out to hold. */
 interface Scope {
   readonly category: string | null;
   readonly sub: string | null;
 }
 
-const ALL: Scope = { category: null, sub: null };
+/** One run of citations, carrying the path that names it while a filter is running. */
+interface Run {
+  readonly path: string;
+  readonly entries: readonly Reference[];
+}
+
+/** Every matching run across the whole bibliography, each headed by its category path. */
+function runsOf(sections: readonly ReferenceSection[]): Run[] {
+  return sections.flatMap((section) =>
+    section.groups.map((group) => ({
+      path: group.name === null ? section.name : `${section.name} / ${group.name}`,
+      entries: group.entries,
+    })),
+  );
+}
 
 /** One citation in author-date form, every string composed by the generator. */
 function Entry({ reference }: { readonly reference: Reference }): React.ReactElement {
@@ -28,19 +42,11 @@ function Entry({ reference }: { readonly reference: Reference }): React.ReactEle
     ) : (
       <>&ldquo;{reference.title}.&rdquo;</>
     );
-  return (
-    <li className={styles.entry}>
-      {reference.creators === "" ? null : (
-        <span className={styles.creators}>{reference.creators} </span>
-      )}
+  const citation = (
+    <>
+      {reference.creators === "" ? null : `${reference.creators} `}
       <span className={styles.year}>{reference.year ?? reference.date}. </span>
-      {reference.url === "" ? (
-        titled
-      ) : (
-        <a className={styles.titleLink} href={reference.url} {...EXTERNAL}>
-          {titled}
-        </a>
-      )}
+      {titled}
       {reference.titleStyle === "italic" ? ". " : " "}
       {reference.container === "" ? null : (
         <>
@@ -55,6 +61,17 @@ function Entry({ reference }: { readonly reference: Reference }): React.ReactEle
         </>
       )}
       {reference.container === "" && reference.detail === "" ? null : "."}
+    </>
+  );
+  return (
+    <li className={styles.entry}>
+      {reference.url === "" ? (
+        citation
+      ) : (
+        <a className={styles.citationLink} href={reference.url} {...EXTERNAL}>
+          {citation}
+        </a>
+      )}
       <span className={styles.kind}>{reference.type}</span>
     </li>
   );
@@ -76,7 +93,7 @@ export function ReferencesPage({ navigate, load }: ReferencesPageProps): React.R
   const [payload, setPayload] = useState<ReferencesPayload | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [query, setQuery] = useState("");
-  const [scope, setScope] = useState<Scope>(ALL);
+  const [scope, setScope] = useState<Scope>({ category: null, sub: null });
 
   useEffect(() => {
     let current = true;
@@ -94,26 +111,36 @@ export function ReferencesPage({ navigate, load }: ReferencesPageProps): React.R
   }, [load]);
 
   const terms = useMemo(() => termsOf(query), [query]);
-  const sections = useMemo(
-    () => (payload ? filterSections(payload.sections, terms) : []),
-    [payload, terms],
-  );
+  const all = useMemo(() => payload?.sections ?? [], [payload]);
+  const matched = useMemo(() => filterSections(all, terms), [all, terms]);
+  //: A filter matching nothing leaves the whole list standing, rather than an empty selector.
+  const sections = matched.length === 0 ? all : matched;
 
-  //: An emptied scope falls back to the whole bibliography.
-  const section = sections.find((s) => s.name === scope.category) ?? null;
+  //: Nothing chosen, or a choice the payload does not hold, opens on the first category.
+  //: Resolved against the whole bibliography, so a filter never moves the chosen scope.
+  const section = all.find((s) => s.name === scope.category) ?? all[0] ?? null;
   const group = section?.groups.find((g) => g.name === scope.sub) ?? null;
   const category = section === null ? null : section.name;
   const sub = group === null ? null : group.name;
 
+  //: A filter searches the whole bibliography, so its results ignore the chosen scope.
+  const filtering = terms.length > 0;
+  const runs = useMemo(() => (filtering ? runsOf(matched) : []), [filtering, matched]);
   const shown = useMemo(() => {
-    if (section === null) return sections;
+    if (section === null) return [];
     if (group === null) return [section];
     return [{ ...section, groups: [group] }];
-  }, [sections, section, group]);
+  }, [section, group]);
 
+  //: The selector and the filter are two ways to the same panel, so choosing one drops the other.
   const pick = useCallback((next: Scope) => {
     setScope(next);
+    setQuery("");
   }, []);
+
+  //: A filter ignores the chosen scope, so the selector shows nothing chosen while one runs.
+  const marked = (name: string, run: string | null): boolean =>
+    !filtering && category === name && sub === run;
 
   const body = (): React.ReactElement => {
     if (error !== null) {
@@ -125,26 +152,36 @@ export function ReferencesPage({ navigate, load }: ReferencesPageProps): React.R
       );
     }
     if (payload === null) return <p className={styles.state}>Loading&hellip;</p>;
-    if (shown.length === 0) return <p className={styles.state}>No works match.</p>;
+    if ((filtering ? runs : shown).length === 0) {
+      return <p className={styles.state}>No works match.</p>;
+    }
     return (
       <div className={styles.body}>
-        {shown.map((s) => (
-          <div className={styles.block} key={s.name}>
-            {/* The category is named here only when the head above does not
-                already name it - that is, only when everything is showing. */}
-            {category === null ? <h2 className={styles.categoryHead}>{s.name}</h2> : null}
-            {s.groups.map((g) => (
-              <div className={styles.run} key={g.name ?? " ungrouped"}>
-                {g.name === null ? null : <h3 className={styles.subHead}>{g.name}</h3>}
+        {filtering
+          ? runs.map((r) => (
+              <div className={styles.block} key={r.path}>
+                <h2 className={styles.runHead}>{r.path}</h2>
                 <ul className={styles.entries}>
-                  {g.entries.map((reference) => (
+                  {r.entries.map((reference) => (
                     <Entry key={reference.id} reference={reference} />
                   ))}
                 </ul>
               </div>
+            ))
+          : shown.map((s) => (
+              <div className={styles.block} key={s.name}>
+                {s.groups.map((g) => (
+                  <div className={styles.run} key={g.name ?? " ungrouped"}>
+                    {g.name === null ? null : <h3 className={styles.runHead}>{g.name}</h3>}
+                    <ul className={styles.entries}>
+                      {g.entries.map((reference) => (
+                        <Entry key={reference.id} reference={reference} />
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             ))}
-          </div>
-        ))}
         <p className={styles.colophon}>
           <a href={REFERENCES_BIB_URL} download>
             Export BibTeX
@@ -163,21 +200,12 @@ export function ReferencesPage({ navigate, load }: ReferencesPageProps): React.R
             className={`${layout.panel} ${styles.selector}`}
             aria-label="Bibliography contents"
           >
-            <button
-              type="button"
-              className={`${styles.scopeAll}${category === null ? ` ${styles.isOn}` : ""}`}
-              onClick={() => {
-                pick(ALL);
-              }}
-            >
-              All
-              <span className={styles.count}>{countWorks(sections)}</span>
-            </button>
             {sections.map((s) => (
               <div className={styles.group} key={s.name}>
                 <button
                   type="button"
-                  className={`${styles.category}${category === s.name && sub === null ? ` ${styles.isOn}` : ""}`}
+                  className={`${styles.category}${marked(s.name, null) ? ` ${styles.isOn}` : ""}`}
+                  {...(marked(s.name, null) ? { "aria-current": true as const } : {})}
                   onClick={() => {
                     pick({ category: s.name, sub: null });
                   }}
@@ -190,7 +218,8 @@ export function ReferencesPage({ navigate, load }: ReferencesPageProps): React.R
                     <button
                       type="button"
                       key={g.name}
-                      className={`${styles.sub}${category === s.name && sub === g.name ? ` ${styles.isOn}` : ""}`}
+                      className={`${styles.sub}${marked(s.name, g.name) ? ` ${styles.isOn}` : ""}`}
+                      {...(marked(s.name, g.name) ? { "aria-current": true as const } : {})}
                       onClick={() => {
                         pick({ category: s.name, sub: g.name });
                       }}
@@ -208,7 +237,7 @@ export function ReferencesPage({ navigate, load }: ReferencesPageProps): React.R
             <div className={styles.head}>
               <span className={styles.subject}>
                 <span className={styles.subjectName}>References</span>
-                {category === null ? null : (
+                {category === null || filtering ? null : (
                   <span className={styles.subjectState}>{category}</span>
                 )}
               </span>

@@ -7,7 +7,5 @@ declare const styles: {
   readonly cards: string;
   readonly figurePending: string;
   readonly home: string;
-  readonly isCluster: string;
-  readonly isCompare: string;
 };
 export default styles;

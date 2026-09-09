@@ -64,8 +64,8 @@ describe("buildHeatmapGrid", () => {
     "calibrated_z",
   );
 
-  it("fills the diagonal with z=0 and a Psalm-N hover label, never a true gap", () => {
-    expect(grid.z[0]![0]).toBe(0);
+  it("leaves the diagonal empty so it renders as background, keeping its Psalm-N hover label", () => {
+    expect(grid.z[0]![0]).toBeNull();
     expect(grid.text[0]![0]).toBe("Psalm 1");
   });
 
@@ -78,8 +78,9 @@ describe("buildHeatmapGrid", () => {
     expect(grid.text[0]![1]).toBe("Psalm 1 vs 2<br>calibrated_z: 0.500");
   });
 
-  it("marks a psalm with zero pairs anywhere as z=0 with an explicit no-data hover label", () => {
-    expect(grid.z[2]![0]).toBe(0);
+  it("leaves a psalm with zero pairs anywhere empty, with an explicit no-data hover label", () => {
+    expect(grid.z[2]![0]).toBeNull();
+    expect(grid.z[0]![2]).toBeNull();
     expect(grid.text[2]![0]).toBe("Psalm 3 vs 1<br>no data");
     expect(grid.text[2]![1]).toBe("Psalm 3 vs 2<br>no data");
   });

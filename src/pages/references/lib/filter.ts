@@ -48,17 +48,6 @@ export function filterSections(
   return narrowed;
 }
 
-/** Distinct works across a run of sections, since one work can be filed twice. */
-export function countWorks(sections: readonly ReferenceSection[]): number {
-  const seen = new Set<string>();
-  for (const section of sections) {
-    for (const group of section.groups) {
-      for (const entry of group.entries) seen.add(entry.id);
-    }
-  }
-  return seen.size;
-}
-
 /** A stable id for a collection or subcollection, for the index to link to. */
 export function slug(...parts: readonly string[]): string {
   return (

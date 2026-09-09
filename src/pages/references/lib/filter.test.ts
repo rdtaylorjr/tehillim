@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countWorks, filterSections, fold, matches, slug, termsOf } from "./filter";
+import { filterSections, fold, matches, slug, termsOf } from "./filter";
 import type { Reference, ReferenceSection } from "../model/types";
 
 const work = (over: Partial<Reference> = {}): Reference => ({
@@ -91,17 +91,6 @@ describe("filterSections", () => {
 
   it("drops a section the query empties, rather than leaving it standing empty", () => {
     expect(filterSections(sections, ["nothing-matches-this"])).toEqual([]);
-  });
-});
-
-describe("countWorks", () => {
-  it("counts distinct works, since one may be filed in two sections", () => {
-    const shared = work({ id: "SHARED" });
-    expect(countWorks([section("A", [shared]), section("B", [shared])])).toBe(1);
-  });
-
-  it("counts nothing for no sections", () => {
-    expect(countWorks([])).toBe(0);
   });
 });
 

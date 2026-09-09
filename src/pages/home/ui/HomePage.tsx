@@ -12,11 +12,10 @@ import type { NavigateHandler } from "../../../../shell/Root";
 interface Card {
   readonly route: Extract<Route, "benchmark" | "compare" | "cluster">;
   readonly name: string;
-  /** The kind of question the page answers, in the card's hue. */
+  /** The kind of question the page answers, set in the accent. */
   readonly what: string;
   readonly blurb: string;
   readonly figure: (props: { readonly figures: HomeFigures }) => React.ReactElement;
-  readonly extraClass?: string;
 }
 
 /** Measurement first, then the two views built on it. */
@@ -36,7 +35,6 @@ const CARDS: readonly Card[] = [
     blurb:
       "Examine how a selected representation organizes all 150 Hebrew Psalms. The matrix and network present the same similarity record, while a selected psalm reveals its nearest matches, shared features, and the score that orders each match.",
     figure: CompareFigure,
-    extraClass: styles.isCompare,
   },
   {
     route: "cluster",
@@ -45,7 +43,6 @@ const CARDS: readonly Card[] = [
     blurb:
       "Partition the 150 Hebrew Psalms from a selected similarity representation, then compare the result with a received historical genre index. Inspect alignment and stability diagnostics, including an explicit no-structure result when the gap statistic selects one cluster.",
     figure: ClusterFigure,
-    extraClass: styles.isCluster,
   },
 ];
 
@@ -98,10 +95,7 @@ export function HomePage({ navigate, load }: HomePageProps): React.ReactElement 
             const Figure = card.figure;
             return (
               <li key={card.route}>
-                <a
-                  className={[styles.card, card.extraClass].filter(Boolean).join(" ")}
-                  {...linkProps(card.route)}
-                >
+                <a className={styles.card} {...linkProps(card.route)}>
                   {figures === null ? (
                     <div className={styles.figurePending} aria-hidden="true" />
                   ) : (

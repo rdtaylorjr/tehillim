@@ -19,7 +19,7 @@ describe("dataUrl", () => {
   });
 
   it("is relative to the deployed base, so a subpath deployment still resolves", () => {
-    expect(dataUrl("syntax").startsWith(import.meta.env.BASE_URL)).toBe(true);
+    expect(dataUrl("syntactic").startsWith(import.meta.env.BASE_URL)).toBe(true);
   });
 });
 
@@ -43,7 +43,9 @@ describe("loadDomainData", () => {
 
   it("reports a never-benchmarked family as absent without asking the network", async () => {
     const fetcher = vi.fn();
-    await expect(loadDomainData("phonology", fetcher)).resolves.toEqual({ status: "absent" });
+    await expect(loadDomainData("phonological", fetcher)).resolves.toEqual({
+      status: "absent",
+    });
     expect(fetcher).not.toHaveBeenCalled();
   });
 
@@ -54,7 +56,7 @@ describe("loadDomainData", () => {
 
   it("reports a payload without the family's key as absent", async () => {
     const fetcher = vi.fn().mockResolvedValue(ok({ lexical: {} }));
-    await expect(loadDomainData("syntax", fetcher)).resolves.toEqual({ status: "absent" });
+    await expect(loadDomainData("syntactic", fetcher)).resolves.toEqual({ status: "absent" });
   });
 
   it("reports a server error as a failure rather than as missing data", async () => {
@@ -83,8 +85,8 @@ describe("loadDomainData", () => {
   });
 
   it("requests the file for the family it was asked about", async () => {
-    const fetcher = vi.fn().mockResolvedValue(ok({ syntax: {} }));
-    await loadDomainData("syntax", fetcher);
-    expect(fetcher).toHaveBeenCalledWith(dataUrl("syntax"));
+    const fetcher = vi.fn().mockResolvedValue(ok({ syntactic: {} }));
+    await loadDomainData("syntactic", fetcher);
+    expect(fetcher).toHaveBeenCalledWith(dataUrl("syntactic"));
   });
 });

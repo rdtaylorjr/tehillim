@@ -202,16 +202,13 @@
 }
 
 .title-link {
-  color: inherit;
+  color: var(--accent);
   text-decoration: none;
   transition: color 0.14s;
 }
 
 .title-link:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-decoration-color: var(--accent-dim);
-  text-underline-offset: 2px;
+  color: var(--accent-bright);
 }
 
 .title-link:focus-visible {

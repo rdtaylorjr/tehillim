@@ -27,7 +27,7 @@ The project also uses received classifications and external annotations. The ben
 
 `tehillim-dss2etcbc` introduces a second textual witness. Its 11Q5 work retains glyphs, reconstruction, uncertainty, correction, removal, fragment, and morphology information beside each proposed correspondence with BHSA. A transferred clause or phrase boundary therefore remains conditional on a reading, a normalization, an alignment, and the Masoretic source structure.
 
-The project separates representations from derived results. `tehillim-embeddings` currently holds 24,226 Parquet artifacts across lexical, morphology, syntax, and semantic domains. `tehillim-data` holds 322 CSV, Parquet, and JSON result artifacts. Some source annotations and copyrighted materials remain unavailable for redistribution. Public access therefore permits inspection of many operations and outputs while leaving some input judgments inaccessible.
+The project separates representations from derived results. `tehillim-embeddings` currently holds 24,226 Parquet artifacts across lexical, morphological, syntactic, and semantic domains. `tehillim-data` holds 322 CSV, Parquet, and JSON result artifacts. Some source annotations and copyrighted materials remain unavailable for redistribution. Public access therefore permits inspection of many operations and outputs while leaving some input judgments inaccessible.
 
 ## Methodology
 

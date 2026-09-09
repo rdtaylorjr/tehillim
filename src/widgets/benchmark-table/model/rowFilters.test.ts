@@ -9,11 +9,11 @@ describe("applyFacetFilter", () => {
   ];
 
   it("returns every row unfiltered when unit is all", () => {
-    expect(applyFacetFilter(rows, "syntax", "all")).toEqual(rows);
+    expect(applyFacetFilter(rows, "syntactic", "all")).toEqual(rows);
   });
 
   it("keeps only rows matching the chosen facet value for a faceted domain", () => {
-    expect(applyFacetFilter(rows, "syntax", "phrase")).toEqual([rows[0]]);
+    expect(applyFacetFilter(rows, "syntactic", "phrase")).toEqual([rows[0]]);
   });
 
   it("returns every row unfiltered for a domain with no facet at all", () => {
@@ -22,7 +22,7 @@ describe("applyFacetFilter", () => {
 
   it("falls back to model when a row carries no model_base", () => {
     const noBase = [{ model: "phrase_typ_1gram" }];
-    expect(applyFacetFilter(noBase, "syntax", "phrase")).toEqual(noBase);
+    expect(applyFacetFilter(noBase, "syntactic", "phrase")).toEqual(noBase);
   });
 });
 

@@ -55,3 +55,20 @@ jobs:
             exit 1
           fi
           echo "Version bumped: $BASE_VERSION -> $HEAD_VERSION"
+
+  deploy:
+    # Only a merge into main ships, and only behind the checks above.
+    needs: [test, vulnerability-scan]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - run: npm ci
+      # The detail payloads live in R2, not the repo; the build reads their committed hash.
+      - run: npm run build
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

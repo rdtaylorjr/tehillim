@@ -1,6 +1,6 @@
 {
  "collection": "Tehillim",
- "count": 195,
+ "count": 166,
  "sections": [
   {
    "name": "Hebrew Psalms",
@@ -31,7 +31,7 @@
        "date": "2021-05-23",
        "year": 2021,
        "container": "",
-       "detail": "Edmonton, AB",
+       "detail": "Edmonton, Alberta",
        "url": "https://github.com/chaimmetzger/TaameiMiqraMachineLearning"
       },
       {
@@ -57,21 +57,21 @@
        "date": "2019-05-29",
        "year": 2019,
        "container": "Ancient Texts and Modern Readers",
-       "detail": "246-262",
+       "detail": "246–262",
        "url": "https://brill.com/display/book/9789004402911/BP000013.xml"
       },
       {
        "id": "DWU7WD2H",
-       "type": "Conference Paper",
+       "type": "Presentation",
        "title": "From Exegetical Question to Query: SHEBANQ in the OT Exegesis Classroom",
        "titleStyle": "quoted",
-       "containerPrefix": "In ",
+       "containerPrefix": "",
        "creators": "Erwich, Christiaan M. and E. Staalduine-Sulman.",
        "date": "25 June 2018",
        "year": 2018,
        "container": "",
        "detail": "",
-       "url": "https://www.semanticscholar.org/paper/From-Exegetical-Question-to-Query%3A-SHEBANQ-in-the-Erwich-Staalduine-Sulman/c929feea5893276aa5713f858e76fd8b50dc87cb"
+       "url": "https://www.academia.edu/36965425/From_Exegetical_Question_to_Query_SHEBANQ_in_the_OT_Exegesis_Classroom"
       },
       {
        "id": "SYKUQT2M",
@@ -83,20 +83,20 @@
        "date": "2018",
        "year": 2018,
        "container": "Reading and Listening: Meeting One God in Many Texts: Festschrift for Eric Peels on the Occasion of his 25th Jubilee as Professor of Old Testament Studies",
-       "detail": "Bergambacht, 179-187",
+       "detail": "Bergambacht, 179–187",
        "url": "https://www.academia.edu/38359616/Patterns_and_Pleasure_Participants_in_Psalm_16"
       },
       {
        "id": "AZ37LMDK",
        "type": "Conference Paper",
-       "title": "Identifying Patterns of Participant Shifts in the Psalms: Plotting Poetry: On Mechanically Enhanced Reading",
+       "title": "Identifying Patterns of Participant Shifts in Psalm 89",
        "titleStyle": "quoted",
        "containerPrefix": "In ",
        "creators": "Erwich, Christiaan M.",
-       "date": "2017-10",
+       "date": "5-7 October 2017",
        "year": 2017,
-       "container": "",
-       "detail": "",
+       "container": "Plotting Poetry: On Mechanically Enhanced Reading",
+       "detail": "Basel, Switzerland",
        "url": ""
       },
       {
@@ -108,9 +108,9 @@
        "creators": "van Peursen, W. T.",
        "date": "2017",
        "year": 2017,
-       "container": "TUA Inzicht",
-       "detail": "21.1: 11-13",
-       "url": ""
+       "container": "Theologische Universiteit Apeldoorn Inzicht",
+       "detail": "21.1: 11–13",
+       "url": "https://www.tua.nl"
       },
       {
        "id": "JAVAYASK",
@@ -122,7 +122,7 @@
        "date": "2017",
        "year": 2017,
        "container": "New Directions in the Computational Analysis of Biblical Poetry: Congress Volume Stellenbosch 2016",
-       "detail": "Leiden, 378-394",
+       "detail": "Leiden, 378–394",
        "url": "https://brill.com/display/title/35687"
       },
       {
@@ -135,8 +135,8 @@
        "date": "2017",
        "year": 2017,
        "container": "Multiple Teachers in Biblical Texts",
-       "detail": "29-47",
-       "url": "https://www.peeters-leuven.be/detail.php?search_key=9789042935426&series_number_str=88&lang=en"
+       "detail": "29–47",
+       "url": "https://www.peeters-leuven.be/detail.php?search_key=9789042935426"
       },
       {
        "id": "UAAH32LD",
@@ -191,6 +191,19 @@
        "url": "https://research.vu.nl/en/publications/verbal-forms-in-biblical-hebrew-poetry-poetic-freedom-or-linguist/"
       },
       {
+       "id": "UB6APC4S",
+       "type": "Dataset",
+       "title": "Psalms Explorer",
+       "titleStyle": "italic",
+       "containerPrefix": "",
+       "creators": "Witthoff, David, Kris Lyle, Matt Nerdahl, and Jimmy Parks, et al.",
+       "date": "2014",
+       "year": 2014,
+       "container": "",
+       "detail": "",
+       "url": "https://logos.com/product/54188/psalms-explorer-dataset"
+      },
+      {
        "id": "M4CNIEVG",
        "type": "Journal Article",
        "title": "The Sounds of the Psalter: Computational Analysis of Soundplay",
@@ -200,7 +213,7 @@
        "date": "2014-09-01",
        "year": 2014,
        "container": "Literary and Linguistic Computing",
-       "detail": "29.3: 361-378",
+       "detail": "29.3: 361–378",
        "url": "https://doi.org/10.1093/llc/fqu024"
       },
       {
@@ -213,7 +226,7 @@
        "date": "2014",
        "year": 2014,
        "container": "Journal of Religion, Media and Digital Culture",
-       "detail": "3.3: 129-148",
+       "detail": "3.3: 129–148",
        "url": "https://brill.com/view/journals/rmdc/3/3/article-p129_129.xml"
       },
       {
@@ -239,8 +252,8 @@
        "date": "2013",
        "year": 2013,
        "container": "Energion Publications",
-       "detail": "Gonzalez, FL",
-       "url": "https://energion.co.uk/books/seeing-the-psalter/"
+       "detail": "Gonzalez, Florida",
+       "url": "https://energiondirect.com/product/seeing-the-psalter-direct/"
       },
       {
        "id": "M2FFVZIL",
@@ -252,8 +265,8 @@
        "date": "2013",
        "year": 2013,
        "container": "Digital Humanities 2013 Conference Abstracts",
-       "detail": "105–106",
-       "url": "https://energiondirect.com/product/seeing-the-psalter-direct/"
+       "detail": "Lincoln, Nebraska, 105–106",
+       "url": "https://dh-abstracts.library.virginia.edu/works/1782"
       },
       {
        "id": "G8CNQFN6",
@@ -278,7 +291,7 @@
        "date": "2011-01-01",
        "year": 2011,
        "container": "Tradition and Innovation in Biblical Interpretation",
-       "detail": "69-91",
+       "detail": "69–91",
        "url": "https://brill.com/display/book/edcoll/9789004215184/B9789004215184_006.xml"
       },
       {
@@ -291,7 +304,7 @@
        "date": "2011",
        "year": 2011,
        "container": "Tradition and Innovation in Biblical Interpretation: Studies Presented to Professor Eep Talstra on the Occasion of His Sixty-Fifth Birthday",
-       "detail": "Leiden, 317-335",
+       "detail": "Leiden, 317–335",
        "url": "https://brill.com/display/book/edcoll/9789004215184/B9789004215184_019.xml"
       },
       {
@@ -304,7 +317,7 @@
        "date": "2004",
        "year": 2004,
        "container": "Letter en feest: In gesprek met Niek Schuman over bijbel en liturgie",
-       "detail": "173–184",
+       "detail": "Zoetermeer, 173–184",
        "url": ""
       },
       {
@@ -317,7 +330,7 @@
        "date": "2002",
        "year": 2002,
        "container": "Bible and Computer: The Stellenbosch AIBI-6 Conference. Proceedings of the Association Internationale Bible et Informatique \"From Alpha to Byte\" University of Stellenbosch 17-21 July, 2000",
-       "detail": "Leiden, 309-321",
+       "detail": "Leiden, 309–321",
        "url": "https://brill.com/display/book/edcoll/9789004493339/B9789004493339_s021.xml"
       },
       {
@@ -330,8 +343,8 @@
        "date": "2002",
        "year": 2002,
        "container": "Bible and Computer: The Stellenbosch AIBI-6 Conference. Proceedings of the Association Internationale Bible et Informatique \"From Alpha to Byte\" University of Stellenbosch 17-21 July, 2000",
-       "detail": "Leiden, 189-208",
-       "url": "https://brill.com/display/book/edcoll/9789004493339/B9789004493339_s021.xml"
+       "detail": "Leiden, 189–208",
+       "url": "https://brill.com/display/book/edcoll/9789004493339/B9789004493339_s014.xml"
       },
       {
        "id": "3Y3JACLB",
@@ -343,7 +356,7 @@
        "date": "2001",
        "year": 2001,
        "container": "Calvin Theological Journal",
-       "detail": "36: 290-313",
+       "detail": "36: 290–313",
        "url": ""
       },
       {
@@ -382,7 +395,7 @@
        "date": "1992",
        "year": 1992,
        "container": "Biblical Research Associates",
-       "detail": "Wooster, OH",
+       "detail": "Wooster, Ohio",
        "url": ""
       },
       {
@@ -395,7 +408,7 @@
        "date": "1991-01-01",
        "year": 1991,
        "container": "Congress Volume Leuven 1989",
-       "detail": "248-263",
+       "detail": "248–263",
        "url": "https://brill.com/display/book/edcoll/9789004275669/B9789004275669-s017.xml"
       }
      ]
@@ -417,19 +430,6 @@
        "url": "https://doi.org/10.34894/XBDUJJ"
       },
       {
-       "id": "ZJAGQF36",
-       "type": "Book",
-       "title": "The Design of the Psalter: A Macrostructural Analysis",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Ho, Peter C. W.",
-       "date": "2019",
-       "year": 2019,
-       "container": "Wipf & Stock",
-       "detail": "Eugene, OR",
-       "url": "https://wipfandstock.com/9781532654428/the-design-of-the-psalter/"
-      },
-      {
        "id": "X6QQPFK4",
        "type": "Book Section",
        "title": "A Statistical Overview of Fronting in the Psalms",
@@ -439,7 +439,7 @@
        "date": "2018",
        "year": 2018,
        "container": "Psalms-in-Context: Final Papers—JCBT 2018",
-       "detail": "Jerusalem, 31-53",
+       "detail": "Jerusalem, 31–53",
        "url": "https://www.researchgate.net/publication/376610005_PSALMS_IN_CONTEXT_FINAL_PAPERS_JCBT_2018"
       },
       {
@@ -456,19 +456,6 @@
        "url": "https://research.rug.nl/en/publications/general-introduction-to-logotechnical-analysis-rev"
       },
       {
-       "id": "CXLPSKEG",
-       "type": "Thesis",
-       "title": "Re-sculpting a Sacred Text: Towards an Acceptable Poetic Translation of the Psalms – Exemplified by Psalms 131 and 150",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Watt, Milton Lewis.",
-       "date": "2015",
-       "year": 2015,
-       "container": "PhD diss., Stellenbosch University",
-       "detail": "",
-       "url": "http://hdl.handle.net/10019.1/97805"
-      },
-      {
        "id": "9MFEGWQ6",
        "type": "Thesis",
        "title": "An Analysis of the Frequency and Distribution of the X-Finite Verb Clauses in Book Two of the Psalter",
@@ -479,7 +466,7 @@
        "year": 2014,
        "container": "PhD diss., New Orleans Baptist Theological Seminary",
        "detail": "",
-       "url": "https://mcmasterdivinity.ca/wp-content/uploads/2018/01/Boda_CV.pdf"
+       "url": ""
       },
       {
        "id": "78I4ARXY",
@@ -492,20 +479,7 @@
        "year": 2014,
        "container": "",
        "detail": "",
-       "url": "https://www.labuschagne.nl/psalter.pdf"
-      },
-      {
-       "id": "CHUNR7MR",
-       "type": "Book",
-       "title": "Metrical Verse in the Psalms",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Halle, Morris.",
-       "date": "2013-09-12",
-       "year": 2013,
-       "container": "Routledge",
-       "detail": "London",
-       "url": "https://doi.org/10.4324/9780203039168"
+       "url": "https://www.labuschagne.nl/psalms.htm"
       },
       {
        "id": "XDTQ4FVF",
@@ -543,7 +517,7 @@
        "date": "2010",
        "year": 2010,
        "container": "The Composition of the Book of Psalms",
-       "detail": "Leuven, 643-651",
+       "detail": "Leuven, 643–651",
        "url": "https://www.peeters-leuven.be/detail.php?search_key=9789042923294"
       },
       {
@@ -569,21 +543,8 @@
        "date": "2003",
        "year": 2003,
        "container": "Journal of Northwest Semitic Languages",
-       "detail": "29/2: 65-82",
+       "detail": "29.2: 65–82",
        "url": "https://journals.co.za/doi/abs/10.10520/EJC101279"
-      },
-      {
-       "id": "CX9M4NA4",
-       "type": "Journal Article",
-       "title": "Psalm 47: Numerical and Geometrical Devices Used to Emphasize the Author's Message",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Cohen, Samuel I.",
-       "date": "1995",
-       "year": 1995,
-       "container": "Jewish Bible Quarterly",
-       "detail": "23:4",
-       "url": "https://www.nli.org.il/en/articles/RAMBI990001570790705171/NLI"
       },
       {
        "id": "76SZJEZI",
@@ -599,30 +560,17 @@
        "url": "https://www.jstor.org/stable/1517981"
       },
       {
-       "id": "FYWMJ83K",
+       "id": "EV7QX6UF",
        "type": "Journal Article",
-       "title": "Die alphabetisch-arithmetische Struktur von Psalm CXXXVI",
+       "title": "Wisdom Vocabulary in the Hebrew Psalter: A Contribution to the Study of 'Wisdom Psalms'",
        "titleStyle": "quoted",
        "containerPrefix": "",
-       "creators": "Schedl, Claus.",
-       "date": "1986",
-       "year": 1986,
+       "creators": "Hurvitz, Avi.",
+       "date": "1988",
+       "year": 1988,
        "container": "Vetus Testamentum",
-       "detail": "36.4: 489-494",
-       "url": "https://www.jstor.org/stable/1518332"
-      },
-      {
-       "id": "7HTUUX4E",
-       "type": "Journal Article",
-       "title": "The Geometric-Figurative Structure of Psalm 136",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Bazak, Jacob.",
-       "date": "1985",
-       "year": 1985,
-       "container": "Vetus Testamentum",
-       "detail": "35.2: 129–138",
-       "url": "https://biblicalstudies.org.uk/articles_vetus-testamentum_04.php"
+       "detail": "38.1: 41-51",
+       "url": "https://doi.org/10.1163/156853388X00472"
       },
       {
        "id": "MW97V2JY",
@@ -647,7 +595,7 @@
        "date": "1981-06-01",
        "year": 1981,
        "container": "Journal of Biblical Literature",
-       "detail": "100.2: 161-167",
+       "detail": "100.2: 161–167",
        "url": "https://doi.org/10.2307/3266062"
       },
       {
@@ -660,7 +608,7 @@
        "date": "1979-10-01",
        "year": 1979,
        "container": "Journal for the Study of the Old Testament",
-       "detail": "4.14: 55-62",
+       "detail": "4.14: 55–62",
        "url": "https://doi.org/10.1177/030908927900401404"
       },
       {
@@ -686,7 +634,7 @@
        "date": "1978-04-01",
        "year": 1978,
        "container": "Journal for the Study of the Old Testament",
-       "detail": "3.6: 41-48",
+       "detail": "3.6: 41–48",
        "url": "https://doi.org/10.1177/030908927800300605"
       },
       {
@@ -699,7 +647,7 @@
        "date": "1978-04-01",
        "year": 1978,
        "container": "Journal for the Study of the Old Testament",
-       "detail": "3.6: 54-57",
+       "detail": "3.6: 54–57",
        "url": "https://doi.org/10.1177/030908927800300607"
       },
       {
@@ -725,21 +673,21 @@
        "date": "1974",
        "year": 1974,
        "container": "Journal of the Evangelical Theological Society",
-       "detail": "17.1: 11-28",
+       "detail": "17.1: 11–28",
        "url": ""
       },
       {
        "id": "K5UBDJTS",
-       "type": "Book",
+       "type": "Journal Article",
        "title": "The Metrical Basis of Hebrew Poetry",
-       "titleStyle": "italic",
+       "titleStyle": "quoted",
        "containerPrefix": "",
        "creators": "Isaacs, Elcanon.",
        "date": "1918-10-01",
        "year": 1918,
        "container": "The American Journal of Semitic Languages and Literatures",
-       "detail": "",
-       "url": "http://archive.org/details/jstor-528587"
+       "detail": "35.1: 20–54",
+       "url": "https://archive.org/details/jstor-528587"
       }
      ]
     }
@@ -762,7 +710,7 @@
        "year": 2026,
        "container": "",
        "detail": "",
-       "url": "http://arxiv.org/abs/2606.19638"
+       "url": "https://arxiv.org/abs/2606.19638"
       },
       {
        "id": "7GH88UCU",
@@ -799,9 +747,9 @@
        "creators": "McGovern, Hope, Hale Sirin, and Tom Lippincott.",
        "date": "2025",
        "year": 2025,
-       "container": "Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 2: Short Papers",
-       "detail": "154–160",
-       "url": "https://doi.org/10.18653/v1/2025.naacl-short.13"
+       "container": "Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 2: Short Papers)",
+       "detail": "Albuquerque, New Mexico, 154–160",
+       "url": "https://aclanthology.org/2025.naacl-short.13/"
       },
       {
        "id": "QF8UYGGB",
@@ -813,7 +761,7 @@
        "date": "2025",
        "year": 2025,
        "container": "PLOS One",
-       "detail": "20.6: e0323185",
+       "detail": "20.6",
        "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0323185"
       },
       {
@@ -825,8 +773,8 @@
        "creators": "Lourie, Yonatan, Jonathan Ben-Dov, and Roded Sharan.",
        "date": "2025",
        "year": 2025,
-       "container": "Proceedings of the Second Workshop on Ancient Language Processing (ALP 2025)",
-       "detail": "12–21",
+       "container": "Proceedings of the Second Workshop on Ancient Language Processing",
+       "detail": "Albuquerque, New Mexico, 12–21",
        "url": "https://aclanthology.org/2025.alp-1.2/"
       },
       {
@@ -840,7 +788,7 @@
        "year": 2025,
        "container": "",
        "detail": "",
-       "url": "http://arxiv.org/abs/2506.24117"
+       "url": "https://arxiv.org/abs/2506.24117"
       },
       {
        "id": "SMDLSDDN",
@@ -852,7 +800,7 @@
        "date": "2025",
        "year": 2025,
        "container": "Proceedings of the Second Workshop on Ancient Language Processing",
-       "detail": "65–70",
+       "detail": "Albuquerque, New Mexico, 53–58",
        "url": "https://aclanthology.org/2025.alp-1.7/"
       },
       {
@@ -865,7 +813,7 @@
        "date": "2024-08",
        "year": 2024,
        "container": "Proceedings of the 1st Workshop on Machine Learning for Ancient Languages (ML4AL 2024)",
-       "detail": "Bangkok, 269–279",
+       "detail": "Bangkok, Thailand, 269–279",
        "url": "https://aclanthology.org/2024.ml4al-1.26/"
       },
       {
@@ -879,32 +827,32 @@
        "year": 2024,
        "container": "PhD diss., KU Leuven",
        "detail": "",
-       "url": ""
+       "url": "https://lirias.kuleuven.be/4082449"
       },
       {
        "id": "XW5T3475",
-       "type": "Journal Article",
-       "title": "A Transformer-based Parser for Syriac Morphology: 1st Workshop on Ancient Language Processing, ALP 2023",
+       "type": "Conference Paper",
+       "title": "A Transformer-based Parser for Syriac Morphology",
        "titleStyle": "quoted",
-       "containerPrefix": "",
+       "containerPrefix": "In ",
        "creators": "Naaijer, Martijn, Constantijn J. Sikkel, Mathias Coeckelbergs, and Jisk Attema, et al.",
        "date": "2023",
        "year": 2023,
        "container": "Proceedings of the Ancient Language Processing Workshop",
-       "detail": "23-29",
-       "url": "https://www.scopus.com/pages/publications/85184996522"
+       "detail": "Varna, Bulgaria, 23–29",
+       "url": "https://aclanthology.org/2023.alp-1.3/"
       },
       {
        "id": "NVTEKDAB",
        "type": "Journal Article",
-       "title": "Determining the Significance of Lexical Features as Indicative of CBH and LBH: Insights from the Tiberias Stylistic Classifier for the Hebrew Bible: SBL Annual Meeting 2020 Linguistics and Biblical Hebrew Seminar: Syntax of Late Biblical Hebrew",
+       "title": "Determining the Significance of Lexical Features as Indicative of CBH and LBH: Insights from the Tiberias Stylistic Classifier for the Hebrew Bible",
        "titleStyle": "quoted",
        "containerPrefix": "",
        "creators": "Berman, Joshua.",
        "date": "2022",
        "year": 2022,
        "container": "Journal for Semitics",
-       "detail": "30.2: 2663-6573",
+       "detail": "30.2",
        "url": "https://unisapressjournals.co.za/index.php/JSEM/article/view/9302"
       },
       {
@@ -917,7 +865,7 @@
        "date": "2022",
        "year": 2022,
        "container": "Journal for Semitics",
-       "detail": "2663-6573",
+       "detail": "30.2",
        "url": "https://unisapressjournals.co.za/index.php/JSEM/article/view/9319"
       },
       {
@@ -930,7 +878,7 @@
        "date": "2021",
        "year": 2021,
        "container": "Vetus Testamentum",
-       "detail": "71.3: 303-316",
+       "detail": "71.3: 303–316",
        "url": "https://doi.org/10.1163/15685330-12341070"
       },
       {
@@ -943,7 +891,7 @@
        "date": "2020",
        "year": 2020,
        "container": "Proceedings of the Twelfth Language Resources and Evaluation Conference",
-       "detail": "4229–4236",
+       "detail": "Marseille, France, 4229–4236",
        "url": "https://aclanthology.org/2020.lrec-1.522/"
       },
       {
@@ -956,8 +904,8 @@
        "date": "2020",
        "year": 2020,
        "container": "Vetus Testamentum",
-       "detail": "70.1: 140-155",
-       "url": "https://www.scopus.com/pages/publications/85078522799"
+       "detail": "70.1: 140–155",
+       "url": "https://brill.com/view/journals/vt/70/1/article-p140_10.xml"
       },
       {
        "id": "H2G8JNM2",
@@ -969,8 +917,8 @@
        "date": "2019-04",
        "year": 2019,
        "container": "Journal of Biblical Text Research",
-       "detail": "44: 237-253",
-       "url": "https://issuu.com/koreanbiblesociety/docs/44-00_table_of_content"
+       "detail": "44: 237–253",
+       "url": "http://en.bskorea.or.kr/wp-content/uploads/2023/10/Vol.-44_2019_04_-all-articles.pdf"
       },
       {
        "id": "VW4UEX69",
@@ -1008,7 +956,7 @@
        "date": "2018",
        "year": 2018,
        "container": "Dead Sea Discoveries",
-       "detail": "25.1: 57-82",
+       "detail": "25.1: 57–82",
        "url": "https://www.jstor.org/stable/27073814"
       },
       {
@@ -1021,8 +969,8 @@
        "date": "2018",
        "year": 2018,
        "container": "Journal for Semitics",
-       "detail": "1013-8471",
-       "url": "https://www.unisapressjournals.co.za/index.php/JSEM/article/view/2936"
+       "detail": "27.1",
+       "url": "https://unisapressjournals.co.za/index.php/JSEM/article/view/2936"
       },
       {
        "id": "ECPJQRJ7",
@@ -1053,15 +1001,15 @@
       {
        "id": "NJF2SBJU",
        "type": "Conference Paper",
-       "title": "Modeling the Hebrew Bible: Potential of Topic Modeling Techniques for Semantic Annotation and Historical  Analysis",
+       "title": "Modeling the Hebrew Bible: Potential of Topic Modeling Techniques for Semantic Annotation and Historical Analysis",
        "titleStyle": "quoted",
        "containerPrefix": "In ",
        "creators": "Coeckelbergs, Mathias and Seth van Hooland.",
-       "date": "2016",
+       "date": "May 30th, 2016",
        "year": 2016,
-       "container": "Proceedings of the Second International Workshop on Semantic Web for Scientific Heritage co-located with 13th Extended Semantic Web Conference (ESWC 2016), Heraklion, Greece, May 30th, 2016",
-       "detail": "",
-       "url": ""
+       "container": "Proceedings of the Second International Workshop on Semantic Web for Scientific Heritage co-located with 13th Extended Semantic Web Conference (ESWC 2016)",
+       "detail": "Heraklion, Greece, 47–52",
+       "url": "https://ceur-ws.org/Vol-1595/paper5.pdf"
       },
       {
        "id": "6LQJ4CL5",
@@ -1074,7 +1022,7 @@
        "year": 2016,
        "container": "",
        "detail": "",
-       "url": "http://arxiv.org/abs/1603.01541"
+       "url": "https://arxiv.org/abs/1603.01541"
       },
       {
        "id": "M7FQTY9G",
@@ -1087,7 +1035,7 @@
        "year": 2015,
        "container": "MA thesis, Delft University of Technology",
        "detail": "",
-       "url": ""
+       "url": "https://resolver.tudelft.nl/uuid:cb0e8409-41f3-4c67-ae28-b9edcc7b42f1"
       },
       {
        "id": "JMXVK84U",
@@ -1139,7 +1087,7 @@
        "year": 2014,
        "container": "Journal of Northwest Semitic Languages",
        "detail": "40.1: 43–62",
-       "url": "https://journals.co.za/doi/10.10520/EJC158537"
+       "url": "https://journals.co.za/doi/abs/10.10520/EJC158537"
       },
       {
        "id": "JKQGXG3Q",
@@ -1153,19 +1101,6 @@
        "container": "Software Engineering, Artificial Intelligence, Networking and Parallel/Distributed Computing, Studies in Computational Intelligence 492",
        "detail": "Heidelberg, 67–86",
        "url": "https://doi.org/10.1007/978-3-319-00738-0_6"
-      },
-      {
-       "id": "4G7HCLSD",
-       "type": "Book",
-       "title": "Biblical Hebrew Grammar Visualized",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Andersen, Francis I. and A. Dean Forbes.",
-       "date": "2012",
-       "year": 2012,
-       "container": "Eisenbrauns",
-       "detail": "Winona Lake, IN",
-       "url": ""
       },
       {
        "id": "C8K2DYVS",
@@ -1190,7 +1125,7 @@
        "date": "2006",
        "year": 2006,
        "container": "Corpus Linguistics and Textual History: A Computer-assisted Interdisciplinary Approach to the Peshitta",
-       "detail": "Assen, 13-44",
+       "detail": "Assen, 13–44",
        "url": "https://doi.org/10.1163/9789004358775_003"
       },
       {
@@ -1218,58 +1153,6 @@
        "container": "Corpus Linguistics and Textual History",
        "detail": "Assen, 123–128",
        "url": "https://brill.com/abstract/title/14837"
-      },
-      {
-       "id": "UIE85TMQ",
-       "type": "Book Section",
-       "title": "Response to A. Dean Forbes",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Bosman, Hendrik Jan and Constantijn J. Sikkel.",
-       "date": "2006",
-       "year": 2006,
-       "container": "Corpus Linguistics and Textual History",
-       "detail": "Assen, 129–132",
-       "url": "https://brill.com/abstract/title/14837"
-      },
-      {
-       "id": "CR95CSGR",
-       "type": "Book Section",
-       "title": "Response to Pier G. Borbone",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Bosman, Hendrik Jan and Constantijn J. Sikkel.",
-       "date": "2006",
-       "year": 2006,
-       "container": "Corpus Linguistics and Textual History",
-       "detail": "Assen, 119–121",
-       "url": "https://brill.com/abstract/title/14837"
-      },
-      {
-       "id": "BSILBS78",
-       "type": "Journal Article",
-       "title": "Electronic Resources Relevant to the Textual Criticism of Hebrew Scripture",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Tov, Emanuel.",
-       "date": "2003",
-       "year": 2003,
-       "container": "TC: A Journal of Biblical Textual Criticism",
-       "detail": "",
-       "url": ""
-      },
-      {
-       "id": "7NYJ2G2B",
-       "type": "Journal Article",
-       "title": "Hebrew Grammar Visualised: I. Syntax",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Andersen, Francis I. and A. Dean Forbes.",
-       "date": "2003",
-       "year": 2003,
-       "container": "Ancient Near Eastern Studies",
-       "detail": "40: 43–61",
-       "url": ""
       },
       {
        "id": "CIZNMH7E",
@@ -1307,8 +1190,8 @@
        "date": "1999",
        "year": 1999,
        "container": "Journal of Northwest Semitic Languages",
-       "detail": "",
-       "url": "https://www.semanticscholar.org/paper/Reading-Biblical-Hebrew-Poetry-Linguistic-System-or-Talstra/489281d7e7a01ccdbcd572d56b9981a1770edab8"
+       "detail": "25.2: 101–126",
+       "url": "https://academic.sun.ac.za/jnsl/Volumes/JNSL%2025-2%20abstract%20and%20bookreview%20for%20website%20A.pdf"
       },
       {
        "id": "MSW7DMZI",
@@ -1389,58 +1272,6 @@
        "url": ""
       },
       {
-       "id": "CYRQBMA4",
-       "type": "Book",
-       "title": "Studies in Hebrew and Aramaic Orthography",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Freedman, David Noel, A. Dean Forbes, and Francis I. Andersen.",
-       "date": "1992",
-       "year": 1992,
-       "container": "Eisenbrauns",
-       "detail": "Winona Lake, IN",
-       "url": ""
-      },
-      {
-       "id": "U6M6PJ5Z",
-       "type": "Book",
-       "title": "The Vocabulary of the Old Testament",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Andersen, Francis I. and A. Dean Forbes.",
-       "date": "1992",
-       "year": 1992,
-       "container": "Pontifical Biblical Institute Press",
-       "detail": "Rome",
-       "url": ""
-      },
-      {
-       "id": "X6HTDXAW",
-       "type": "Book Section",
-       "title": "Coding Dilemmas in Collecting and Reformatting Textual Materials for CD-ROM Distribution",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Kraft, Robert A.",
-       "date": "1990",
-       "year": 1990,
-       "container": "Computers in Literary and Linguistic Research / Literary and Linguistic Computing 1988",
-       "detail": "Paris-Genève, 233–245",
-       "url": ""
-      },
-      {
-       "id": "7ALJMYE8",
-       "type": "Journal Article",
-       "title": "Beyond CATSS: Utilizing Relational Databases for Text-critical Research",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Nieuwoudt, Bernard A.",
-       "date": "1989",
-       "year": 1989,
-       "container": "Literary and Linguistic Computing",
-       "detail": "4.4: 254–259",
-       "url": ""
-      },
-      {
        "id": "JP5L4CXJ",
        "type": "Book Section",
        "title": "Computer Assisted Identification and Reconstruction of Fragmentary Manuscripts",
@@ -1467,32 +1298,6 @@
        "url": ""
       },
       {
-       "id": "R2623IMT",
-       "type": "Journal Article",
-       "title": "MIKRAH-COMPUCORD: A Linguistic Database on a Microcomputer for the Massoretic Text of the Bible",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Poswick, R.-Ferdinand.",
-       "date": "1988",
-       "year": 1988,
-       "container": "Literary and Linguistic Computing",
-       "detail": "3.3: 152–153",
-       "url": ""
-      },
-      {
-       "id": "9NLLPKCY",
-       "type": "Book",
-       "title": "A Computerized Data Base for Septuagint Studies: The Parallel Aligned Text of the Greek and Hebrew Bible (CATSS 2)",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Tov, Emanuel.",
-       "date": "1986",
-       "year": 1986,
-       "container": "",
-       "detail": "",
-       "url": ""
-      },
-      {
        "id": "NQH7PM2S",
        "type": "Conference Paper",
        "title": "Problems in Taxonomy and Lemmatization",
@@ -1506,19 +1311,6 @@
        "url": ""
       },
       {
-       "id": "FPIP454K",
-       "type": "Book",
-       "title": "Spelling in the Hebrew Bible",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Andersen, Francis I. and A. Dean Forbes.",
-       "date": "1986",
-       "year": 1986,
-       "container": "Pontifical Biblical Institute Press",
-       "detail": "Rome",
-       "url": ""
-      },
-      {
        "id": "97HN3UFH",
        "type": "Journal Article",
        "title": "A Computerized Data Base for the Qumran Biblical Scrolls",
@@ -1529,32 +1321,6 @@
        "year": 1984,
        "container": "Journal of Northwest Semitic Languages",
        "detail": "12: 133–137",
-       "url": ""
-      },
-      {
-       "id": "IPSF7P5S",
-       "type": "Journal Article",
-       "title": "Computer Assisted Alignment of the Greek and Hebrew Biblical Texts—Programming Background",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Abercrombie, John R.",
-       "date": "1984",
-       "year": 1984,
-       "container": "Textus",
-       "detail": "11: 125–139",
-       "url": ""
-      },
-      {
-       "id": "WZJQG4FZ",
-       "type": "Journal Article",
-       "title": "The Use of a Computerized Data Base for Septuagintal Research: The Greek-Hebrew Parallel Alignment",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Tov, Emanuel.",
-       "date": "1984",
-       "year": 1984,
-       "container": "Bulletin of the International Organization for Septuagint and Cognate Studies",
-       "detail": "17: 36–47",
        "url": ""
       }
      ]
@@ -1585,7 +1351,7 @@
        "date": "2012-01-01",
        "year": 2012,
        "container": "Vetus Testamentum",
-       "detail": "62.2: 189-197",
+       "detail": "62.2: 189–197",
        "url": "https://brill.com/view/journals/vt/62/2/article-p189_4.xml"
       },
       {
@@ -1598,7 +1364,7 @@
        "date": "2006",
        "year": 2006,
        "container": "Paternoster",
-       "detail": "Waynesboro, GA",
+       "detail": "Waynesboro, Georgia",
        "url": "https://global.oup.com/academic/product/word-order-variation-in-biblical-hebrew-poetry-9781842274231"
       },
       {
@@ -1611,21 +1377,8 @@
        "date": "March 2001",
        "year": 2001,
        "container": "Edwin Mellen Press",
-       "detail": "",
+       "detail": "Lewiston, New York",
        "url": ""
-      },
-      {
-       "id": "LX8BWCWI",
-       "type": "Web Page",
-       "title": "Numerological Structure in Biblical Literature",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Rand, Herbert.",
-       "date": "1992-01-01",
-       "year": 1992,
-       "container": "",
-       "detail": "",
-       "url": "https://www.jewishbible.org/articles/numerological-structure-in-biblical-literature/"
       },
       {
        "id": "UVBCCN99",
@@ -1638,7 +1391,7 @@
        "year": 1986,
        "container": "PhD diss., Katholieke Theologische Hogeschool Amsterdam",
        "detail": "",
-       "url": "https://www.harmvangrol.nl/publications/annotated-bibliography/"
+       "url": "http://www.harmvangrol.nl/publications/annotated-bibliography/"
       },
       {
        "id": "GADWTF6A",
@@ -1676,7 +1429,7 @@
        "date": "1973",
        "year": 1973,
        "container": "Vetus Testamentum",
-       "detail": "23.3: 257-272",
+       "detail": "23.3: 257–272",
        "url": "https://www.jstor.org/stable/1517324"
       },
       {
@@ -1689,7 +1442,7 @@
        "date": "1947",
        "year": 1947,
        "container": "Journal of Biblical Literature",
-       "detail": "66.1: 63-77",
+       "detail": "66.1: 63–77",
        "url": "https://www.jstor.org/stable/3262341"
       }
      ]
@@ -1726,7 +1479,7 @@
        "year": 2026,
        "container": "Scripta & e-Scripta",
        "detail": "26: 121–137",
-       "url": "https://e-scripta.eu/archives/year-xxii-2026/scripta-e-scripta-vol-26-2026/digital-edition-sinai-psalter-etymological"
+       "url": ""
       },
       {
        "id": "Z5U8VUSE",
@@ -1738,7 +1491,7 @@
        "date": "2024",
        "year": 2024,
        "container": "Editing the Greek Psalter",
-       "detail": "Göttingen, 193-206",
+       "detail": "Göttingen, 193–206",
        "url": "https://www.vandenhoeck-ruprecht-verlage.com/58956/editing-the-greek-psalter"
       },
       {
@@ -1781,32 +1534,6 @@
        "url": "https://ora.ox.ac.uk/objects/uuid%3Acb0d6cc3-e535-45c6-adcd-3fead5a67a24"
       },
       {
-       "id": "WTKKKK8J",
-       "type": "Book Section",
-       "title": "Quotative Index Phrases in Shenoute’s Canon 6: A Case Study of Quotations from the Psalms",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Miyagawa, So and Heike Behlmer.",
-       "date": "2022",
-       "year": 2022,
-       "container": "Uses and Misuses of Ancient Mediterranean Sources: Erudition, Authority, Manipulation",
-       "detail": "Tübingen, 101–116",
-       "url": ""
-      },
-      {
-       "id": "BAYJP29V",
-       "type": "Thesis",
-       "title": "Shenoute, Besa, and the Bible: Digital Text Reuse Analysis of Selected Monastic Writings from Egypt",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Miyagawa, So.",
-       "date": "2022",
-       "year": 2022,
-       "container": "PhD diss., Georg-August-Universität Göttingen",
-       "detail": "",
-       "url": "https://ediss.uni-goettingen.de/handle/11858/13894"
-      },
-      {
        "id": "G8RE4T5P",
        "type": "Journal Article",
        "title": "Automatic Alignment of the Psalterium Sinaiticum and the Septuagint Psalms",
@@ -1817,7 +1544,7 @@
        "year": 2021,
        "container": "Кирило-Методиевски студии",
        "detail": "31: 71–90",
-       "url": "https://ora.ox.ac.uk/objects/uuid:04c9d551-355e-46b0-a5b6-1f4e1f7e7085"
+       "url": "https://ora.ox.ac.uk/objects/uuid:b2604c8d-a3bf-4ac4-84d2-ddc3e237398a"
       },
       {
        "id": "3PJ8ESEA",
@@ -1842,8 +1569,21 @@
        "date": "2013",
        "year": 2013,
        "container": "Foundations for Syriac Lexicography V: Colloquia of the International Syriac Language Project",
-       "detail": "Piscataway, NJ, 43–70",
+       "detail": "Piscataway, New Jersey, 43–70",
        "url": "https://www.gorgiaspress.com/foundations-for-syriac-lexicography-v"
+      },
+      {
+       "id": "RWZ2DZ2D",
+       "type": "Book",
+       "title": "The Translational Technique of the Greek Septuagint for the Hebrew Verbs and Participles in Psalms 3-41",
+       "titleStyle": "italic",
+       "containerPrefix": "",
+       "creators": "Sailhamer, John H.",
+       "date": "1991",
+       "year": 1991,
+       "container": "Peter Lang",
+       "detail": "New York",
+       "url": "https://www.peterlang.com/series/sbg"
       },
       {
        "id": "QT3X66NM",
@@ -1857,19 +1597,6 @@
        "container": "PhD diss., McGill University",
        "detail": "",
        "url": "https://www.erudit.org/en/theses/mcgill/1988/?page=11"
-      },
-      {
-       "id": "ISAKGPJ5",
-       "type": "Thesis",
-       "title": "The Translational Technique of the Greek Septuagint for the Hebrew Verbs and Participles in Psalms 3-41",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Sailhamer, John H.",
-       "date": "1981",
-       "year": 1981,
-       "container": "PhD diss., University of California, Los Angeles",
-       "detail": "",
-       "url": ""
       },
       {
        "id": "7X8BCU8Y",
@@ -1900,20 +1627,7 @@
        "year": 2005,
        "container": "Universiteit Leiden",
        "detail": "",
-       "url": "https://research.vu.nl/"
-      },
-      {
-       "id": "N7UD3NCG",
-       "type": "Conference Paper",
-       "title": "The CATSS Project: A Progress Report",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Tov, Emanuel.",
-       "date": "1991",
-       "year": 1991,
-       "container": "VII Congress of the International Organization for Septuagint and Cognate Studies, Leuven, 1989",
-       "detail": "157–163",
-       "url": ""
+       "url": "https://www.nwo.nl/en/projects/276-25-001"
       },
       {
        "id": "HETA3Z4T",
@@ -1929,6 +1643,19 @@
        "url": ""
       },
       {
+       "id": "9NLLPKCY",
+       "type": "Book",
+       "title": "A Computerized Data Base for Septuagint Studies: The Parallel Aligned Text of the Greek and Hebrew Bible (CATSS 2)",
+       "titleStyle": "italic",
+       "containerPrefix": "",
+       "creators": "Tov, Emanuel.",
+       "date": "1986",
+       "year": 1986,
+       "container": "",
+       "detail": "Stellenbosch",
+       "url": ""
+      },
+      {
        "id": "HWUJBAS9",
        "type": "Journal Article",
        "title": "A Note on the Statistical Analysis of Septuagintal Syntax",
@@ -1938,7 +1665,7 @@
        "date": "1985",
        "year": 1985,
        "container": "Journal of Biblical Literature",
-       "detail": "104.1: 111-114",
+       "detail": "104.1: 111–114",
        "url": "https://www.jstor.org/stable/3260598"
       },
       {
@@ -1955,62 +1682,36 @@
        "url": ""
       },
       {
-       "id": "FPIU9UNB",
+       "id": "IPSF7P5S",
        "type": "Journal Article",
-       "title": "Computer Assisted Morphological Analysis of the Septuagint",
+       "title": "Computer Assisted Alignment of the Greek and Hebrew Biblical Texts—Programming Background",
        "titleStyle": "quoted",
        "containerPrefix": "",
-       "creators": "Adler, William.",
+       "creators": "Abercrombie, John R.",
        "date": "1984",
        "year": 1984,
        "container": "Textus",
-       "detail": "11: 1–16",
+       "detail": "11: 125–139",
        "url": ""
       },
       {
-       "id": "T8NQ2NHT",
+       "id": "WZJQG4FZ",
        "type": "Journal Article",
-       "title": "The Use of the Computerized Data Base for the Study of Septuagint Revisions",
+       "title": "The Use of a Computerized Data Base for Septuagintal Research: The Greek-Hebrew Parallel Alignment",
        "titleStyle": "quoted",
        "containerPrefix": "",
-       "creators": "Lippi, Peter.",
+       "creators": "Tov, Emanuel.",
        "date": "1984",
        "year": 1984,
        "container": "Bulletin of the International Organization for Septuagint and Cognate Studies",
-       "detail": "17: 48–62",
-       "url": ""
-      },
-      {
-       "id": "F3J7I3MX",
-       "type": "Journal Article",
-       "title": "Computer-Assisted Tools for Septuagint Studies",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Kraft, Robert A. and Emanuel Tov.",
-       "date": "1981",
-       "year": 1981,
-       "container": "Bulletin of the International Organization for Septuagint and Cognate Studies",
-       "detail": "14: 22–40",
+       "detail": "17: 36–47",
        "url": ""
       }
      ]
     },
     {
-     "name": "Reception",
+     "name": "Modern",
      "entries": [
-      {
-       "id": "X4LHRCPV",
-       "type": "Report",
-       "title": "Read the Bible in Context with BibleViz",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Jung, Haeji and Yuri Kim.",
-       "date": "2025",
-       "year": 2025,
-       "container": "",
-       "detail": "",
-       "url": ""
-      },
       {
        "id": "LJDF78IA",
        "type": "Journal Article",
@@ -2035,20 +1736,7 @@
        "year": 2023,
        "container": "Digital Humanities Quarterly",
        "detail": "17.3: 1–16",
-       "url": "http://www.digitalhumanities.org/dhq/vol/17/3/000694/000694.html"
-      },
-      {
-       "id": "AJKXI9D5",
-       "type": "Conference Paper",
-       "title": "Evaluation of Multilingual BERT in a Diachronic, Multilingual, and Multi-Genre Corpus of Bibles",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Calvo Tello, José and Javier de la Rosa.",
-       "date": "2022",
-       "year": 2022,
-       "container": "Digital Humanities 2022 Conference Abstracts",
-       "detail": "Tokyo",
-       "url": "https://dh-abstracts.library.virginia.edu/works/11976"
+       "url": "https://www.digitalhumanities.org/dhq/vol/17/3/000694/000694.html"
       },
       {
        "id": "YU8DQIQR",
@@ -2077,19 +1765,6 @@
        "url": "https://www.journals.pan.pl/dlibra/publication/137231/edition/120266/content"
       },
       {
-       "id": "TGTTQHH3",
-       "type": "Journal Article",
-       "title": "Measuring Internal Spelling Variation of an Early Modern English Text",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Wójcik, Jerzy.",
-       "date": "2021",
-       "year": 2021,
-       "container": "Linguistica Silesiana",
-       "detail": "42: 107–123",
-       "url": "https://www.journals.pan.pl/dlibra/publication/137234/edition/120269/content/linguistica-silesiana-2021-measuring-internal-spelling-variation-of-an-early-modern-english-text-br-wojcik-jerzy-vol-42?language=en"
-      },
-      {
        "id": "SJP3KDAI",
        "type": "Conference Paper",
        "title": "Cross-referencing Using Fine-grained Topic Modeling",
@@ -2099,34 +1774,8 @@
        "date": "2019",
        "year": 2019,
        "container": "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)",
-       "detail": "3978–3987",
+       "detail": "Minneapolis, Minnesota, 3978–3987",
        "url": "https://aclanthology.org/N19-1399/"
-      },
-      {
-       "id": "7BHLZRRB",
-       "type": "Thesis",
-       "title": "Modification Analysis in Historical Paraphrastical Parallel Text: An Empirical Work on Stable and Changing Elements in Historical Text Reuse",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Berger, Maria (née Moritz).",
-       "date": "2019",
-       "year": 2019,
-       "container": "PhD diss., Georg-August-Universität Göttingen",
-       "detail": "",
-       "url": "https://ediss.uni-goettingen.de/handle/21.11130/00-1735-0000-0005-1267-3?locale-attribute=en"
-      },
-      {
-       "id": "HE5DPFUR",
-       "type": "Conference Paper",
-       "title": "Past, Present, Future: A Computational Investigation of the Typology of Tense in 1000 Languages",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Asgari, Ehsaneddin and Hinrich Schütze.",
-       "date": "2017",
-       "year": 2017,
-       "container": "Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing",
-       "detail": "113–124",
-       "url": "https://doi.org/10.18653/v1/D17-1011"
       },
       {
        "id": "LN2WBMW4",
@@ -2140,32 +1789,6 @@
        "container": "Digital Humanities 2017 Conference Abstracts",
        "detail": "Montréal",
        "url": "https://dh2017.adho.org/abstracts/333/333.pdf"
-      },
-      {
-       "id": "SG635DLS",
-       "type": "Conference Paper",
-       "title": "Comparing Network Structures of Different Versions of a Book: A Case Study of the Bible",
-       "titleStyle": "quoted",
-       "containerPrefix": "In ",
-       "creators": "Lee, Keeheon.",
-       "date": "2015",
-       "year": 2015,
-       "container": "Digital Libraries: Providing Quality Information",
-       "detail": "142–152",
-       "url": "https://doi.org/10.1007/978-3-319-27974-9_14"
-      },
-      {
-       "id": "UEH8EZ6B",
-       "type": "Journal Article",
-       "title": "A Computational Bible Study of What to Love and What to Hate",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Hu, Wei.",
-       "date": "2014",
-       "year": 2014,
-       "container": "Advances in Literary Study",
-       "detail": "2.4: 116–133",
-       "url": "https://doi.org/10.4236/als.2014.24019"
       }
      ]
     }
@@ -2213,7 +1836,7 @@
        "date": "2018",
        "year": 2018,
        "container": "Research Data Journal for the Humanities and Social Sciences",
-       "detail": "3: 1-15",
+       "detail": "3: 1–15",
        "url": "https://doi.org/10.1163/24523666-01000011"
       },
       {
@@ -2239,21 +1862,8 @@
        "date": "2017",
        "year": 2017,
        "container": "",
-       "detail": "",
-       "url": ""
-      },
-      {
-       "id": "UB6APC4S",
-       "type": "Dataset",
-       "title": "Psalms Explorer",
-       "titleStyle": "italic",
-       "containerPrefix": "",
-       "creators": "Witthoff, David, Kris Lyle, Matt Nerdahl, and Jimmy Parks, et al.",
-       "date": "2014",
-       "year": 2014,
-       "container": "",
-       "detail": "",
-       "url": ""
+       "detail": "Berlin, Germany",
+       "url": "https://github.com/ETCBC/sbl_berlin17_textfabric"
       }
      ]
     },
@@ -2275,8 +1885,8 @@
       },
       {
        "id": "YTKPBTLP",
-       "type": "Software",
-       "title": "Gemini Embedding 2",
+       "type": "Report",
+       "title": "Gemini Embedding 2: A Native Multimodal Embedding Model from Gemini",
        "titleStyle": "italic",
        "containerPrefix": "",
        "creators": "Shanbhogue, Madhuri, Zhe Li, Shanfeng Zhang, and Gustavo Hernández Ábrego, et al.",
@@ -2284,7 +1894,7 @@
        "year": 2026,
        "container": "",
        "detail": "",
-       "url": ""
+       "url": "https://arxiv.org/abs/2605.27295"
       },
       {
        "id": "EI723ZLI",
@@ -2321,9 +1931,9 @@
        "creators": "Zhao, Xinping, Xinshuo Hu, Zifei Shan, and Shouzheng Huang, et al.",
        "date": "2026",
        "year": 2026,
-       "container": "",
+       "container": "Proceedings of the Fourteenth International Conference on Learning Representations",
        "detail": "",
-       "url": ""
+       "url": "https://arxiv.org/abs/2506.20923"
       },
       {
        "id": "VTLV2GLD",
@@ -2386,9 +1996,9 @@
        "creators": "Li, Chaofan, Minghao Qin, Shitao Xiao, and Jianlyu Chen, et al.",
        "date": "2025",
        "year": 2025,
-       "container": "",
+       "container": "Proceedings of the Thirteenth International Conference on Learning Representations",
        "detail": "",
-       "url": ""
+       "url": "https://openreview.net/forum?id=wfLuiDjQ0u"
       },
       {
        "id": "XGPRXYN7",
@@ -2412,9 +2022,9 @@
        "creators": "Chen, Jianlv, Shitao Xiao, Peitian Zhang, and Kun Luo, et al.",
        "date": "2024",
        "year": 2024,
-       "container": "",
-       "detail": "Bangkok, Thailand, 2318-2335",
-       "url": ""
+       "container": "Findings of the Association for Computational Linguistics: ACL 2024",
+       "detail": "Bangkok, Thailand, 2318–2335",
+       "url": "https://aclanthology.org/2024.findings-acl.137/"
       },
       {
        "id": "Q4KNIVPB",
@@ -2425,9 +2035,9 @@
        "creators": "Zhang, Xin, Yanzhao Zhang, Dingkun Long, and Wen Xie, et al.",
        "date": "2024",
        "year": 2024,
-       "container": "",
-       "detail": "1393-1412",
-       "url": ""
+       "container": "Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing: Industry Track",
+       "detail": "Miami, Florida, 1393–1412",
+       "url": "https://aclanthology.org/2024.emnlp-industry.103/"
       },
       {
        "id": "LPNMTIXJ",
@@ -2440,7 +2050,7 @@
        "year": 2024,
        "container": "",
        "detail": "",
-       "url": ""
+       "url": "https://arxiv.org/abs/2402.05672"
       },
       {
        "id": "JPVSZWCL",
@@ -2464,8 +2074,8 @@
        "creators": "Seker, Amit, Elron Bandel, Dan Bareket, and Idan Brusilovsky, et al.",
        "date": "2022",
        "year": 2022,
-       "container": "",
-       "detail": "46-56",
+       "container": "Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+       "detail": "Dublin, Ireland, 46–56",
        "url": "https://doi.org/10.18653/v1/2022.acl-long.4"
       },
       {
@@ -2495,8 +2105,8 @@
        "creators": "Muennighoff, Niklas, Nouamane Tazi, Loïc Magne, and Nils Reimers.",
        "date": "2023",
        "year": 2023,
-       "container": "",
-       "detail": "Dubrovnik, Croatia, 2014-2037",
+       "container": "Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics",
+       "detail": "Dubrovnik, Croatia, 2014–2037",
        "url": "https://aclanthology.org/2023.eacl-main.148/"
       },
       {
@@ -2509,8 +2119,8 @@
        "date": "2010",
        "year": 2010,
        "container": "Journal of Machine Learning Research",
-       "detail": "11: 2837-2854",
-       "url": ""
+       "detail": "11: 2837–2854",
+       "url": "https://jmlr.org/papers/volume11/vinh10a/vinh10a.pdf"
       },
       {
        "id": "NVFN2645",
@@ -2522,7 +2132,7 @@
        "date": "2001",
        "year": 2001,
        "container": "Annals of Statistics",
-       "detail": "29.4: 1165-1188",
+       "detail": "29.4: 1165–1188",
        "url": "https://doi.org/10.1214/aos/1013699998"
       },
       {
@@ -2535,7 +2145,7 @@
        "date": "1995",
        "year": 1995,
        "container": "Journal of the Royal Statistical Society, Series B (Methodological)",
-       "detail": "57.1: 289-300",
+       "detail": "57.1: 289–300",
        "url": "https://doi.org/10.1111/j.2517-6161.1995.tb02031.x"
       },
       {
@@ -2548,7 +2158,7 @@
        "date": "1995",
        "year": 1995,
        "container": "Journal of Business and Economic Statistics",
-       "detail": "13.1: 85-94",
+       "detail": "13.1: 85–94",
        "url": "https://doi.org/10.1080/07350015.1995.10524581"
       },
       {
@@ -2574,7 +2184,7 @@
        "date": "1987",
        "year": 1987,
        "container": "Journal of the American Statistical Association",
-       "detail": "82.397: 171-185",
+       "detail": "82.397: 171–185",
        "url": "https://doi.org/10.1080/01621459.1987.10478410"
       },
       {
@@ -2587,7 +2197,7 @@
        "date": "1987",
        "year": 1987,
        "container": "Journal of Computational and Applied Mathematics",
-       "detail": "20: 53-65",
+       "detail": "20: 53–65",
        "url": "https://doi.org/10.1016/0377-0427(87)90125-7"
       },
       {
@@ -2600,8 +2210,26 @@
        "date": "1972",
        "year": 1972,
        "container": "Journal of Documentation",
-       "detail": "28.1: 11-21",
+       "detail": "28.1: 11–21",
        "url": "https://doi.org/10.1108/eb026526"
+      }
+     ]
+    },
+    {
+     "name": "Benchmark",
+     "entries": [
+      {
+       "id": "AJKXI9D5",
+       "type": "Conference Paper",
+       "title": "Evaluation of Multilingual BERT in a Diachronic, Multilingual, and Multi-Genre Corpus of Bibles",
+       "titleStyle": "quoted",
+       "containerPrefix": "In ",
+       "creators": "Calvo Tello, José and Javier de la Rosa.",
+       "date": "2022",
+       "year": 2022,
+       "container": "Digital Humanities 2022 Conference Abstracts",
+       "detail": "Tokyo",
+       "url": "https://dh-abstracts.library.virginia.edu/works/11976"
       }
      ]
     }

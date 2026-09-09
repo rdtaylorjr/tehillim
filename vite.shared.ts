@@ -4,10 +4,11 @@ const pkg: { version: string } = JSON.parse(
   readFileSync(new URL("./package.json", import.meta.url), "utf8"),
 ) as { version: string };
 
-/** Stamped by scripts/detail-version.mjs; "dev" until an export has been built and hashed. */
+/** Stamped by scripts/detail-version.mjs and committed, so every build agrees on the version. */
 function detailVersion(): string {
-  const stamp = new URL("./detail-data/VERSION", import.meta.url);
-  return existsSync(stamp) ? readFileSync(stamp, "utf8").trim() : "dev";
+  const stamp = new URL("./detail-version.json", import.meta.url);
+  if (!existsSync(stamp)) return "dev";
+  return (JSON.parse(readFileSync(stamp, "utf8")) as { version: string }).version;
 }
 
 /** Build-time constants shared by the app build and the test run, defined once. */

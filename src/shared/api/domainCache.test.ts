@@ -41,8 +41,8 @@ describe("createDomainCache", () => {
     const fetcher = vi.fn().mockResolvedValue(status(404));
     const load = createDomainCache(fetcher);
 
-    expect(await load("syntax")).toEqual({ status: "absent" });
-    await load("syntax");
+    expect(await load("syntactic")).toEqual({ status: "absent" });
+    await load("syntactic");
 
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
@@ -92,6 +92,6 @@ describe("createTrajectorySliceCache", () => {
   it("yields no rows where the export holds no such slice", async () => {
     const fetcher = vi.fn().mockResolvedValue(status(404));
     const load = createTrajectorySliceCache(fetcher);
-    await expect(load("syntax", "content_distance")).resolves.toEqual([]);
+    await expect(load("syntactic", "content_distance")).resolves.toEqual([]);
   });
 });

@@ -11,22 +11,24 @@ export const TOKENS = {
   good: "#7fb894",
   warn: "#d1ab5c",
   bad: "#d18178",
-  heatmapNeg: "#3981aa",
-  heatmapPos: "#bb753e",
+  heatmapNeg: "#306381",
+  heatmapNegMid: "#2d7966",
+  heatmapPosMid: "#8f743a",
+  heatmapPos: "#86413e",
   trajWithin: "#3981aa",
   trajAcross: "#c19a44",
   sans: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   mono: "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
 } as const;
 
-/** The Okabe and Ito palette retuned to this site's register, closest pair at dE 17. */
+/** The Okabe and Ito palette retuned to this site's register, closest pair at dE 14. */
 export const GENRE_COLORS: Record<string, string> = {
   Hymn: "#c19a44",
   Lament: "#6faccf",
   Praise: "#35a083",
   Royal: "#3981aa",
   Thanksgiving: "#bb753e",
-  Trust: "#cb77a6",
+  Trust: "#c85a5a",
   Wisdom: "#cdc669",
 };
 
@@ -39,9 +41,15 @@ export const PARALLELISM_TYPE_COLORS: Record<string, string> = {
   Staircase: "#bb753e",
 };
 
-/** One diverging scale for every matrix: negative cool blue, positive warm ochre, zero at the panel. */
+/** One diverging scale for every matrix, four hues in steps so a cell reads as a band rather than a shade. */
+/* The four are the categorical hues muted against the panel, so a full matrix does not outshout the charts around it. */
 export const DIVERGING_COLORSCALE: [number, string][] = [
   [0, TOKENS.heatmapNeg],
-  [0.5, TOKENS.bgPanel],
+  [0.25, TOKENS.heatmapNeg],
+  [0.25, TOKENS.heatmapNegMid],
+  [0.5, TOKENS.heatmapNegMid],
+  [0.5, TOKENS.heatmapPosMid],
+  [0.75, TOKENS.heatmapPosMid],
+  [0.75, TOKENS.heatmapPos],
   [1, TOKENS.heatmapPos],
 ];

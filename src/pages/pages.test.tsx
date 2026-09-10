@@ -409,7 +409,6 @@ describe("ReferencesPage", () => {
         .getAllByRole("button")
         .map((b) => b.textContent),
     ).toEqual([
-      "All4",
       "A. Hebrew Psalms3",
       "1. Computational2",
       "2. Quantitative / 1. Nested deeper1",
@@ -417,29 +416,24 @@ describe("ReferencesPage", () => {
     ]);
   });
 
-  it("shows the whole bibliography first, naming each category in the body", async () => {
-    // Nothing is chosen, so the head names no category and the body has to.
+  it("opens on the first category rather than the whole bibliography", async () => {
     renderReferences();
     await screen.findByRole("navigation", { name: "Bibliography contents" });
-    expect(head().textContent).toBe("References");
-    expect(screen.getByRole("heading", { name: "A. Hebrew Psalms" }).tagName).toBe("H2");
+    expect(head().textContent).toBe("ReferencesA. Hebrew Psalms");
     expect(screen.getByText(/A recent computational study/)).toBeInTheDocument();
-    expect(screen.getByText(/Einleitung in die Psalmen/)).toBeInTheDocument();
+    expect(screen.queryByText(/Einleitung in die Psalmen/)).not.toBeInTheDocument();
   });
 
-  it("moves the category into the head when one is chosen, and out of the body", async () => {
-    // The body shows only what the head has not already said.
+  it("names the chosen category in the head, so the body never repeats it", async () => {
     renderReferences();
-    fireEvent.click(await screen.findByRole("button", { name: "A. Hebrew Psalms3" }));
-    expect(head().textContent).toBe("ReferencesA. Hebrew Psalms");
-    expect(screen.queryByRole("heading", { name: "A. Hebrew Psalms" })).not.toBeInTheDocument();
-    expect(screen.queryByText(/Einleitung in die Psalmen/)).not.toBeInTheDocument();
+    fireEvent.click(await screen.findByRole("button", { name: "Context1" }));
+    expect(head().textContent).toBe("ReferencesContext");
+    expect(screen.queryByRole("heading", { name: "Context" })).not.toBeInTheDocument();
   });
 
   it("narrows to one run when a subcategory is chosen", async () => {
     renderReferences();
     fireEvent.click(await screen.findByRole("button", { name: "1. Computational2" }));
-    expect(head().textContent).toBe("ReferencesA. Hebrew Psalms");
     expect(screen.getByText(/A recent computational study/)).toBeInTheDocument();
     expect(screen.queryByText(/A work filed two levels down/)).not.toBeInTheDocument();
   });
@@ -453,10 +447,10 @@ describe("ReferencesPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("leaves a category's ungrouped run unheaded, the category already naming it", async () => {
+  it("leaves a category's ungrouped run unheaded, the category above already naming it", async () => {
     renderReferences();
     fireEvent.click(await screen.findByRole("button", { name: "Context1" }));
-    expect(screen.queryByRole("heading", { name: "Context" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { level: 3 })).not.toBeInTheDocument();
     expect(screen.getByText(/Einleitung in die Psalmen/)).toBeInTheDocument();
   });
 
@@ -473,6 +467,9 @@ describe("ReferencesPage", () => {
     const linked = screen.getByRole("link", { name: /A recent computational study/ });
     expect(linked).toHaveAttribute("href", "https://doi.org/10.7146/hn.v5i2.142740");
     expect(linked).toHaveAttribute("rel", "noopener noreferrer");
+    //: The whole citation is the target, the item type beside it staying out of it.
+    expect(linked).toHaveTextContent(/^Roorda/);
+    expect(linked.textContent).not.toContain("Journal Article");
     expect(screen.queryByRole("link", { name: /An older chapter/ })).not.toBeInTheDocument();
   });
 
@@ -481,8 +478,9 @@ describe("ReferencesPage", () => {
     await screen.findByRole("heading", { name: "1. Computational" });
     expect(screen.getByText("Journal Article")).toBeInTheDocument();
     expect(screen.getByText("Book Section")).toBeInTheDocument();
-    expect(screen.getByText("Book")).toBeInTheDocument();
     expect(screen.getByText("Thesis")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Context1" }));
+    expect(screen.getByText("Book")).toBeInTheDocument();
   });
 
   it("narrows the works and the selector together", async () => {
@@ -495,7 +493,7 @@ describe("ReferencesPage", () => {
       within(contents())
         .getAllByRole("button")
         .map((b) => b.textContent),
-    ).toEqual(["All1", "A. Hebrew Psalms1", "1. Computational1"]);
+    ).toEqual(["A. Hebrew Psalms1", "1. Computational1"]);
   });
 
   it("matches across author, title and year, in any order", async () => {
@@ -506,6 +504,37 @@ describe("ReferencesPage", () => {
     expect(screen.queryByText(/A recent computational study/)).not.toBeInTheDocument();
   });
 
+  it("puts every category back in the selector when nothing matches", async () => {
+    //: A selector narrowed to nothing would leave the reader no way out of the filter.
+    renderReferences();
+    await screen.findByRole("navigation", { name: "Bibliography contents" });
+    fireEvent.change(filter(), { target: { value: "zzzz" } });
+    expect(
+      within(contents())
+        .getAllByRole("button")
+        .map((b) => b.textContent),
+    ).toEqual([
+      "A. Hebrew Psalms3",
+      "1. Computational2",
+      "2. Quantitative / 1. Nested deeper1",
+      "Context1",
+    ]);
+  });
+
+  it("drops the filter when a category is chosen, whether or not it matched", async () => {
+    renderReferences();
+    await screen.findByRole("navigation", { name: "Bibliography contents" });
+    fireEvent.change(filter(), { target: { value: "zzzz" } });
+    fireEvent.click(screen.getByRole("button", { name: "Context1" }));
+    expect(filter()).toHaveValue("");
+    expect(screen.getByText(/Einleitung in die Psalmen/)).toBeInTheDocument();
+
+    fireEvent.change(filter(), { target: { value: "roorda" } });
+    fireEvent.click(screen.getByRole("button", { name: "1. Computational1" }));
+    expect(filter()).toHaveValue("");
+    expect(screen.getByText(/An older chapter/)).toBeInTheDocument();
+  });
+
   it("says so plainly when nothing matches", async () => {
     renderReferences();
     await screen.findByRole("navigation", { name: "Bibliography contents" });
@@ -513,13 +542,55 @@ describe("ReferencesPage", () => {
     expect(screen.getByText("No works match.")).toBeInTheDocument();
   });
 
-  it("falls back to the whole bibliography when a filter empties the chosen scope", async () => {
+  it("searches the whole bibliography, not the chosen category", async () => {
     renderReferences();
     fireEvent.click(await screen.findByRole("button", { name: "Context1" }));
     fireEvent.change(filter(), { target: { value: "roorda" } });
-    //: "Context" is gone, so the page shows what is left rather than an empty category.
-    expect(head().textContent).toBe("References");
     expect(screen.getByText(/A recent computational study/)).toBeInTheDocument();
+  });
+
+  it("marks the chosen scope in the selector, and no scope while a filter runs", async () => {
+    renderReferences();
+    fireEvent.click(await screen.findByRole("button", { name: "1. Computational2" }));
+    expect(within(contents()).getByRole("button", { current: true })).toHaveTextContent(
+      "1. Computational",
+    );
+    fireEvent.change(filter(), { target: { value: "roorda" } });
+    expect(within(contents()).queryByRole("button", { current: true })).not.toBeInTheDocument();
+    fireEvent.change(filter(), { target: { value: "" } });
+    expect(within(contents()).getByRole("button", { current: true })).toHaveTextContent(
+      "1. Computational",
+    );
+  });
+
+  it("heads each run of results with its category path while filtering", async () => {
+    renderReferences();
+    await screen.findByRole("navigation", { name: "Bibliography contents" });
+    fireEvent.change(filter(), { target: { value: "roorda" } });
+    //: The results span categories, so the head names none of them.
+    expect(head().textContent).toBe("References");
+    expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual([
+      "A. Hebrew Psalms / 1. Computational",
+    ]);
+    expect(screen.queryByRole("heading", { level: 3 })).not.toBeInTheDocument();
+  });
+
+  it("names an ungrouped run by its category alone while filtering", async () => {
+    renderReferences();
+    await screen.findByRole("navigation", { name: "Bibliography contents" });
+    fireEvent.change(filter(), { target: { value: "gunkel" } });
+    expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual([
+      "Context",
+    ]);
+  });
+
+  it("returns to the chosen category when the filter is cleared", async () => {
+    renderReferences();
+    fireEvent.click(await screen.findByRole("button", { name: "Context1" }));
+    fireEvent.change(filter(), { target: { value: "roorda" } });
+    fireEvent.change(filter(), { target: { value: "" } });
+    expect(screen.getByText(/Einleitung in die Psalmen/)).toBeInTheDocument();
+    expect(screen.queryByText(/A recent computational study/)).not.toBeInTheDocument();
   });
 
   it("offers the whole list as BibTeX", async () => {

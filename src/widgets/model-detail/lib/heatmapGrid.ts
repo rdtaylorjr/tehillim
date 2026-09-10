@@ -46,12 +46,15 @@ export function buildHeatmapGrid(
   cells: HeatmapCell[],
   order: PsalmOrderEntry[],
   valueTitle: string,
-): { z: number[][]; text: string[][]; clipAbs: number } {
+): { z: (number | null)[][]; text: string[][]; clipAbs: number } {
   const n = order.length;
   const psalmOf = order.map((o) => o.psalm);
   const psalmToIndex = new Map(order.map((o, i) => [o.psalm, i]));
 
-  const z: number[][] = Array.from({ length: n }, () => new Array<number>(n).fill(0));
+  //: Null rather than zero, so a cell without a value shows the background instead of a banded color.
+  const z: (number | null)[][] = Array.from({ length: n }, () =>
+    new Array<number | null>(n).fill(null),
+  );
   const text: string[][] = Array.from({ length: n }, () => new Array<string>(n).fill(""));
 
   /** Writes both orientations of a symmetric cell, with indices already in range. */

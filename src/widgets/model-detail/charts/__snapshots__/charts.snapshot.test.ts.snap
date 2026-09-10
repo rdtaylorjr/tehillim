@@ -430,15 +430,35 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
         "colorscale": [
           [
             0,
-            "#3981aa",
+            "#306381",
+          ],
+          [
+            0.25,
+            "#306381",
+          ],
+          [
+            0.25,
+            "#2d7966",
           ],
           [
             0.5,
-            "#1a1d21",
+            "#2d7966",
+          ],
+          [
+            0.5,
+            "#8f743a",
+          ],
+          [
+            0.75,
+            "#8f743a",
+          ],
+          [
+            0.75,
+            "#86413e",
           ],
           [
             1,
-            "#bb753e",
+            "#86413e",
           ],
         ],
         "customdata": [
@@ -605,15 +625,35 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "colorscale": [
           [
             0,
-            "#3981aa",
+            "#306381",
+          ],
+          [
+            0.25,
+            "#306381",
+          ],
+          [
+            0.25,
+            "#2d7966",
           ],
           [
             0.5,
-            "#1a1d21",
+            "#2d7966",
+          ],
+          [
+            0.5,
+            "#8f743a",
+          ],
+          [
+            0.75,
+            "#8f743a",
+          ],
+          [
+            0.75,
+            "#86413e",
           ],
           [
             1,
-            "#bb753e",
+            "#86413e",
           ],
         ],
         "hovertemplate": "%{text}<extra></extra>",
@@ -637,19 +677,19 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "type": "heatmap",
         "z": [
           [
-            0,
+            null,
             0.4,
             0.9,
           ],
           [
             0.4,
-            0,
+            null,
             -0.2,
           ],
           [
             0.9,
             -0.2,
-            0,
+            null,
           ],
         ],
         "zmax": 0.9,

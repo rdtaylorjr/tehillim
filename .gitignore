@@ -17,3 +17,8 @@ coverage/
 
 # Repo-specific
 detail-data/
+
+# IDE
+.idea/
+.vscode/
+*.swp

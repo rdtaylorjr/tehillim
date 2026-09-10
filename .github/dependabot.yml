@@ -4,7 +4,38 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      # Peer-locked sets, grouped so a bump never lands without its partners.
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+          - "vitest"
+          - "@vitest/*"
+      eslint:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+          - "eslint-plugin-*"
+          - "typescript-eslint"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      testing-library:
+        patterns:
+          - "@testing-library/*"
+    ignore:
+      # eslint-plugin-jsx-a11y@6.10.2 peers eslint <=9, so eslint 10 cannot resolve.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      actions:
+        patterns:
+          - "*"

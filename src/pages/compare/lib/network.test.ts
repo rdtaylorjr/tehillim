@@ -23,11 +23,6 @@ describe("buildNetworkGraph", () => {
     expect(graph.nodes.map((n) => n.id)).toEqual([1, 2, 3]);
   });
 
-  it("assigns each node its traditional book", () => {
-    const graph = buildNetworkGraph(makeMethod(), 0);
-    expect(graph.nodes[0]!.book).toBe(1);
-  });
-
   it("only includes edges at or above the threshold", () => {
     const graph = buildNetworkGraph(makeMethod(), 0.5);
     expect(graph.edges).toEqual([{ source: 1, target: 2, weight: 0.8 }]);

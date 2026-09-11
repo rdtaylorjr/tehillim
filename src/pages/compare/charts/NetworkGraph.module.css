@@ -1,3 +1,9 @@
+/* Tall enough that 150 psalms spread out rather than crowd, and it fills the panel's width. */
+.network-mount {
+  width: 100%;
+  height: 620px;
+}
+
 .network-controls {
   display: flex;
   align-items: center;
@@ -35,50 +41,4 @@
   font-family: var(--mono);
   font-size: 11px;
   color: var(--ink-faint);
-}
-
-.network-container {
-  width: 100%;
-  height: 560px;
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  background: var(--bg-inset);
-}
-
-.network-container svg {
-  width: 100%;
-  height: 100%;
-}
-
-.network-node {
-  cursor: pointer;
-  stroke: rgb(18 20 23 / 85%);
-  stroke-width: 1px;
-}
-
-.network-node.is-selected {
-  stroke: var(--ink);
-  stroke-width: 2.5px;
-}
-
-.network-node.is-dim {
-  opacity: 0.16;
-}
-
-.network-edge {
-  fill: none;
-  stroke: var(--ink-faint);
-  stroke-width: 1.25px;
-}
-
-.network-edge.is-dim {
-  opacity: 0.06;
-}
-
-.network-label {
-  fill: var(--ink-dim);
-  font-family: var(--mono);
-  font-size: 9px;
-  text-anchor: middle;
-  pointer-events: none;
 }

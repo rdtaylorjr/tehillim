@@ -1,13 +1,13 @@
 import { useCallback } from "react";
 import styles from "../ModelDetail.module.css";
 import { Card } from "./Card";
-import { PlotMount } from "../PlotMount";
-import type { PlotFn } from "../../charts/plot";
+import { PlotMount } from "../../../../shared/ui";
+import { GENRE_COLORS, TOKENS } from "../../../../shared/charts";
+import type { PlotFn } from "../../../../shared/charts";
 import { ScaledPlot } from "../ScaledPlot";
 import { GapStat } from "../StatLine";
 import { mountRainclouds } from "../../charts/rainclouds";
 import { mountGenreMeanMatrix, mountHeatmap } from "../../charts/heatmap";
-import { GENRE_COLORS, TOKENS } from "../../model/tokens";
 import type { PsalmOrderEntry, RaincloudGroup, TrajectorySourceData } from "../../model/types";
 import type { TrajectorySection as Section } from "../../model/types";
 

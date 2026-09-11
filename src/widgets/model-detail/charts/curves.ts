@@ -1,10 +1,8 @@
-import { plotly } from "./plot";
-import type { PlotFn } from "./plot";
+import { PLOTLY_CONFIG, TOKENS, baseLayout, plotly } from "../../../shared/charts";
+import type { PlotFn } from "../../../shared/charts";
 import * as Plotly from "plotly.js-dist-min";
 import type { Data } from "plotly.js";
-import { TOKENS } from "../model/tokens";
 import type { CurveSeries } from "../model/types";
-import { baseLayout, PLOTLY_CONFIG } from "./baseLayout";
 import { createHoverFade } from "./hoverFade";
 
 /** Mounts an ROC or PR curve (one dotted reference line plus one line per series, hover-dimming the rest). */

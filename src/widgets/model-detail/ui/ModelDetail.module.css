@@ -19,11 +19,6 @@
   color: var(--ink-faint);
 }
 
-.chart-mount {
-  width: 100%;
-  min-height: 260px;
-}
-
 /* The clicked row's statistics, carried in so the table's context is not lost on the way here. */
 .row-stats {
   display: grid;

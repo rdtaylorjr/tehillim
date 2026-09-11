@@ -3,7 +3,6 @@ declare const styles: {
   readonly card: string;
   readonly cardStat: string;
   readonly cardTitle: string;
-  readonly chartMount: string;
   readonly detail: string;
   readonly good: string;
   readonly grid: string;

@@ -6,13 +6,15 @@ import { HomePage } from "./home";
 import { ReferencesPage } from "./references";
 import type { ReferencesPayload } from "./references";
 import { CLUSTERING, GUNKEL, SIMILARITY } from "../test/fixtures";
+import { capturePlot } from "../test/fakePlot";
 
 const navigate = vi.fn();
 
 const renderCompare = (
   load = (): Promise<{ data: typeof SIMILARITY; gunkel: typeof GUNKEL }> =>
     Promise.resolve({ data: SIMILARITY, gunkel: GUNKEL }),
-): ReturnType<typeof render> => render(<ComparePage navigate={navigate} load={load} />);
+): ReturnType<typeof render> =>
+  render(<ComparePage navigate={navigate} load={load} api={capturePlot().api} />);
 
 const renderCluster = (
   load = (): Promise<{ data: typeof CLUSTERING; gunkel: typeof GUNKEL }> =>
@@ -637,7 +639,7 @@ describe("the default loaders", () => {
 
   it("Compare fetches the similarity and Gunkel payloads at their own URLs", async () => {
     stubFetch({ detail_similarity: SIMILARITY, gunkel: GUNKEL });
-    render(<ComparePage navigate={navigate} />);
+    render(<ComparePage navigate={navigate} api={capturePlot().api} />);
     expect(await screen.findByRole("navigation", { name: "Pages" })).toBeInTheDocument();
     const urls = vi.mocked(fetch).mock.calls.map(([url]) => url as string);
     expect(urls.some((u) => u.includes("data/detail_similarity.json"))).toBe(true);
@@ -654,7 +656,7 @@ describe("the default loaders", () => {
 
   it("surfaces a missing payload as the page's own load error", async () => {
     stubFetch({});
-    render(<ComparePage navigate={navigate} />);
+    render(<ComparePage navigate={navigate} api={capturePlot().api} />);
     expect(await screen.findByRole("alert")).toHaveTextContent(
       /Could not load similarity data/,
     );

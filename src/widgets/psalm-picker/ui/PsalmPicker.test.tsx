@@ -58,15 +58,15 @@ describe("PsalmPicker", () => {
     expect(onSelect).toHaveBeenCalledWith(3);
   });
 
-  it("reports a psalm typed into the jump field", () => {
+  it("reports a psalm typed into the number field", () => {
     const { onSelect } = setup();
-    fireEvent.change(screen.getByLabelText("Jump to Psalm"), { target: { value: "2" } });
+    fireEvent.change(screen.getByLabelText("Psalm"), { target: { value: "2" } });
     expect(onSelect).toHaveBeenCalledWith(2);
   });
 
-  it("ignores a jump-field number outside the psalter", () => {
+  it("ignores a typed number outside the psalter", () => {
     const { onSelect } = setup();
-    const field = screen.getByLabelText("Jump to Psalm");
+    const field = screen.getByLabelText("Psalm");
     for (const value of ["0", "151", "", "abc"]) {
       fireEvent.change(field, { target: { value } });
     }

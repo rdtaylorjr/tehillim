@@ -1,8 +1,14 @@
-import { plotly } from "./plot";
-import type { PlotFn } from "./plot";
+import {
+  DIVERGING_COLORSCALE,
+  PLOTLY_CONFIG,
+  TOKENS,
+  baseLayout,
+  diagonalTrace,
+  plotly,
+} from "../../../shared/charts";
+import type { PlotFn } from "../../../shared/charts";
 import * as Plotly from "plotly.js-dist-min";
-import type { Data, Layout, Shape } from "plotly.js";
-import { TOKENS, DIVERGING_COLORSCALE } from "../model/tokens";
+import type { Data, Layout } from "plotly.js";
 import {
   buildHeatmapGrid,
   crossFadeShapes,
@@ -11,10 +17,15 @@ import {
   robustAbsClip,
 } from "../lib/heatmapGrid";
 import type { GenreMeanCell, HeatmapCell, PsalmOrderEntry } from "../model/types";
-import { baseLayout, PLOTLY_CONFIG } from "./baseLayout";
+
+/** The diagonal is structure, not a reading, so it wears the page's own mid gray. */
+const STRUCTURE_COLOR = TOKENS.inkFaint;
+
+/** Every label around a matrix wears the face the table hangs a model's text variant off. */
+const LABEL_FONT = { family: TOKENS.mono, size: 10.5, color: TOKENS.inkFaint };
 
 const AXIS_COMMON = {
-  tickfont: { family: TOKENS.sans, size: 10.5 },
+  tickfont: LABEL_FONT,
   showgrid: false,
   zeroline: false,
   fixedrange: true,
@@ -33,8 +44,6 @@ export function mountHeatmap(
   const { z, text, clipAbs } = buildHeatmapGrid(cells, order, valueTitle);
   const indexRanges = genreIndexRanges(order);
   const anchors = genreTickAnchors(order);
-  const boundaries: number[] = [];
-  for (let i = 1; i < n; i++) if (genreOf[i] !== genreOf[i - 1]) boundaries.push(i - 0.5);
 
   const trace: Data = {
     type: "heatmap",
@@ -45,8 +54,8 @@ export function mountHeatmap(
     zmid: 0,
     colorscale: DIVERGING_COLORSCALE,
     colorbar: {
-      title: { text: valueTitle, font: { size: 10.5 } },
-      tickfont: { family: TOKENS.mono, size: 9.5 },
+      title: { text: valueTitle, font: LABEL_FONT },
+      tickfont: LABEL_FONT,
       len: 0.85,
       outlinewidth: 0,
     },
@@ -61,38 +70,20 @@ export function mountHeatmap(
   };
   const gridSize = 800;
   const margin = { l: 90, r: 130, t: 10, b: 70 };
-  const staticShapes: Partial<Shape>[] = boundaries.flatMap((b) => [
-    {
-      type: "line",
-      xref: "x",
-      x0: b,
-      x1: b,
-      yref: "paper",
-      y0: 0,
-      y1: 1,
-      line: { color: TOKENS.bgPanel, width: 2 },
-    },
-    {
-      type: "line",
-      yref: "y",
-      y0: b,
-      y1: b,
-      xref: "paper",
-      x0: 0,
-      x1: 1,
-      line: { color: TOKENS.bgPanel, width: 2 },
-    },
-  ]);
   const layout = baseLayout({
     xaxis: { ...axisCommon, tickangle: -40 },
     yaxis: { ...axisCommon, autorange: "reversed" },
-    shapes: staticShapes,
     margin,
     width: gridSize + margin.l + margin.r,
     height: gridSize + margin.t + margin.b,
   });
 
-  void plot(mount, [trace], layout as Partial<Layout>, PLOTLY_CONFIG).then((gd) => {
+  void plot(
+    mount,
+    [trace, diagonalTrace(n, STRUCTURE_COLOR)],
+    layout as Partial<Layout>,
+    PLOTLY_CONFIG,
+  ).then((gd) => {
     gd.on("plotly_hover", (ev) => {
       const pt = ev.points[0];
       if (!pt?.pointIndex) return;
@@ -115,10 +106,10 @@ export function mountHeatmap(
         TOKENS.bgPanel,
         TOKENS.accent,
       );
-      void Plotly.relayout(gd, { shapes: [...staticShapes, ...dynamic] });
+      void Plotly.relayout(gd, { shapes: dynamic });
     });
     gd.on("plotly_unhover", () => {
-      void Plotly.relayout(gd, { shapes: staticShapes });
+      void Plotly.relayout(gd, { shapes: [] });
     });
   });
 }
@@ -160,8 +151,8 @@ export function mountGenreMeanMatrix(
     zmid: 0,
     colorscale: DIVERGING_COLORSCALE,
     colorbar: {
-      title: { text: valueTitle, font: { size: 10.5 } },
-      tickfont: { family: TOKENS.mono, size: 9.5 },
+      title: { text: valueTitle, font: LABEL_FONT },
+      tickfont: LABEL_FONT,
       len: 0.85,
       outlinewidth: 0,
     },
@@ -187,6 +178,7 @@ export function mountGenreMeanMatrix(
     height: gridSize + margin.t + margin.b,
   });
 
+  //: No gray diagonal here: a genre against itself is its within-genre mean, a reading in its own right.
   void plot(mount, [trace], layout as Partial<Layout>, PLOTLY_CONFIG).then((gd) => {
     gd.on("plotly_hover", (ev) => {
       const pt = ev.points[0];

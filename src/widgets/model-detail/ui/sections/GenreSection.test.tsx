@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { GenreSection } from "./GenreSection";
-import type { PlotFn } from "../../charts/plot";
+import type { PlotFn } from "../../../../shared/charts";
 import type { GenreSection as Section } from "../../model/types";
 
 const section: Section = {

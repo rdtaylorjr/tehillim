@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { TrajectorySection } from "./TrajectorySection";
-import type { PlotFn } from "../../charts/plot";
+import type { PlotFn } from "../../../../shared/charts";
 import type { TrajectorySection as Section, TrajectorySourceData } from "../../model/types";
 
 const mounted: unknown[] = [];

@@ -2,14 +2,14 @@ import { useCallback } from "react";
 import styles from "../ModelDetail.module.css";
 import { Card } from "./Card";
 import { SeriesKey } from "../SeriesKey";
-import { PlotMount } from "../PlotMount";
-import type { PlotFn } from "../../charts/plot";
+import { PlotMount } from "../../../../shared/ui";
+import { PARALLELISM_TYPE_COLORS, TOKENS } from "../../../../shared/charts";
+import type { PlotFn } from "../../../../shared/charts";
 import { mountMultiCurve } from "../../charts/curves";
 import { mountRainclouds } from "../../charts/rainclouds";
 import { orderGroups, seriesColor } from "../../lib/curveStyle";
 import { computePrevalence } from "../../lib/prevalence";
 import { ScalarStat } from "../StatLine";
-import { PARALLELISM_TYPE_COLORS, TOKENS } from "../../model/tokens";
 import type { ParallelismSection as Section } from "../../model/types";
 
 const groupColor = (key: string): string => {

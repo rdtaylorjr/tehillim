@@ -20,8 +20,8 @@ export function createAlignmentColorScale(): (share: number) => string {
 
 //: Books and Gunkel families are independent categorizations, so two hue sequences.
 
-//: BOOK_HUES: palette slots 1/2/3/4/8 in Book I-V order, validated for dark mode.
-const BOOK_HUES: readonly string[] = [
+/** Palette slots 1/2/3/4/8 in Book I-V order, validated for dark mode. */
+export const BOOK_HUES: readonly string[] = [
   "#5b9bea", // slot 1 blue - Book I
   "#f0824e", // slot 2 orange - Book II
   "#35c491", // slot 3 aqua/green - Book III
@@ -33,8 +33,8 @@ export function createBookColorScale(): (book: number) => string {
   return scaleOrdinal<number, string>().domain([1, 2, 3, 4, 5]).range(BOOK_HUES);
 }
 
-//: FAMILY_HUES: palette slots 1/2/7/4/8 plus a light green, lifted for a dark ground.
-const FAMILY_HUES: readonly string[] = [
+/** Palette slots 1/2/7/4/8 plus a light green, lifted for a dark ground, one per Gunkel family. */
+export const FAMILY_HUES: readonly string[] = [
   "#5b9bea", // slot 1 blue - Hymn
   "#f0824e", // slot 2 orange - Lament
   "#8b7ce0", // slot 7 violet - Royal Psalm

@@ -9,8 +9,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    // The toolbar permutation tests run 2s alone and several times that when 64 files compete for cores.
-    testTimeout: 20000,
+    // The toolbar permutation tests run 8s alone and several times that when 79 files compete for cores.
+    testTimeout: 45000,
     setupFiles: ["./src/test/setup.ts", "./src/test/psalm-picker-setup.ts"],
     // Class names come back unscoped, so assertions read the stylesheet's own vocabulary.
     css: { modules: { classNameStrategy: "non-scoped" } },

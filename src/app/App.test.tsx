@@ -62,6 +62,9 @@ const loadDetail = (): Promise<DetailLoad> =>
 const renderApp = (): ReturnType<typeof render> =>
   render(<App load={load} loadDetail={loadDetail} />);
 
+//: The detail pane is a lazy chunk carrying Plotly, which parses slowly when the suite fills the cores.
+const DETAIL_WAIT = 20000;
+
 describe("App", () => {
   it("keeps one toolbar mounted while the pane beneath it swaps", async () => {
     renderApp();
@@ -72,7 +75,7 @@ describe("App", () => {
 
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     expect(
-      await screen.findByText("ROC curve", undefined, { timeout: 5000 }),
+      await screen.findByText("ROC curve", undefined, { timeout: DETAIL_WAIT }),
     ).toBeInTheDocument();
     // The same node, so the toolbar was never unmounted and remounted.
     expect(screen.getByRole("radiogroup", { name: "Models" })).toBe(toolbar);
@@ -84,7 +87,7 @@ describe("App", () => {
 
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     expect(
-      await screen.findByText("ROC curve", undefined, { timeout: 5000 }),
+      await screen.findByText("ROC curve", undefined, { timeout: DETAIL_WAIT }),
     ).toBeInTheDocument();
     expect(screen.getByText("Precision–Recall curve")).toBeInTheDocument();
     expect(screen.getAllByText("alephbert_consonantal").length).toBeGreaterThan(0);

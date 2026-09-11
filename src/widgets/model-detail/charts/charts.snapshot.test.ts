@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mountRainclouds } from "./rainclouds";
 import { mountMultiCurve } from "./curves";
 import { mountHeatmap, mountGenreMeanMatrix } from "./heatmap";
-import type { PlotFn } from "./plot";
+import type { PlotFn } from "../../../shared/charts";
 import type {
   CurveSeries,
   GenreMeanCell,

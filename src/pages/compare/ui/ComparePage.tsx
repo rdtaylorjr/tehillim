@@ -15,6 +15,7 @@ import { featurePhrase } from "../../../shared/lib/corpus";
 import { initialCompareState, reduceCompare } from "../../../shared/model";
 import type { ViewMode } from "../../../shared/model";
 import type { GunkelPayload, MethodPayload, SimilarityPayload } from "../../../shared/model";
+import type { PlotApi } from "../../../shared/charts";
 import type { NavigateHandler } from "../../../../shell/Root";
 
 const TABS: readonly { id: ViewMode; label: string }[] = [
@@ -31,9 +32,11 @@ export interface ComparePageProps {
   readonly navigate: NavigateHandler;
   /** Injected in tests so the page can be driven without a server. */
   readonly load?: () => Promise<Loaded>;
+  /** Injected in tests so the views render without a real Plotly canvas. */
+  readonly api?: PlotApi;
 }
 
-export function ComparePage({ navigate, load }: ComparePageProps): React.ReactElement {
+export function ComparePage({ navigate, load, api }: ComparePageProps): React.ReactElement {
   const [loaded, setLoaded] = useState<Loaded | null>(null);
   const [error, setError] = useState<unknown>(null);
 
@@ -68,17 +71,25 @@ export function ComparePage({ navigate, load }: ComparePageProps): React.ReactEl
     );
   }
   if (loaded === null) return <p className={viz.loadError}>Loading similarity data…</p>;
-  return <CompareView navigate={navigate} data={loaded.data} gunkel={loaded.gunkel} />;
+  return (
+    <CompareView
+      navigate={navigate}
+      data={loaded.data}
+      gunkel={loaded.gunkel}
+      {...(api === undefined ? {} : { api })}
+    />
+  );
 }
 
 interface CompareViewProps {
   readonly navigate: NavigateHandler;
   readonly data: SimilarityPayload;
   readonly gunkel: GunkelPayload;
+  readonly api?: PlotApi;
 }
 
 /** Split from the loader so every hook below can assume the payload is present. */
-function CompareView({ navigate, data, gunkel }: CompareViewProps): React.ReactElement {
+function CompareView({ navigate, data, gunkel, api }: CompareViewProps): React.ReactElement {
   const [state, dispatch] = useReducer(reduceCompare, data.defaultMethod, initialCompareState);
 
   //: The validator rejects an empty method list, so this covers a stale id.
@@ -146,8 +157,8 @@ function CompareView({ navigate, data, gunkel }: CompareViewProps): React.ReactE
               <div role="tabpanel" hidden={state.view !== "matrix"}>
                 <Heatmap
                   method={method}
-                  selected={state.selectedPsalm}
                   onSelect={selectPsalm}
+                  {...(api === undefined ? {} : { api })}
                 />
               </div>
               <div role="tabpanel" hidden={state.view !== "network"}>
@@ -156,6 +167,7 @@ function CompareView({ navigate, data, gunkel }: CompareViewProps): React.ReactE
                   coloring={coloring}
                   selected={state.selectedPsalm}
                   onSelect={selectPsalm}
+                  {...(api === undefined ? {} : { api })}
                 />
               </div>
             </div>

@@ -3,10 +3,8 @@ import styles from "./HomeFigures.module.css";
 import { MatrixHeatmap } from "../../../shared/ui/matrixHeatmap";
 import { AlluvialDiagram } from "../../../shared/ui/AlluvialDiagram";
 import { ResultsTable, parallelismOverallColumns } from "../../../widgets/benchmark-table";
-import {
-  createGunkelFamilyColorScale,
-  createSimilarityColorScale,
-} from "../../../shared/lib/color";
+import { createGunkelFamilyColorScale } from "../../../shared/lib/color";
+import { HEATMAP_STEPS, steppedColorFn } from "../../../shared/charts";
 import { bookBoundaries } from "../../../shared/lib/corpus";
 import type { HomeFigures } from "../api/loadHomeFigures";
 
@@ -63,7 +61,7 @@ export function BenchmarkFigure({
   );
 }
 
-/** The similarity matrix, drawn by the canvas renderer the compare page uses. */
+/** The similarity matrix, in the same four bands the compare page reads it in. */
 export function CompareFigure({
   figures,
 }: {
@@ -81,7 +79,7 @@ export function CompareFigure({
         psalmNumbers: psalms,
         matrix,
         boundaries: bookBoundaries(),
-        colorScale: createSimilarityColorScale(Math.max(domainMax, 0.01)),
+        colorScale: steppedColorFn(HEATMAP_STEPS, Math.max(domainMax, 0.01)),
         tooltipFor: () => "",
         onSelect: () => undefined,
       },

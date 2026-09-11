@@ -1,11 +1,9 @@
-import { plotly } from "./plot";
-import type { PlotFn } from "./plot";
+import { PLOTLY_CONFIG, TOKENS, baseLayout, plotly } from "../../../shared/charts";
+import type { PlotFn } from "../../../shared/charts";
 import * as Plotly from "plotly.js-dist-min";
 import type { Data } from "plotly.js";
-import { TOKENS } from "../model/tokens";
 import { raincloudRowLabel } from "../lib/raincloud";
 import type { RaincloudGroup } from "../model/types";
-import { baseLayout, PLOTLY_CONFIG } from "./baseLayout";
 import { createHoverFade } from "./hoverFade";
 
 /** Mounts a raincloud plot (violin+box+points, or box+points below the density floor) into `mount`. */

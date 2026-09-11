@@ -375,7 +375,8 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
         "showgrid": false,
         "tickangle": -40,
         "tickfont": {
-          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "color": "#6b6f76",
+          "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
           "size": 10.5,
         },
         "ticktext": [
@@ -397,7 +398,8 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
         ],
         "showgrid": false,
         "tickfont": {
-          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "color": "#6b6f76",
+          "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
           "size": 10.5,
         },
         "ticktext": [
@@ -417,11 +419,14 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
           "len": 0.85,
           "outlinewidth": 0,
           "tickfont": {
+            "color": "#6b6f76",
             "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
-            "size": 9.5,
+            "size": 10.5,
           },
           "title": {
             "font": {
+              "color": "#6b6f76",
+              "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
               "size": 10.5,
             },
             "text": "mean z",
@@ -430,35 +435,35 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
         "colorscale": [
           [
             0,
-            "#306381",
+            "#5b9bea",
           ],
           [
             0.25,
-            "#306381",
+            "#5b9bea",
           ],
           [
             0.25,
-            "#2d7966",
+            "#35c491",
           ],
           [
             0.5,
-            "#2d7966",
+            "#35c491",
           ],
           [
             0.5,
-            "#8f743a",
+            "#e8b53a",
           ],
           [
             0.75,
-            "#8f743a",
+            "#e8b53a",
           ],
           [
             0.75,
-            "#86413e",
+            "#ea6a67",
           ],
           [
             1,
-            "#86413e",
+            "#ea6a67",
           ],
         ],
         "customdata": [
@@ -532,34 +537,6 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
       },
       "paper_bgcolor": "#1a1d21",
       "plot_bgcolor": "#1a1d21",
-      "shapes": [
-        {
-          "line": {
-            "color": "#1a1d21",
-            "width": 2,
-          },
-          "type": "line",
-          "x0": 0.5,
-          "x1": 0.5,
-          "xref": "x",
-          "y0": 0,
-          "y1": 1,
-          "yref": "paper",
-        },
-        {
-          "line": {
-            "color": "#1a1d21",
-            "width": 2,
-          },
-          "type": "line",
-          "x0": 0,
-          "x1": 1,
-          "xref": "paper",
-          "y0": 0.5,
-          "y1": 0.5,
-          "yref": "y",
-        },
-      ],
       "width": 1020,
       "xaxis": {
         "fixedrange": true,
@@ -570,7 +547,8 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "showgrid": false,
         "tickangle": -40,
         "tickfont": {
-          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "color": "#6b6f76",
+          "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
           "size": 10.5,
         },
         "ticktext": [
@@ -592,7 +570,8 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         ],
         "showgrid": false,
         "tickfont": {
-          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "color": "#6b6f76",
+          "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
           "size": 10.5,
         },
         "ticktext": [
@@ -612,11 +591,14 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
           "len": 0.85,
           "outlinewidth": 0,
           "tickfont": {
+            "color": "#6b6f76",
             "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
-            "size": 9.5,
+            "size": 10.5,
           },
           "title": {
             "font": {
+              "color": "#6b6f76",
+              "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
               "size": 10.5,
             },
             "text": "z",
@@ -625,35 +607,35 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "colorscale": [
           [
             0,
-            "#306381",
+            "#5b9bea",
           ],
           [
             0.25,
-            "#306381",
+            "#5b9bea",
           ],
           [
             0.25,
-            "#2d7966",
+            "#35c491",
           ],
           [
             0.5,
-            "#2d7966",
+            "#35c491",
           ],
           [
             0.5,
-            "#8f743a",
+            "#e8b53a",
           ],
           [
             0.75,
-            "#8f743a",
+            "#e8b53a",
           ],
           [
             0.75,
-            "#86413e",
+            "#ea6a67",
           ],
           [
             1,
-            "#86413e",
+            "#ea6a67",
           ],
         ],
         "hovertemplate": "%{text}<extra></extra>",
@@ -695,6 +677,38 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "zmax": 0.9,
         "zmid": 0,
         "zmin": -0.9,
+      },
+      {
+        "colorscale": [
+          [
+            0,
+            "#6b6f76",
+          ],
+          [
+            1,
+            "#6b6f76",
+          ],
+        ],
+        "hoverinfo": "skip",
+        "showscale": false,
+        "type": "heatmap",
+        "z": [
+          [
+            1,
+            null,
+            null,
+          ],
+          [
+            null,
+            1,
+            null,
+          ],
+          [
+            null,
+            null,
+            1,
+          ],
+        ],
       },
     ],
   },

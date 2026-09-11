@@ -19,7 +19,7 @@ export interface PsalmPickerProps {
   readonly onColorModeChange: (mode: ReferenceColorMode) => void;
 }
 
-/** The shared picker: a jump-to field, a colour choice, the grid, and its legend. */
+/** The shared picker: a number field, a colour choice, the grid, and its legend. */
 export function PsalmPicker({
   psalms,
   coloring,
@@ -42,7 +42,7 @@ export function PsalmPicker({
   return (
     <section className={`${panel.panel} ${styles.pickerPanel}`} aria-label="Psalm picker">
       <div className={styles.pickerHeader}>
-        <label htmlFor={searchId}>Jump to Psalm</label>
+        <label htmlFor={searchId}>Psalm</label>
         <input
           id={searchId}
           ref={searchRef}

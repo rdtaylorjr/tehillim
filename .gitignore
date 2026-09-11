@@ -22,3 +22,6 @@ detail-data/
 .idea/
 .vscode/
 *.swp
+
+*.md
+!README.md

@@ -1,0 +1,352 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`mountNetwork > hands Plotly an unchanging payload 1`] = `
+[
+  {
+    "config": {
+      "displayModeBar": false,
+      "responsive": false,
+      "scrollZoom": true,
+    },
+    "layout": {
+      "dragmode": "pan",
+      "font": {
+        "color": "#9a9ea5",
+        "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "size": 11,
+      },
+      "hoverlabel": {
+        "bgcolor": "#1a1d21",
+        "bordercolor": "#2c3036",
+        "font": {
+          "color": "#e8e9eb",
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 12,
+        },
+      },
+      "hovermode": "closest",
+      "margin": {
+        "b": 8,
+        "l": 8,
+        "r": 8,
+        "t": 8,
+      },
+      "paper_bgcolor": "#1a1d21",
+      "plot_bgcolor": "#1a1d21",
+      "xaxis": {
+        "showgrid": false,
+        "visible": false,
+        "zeroline": false,
+      },
+      "yaxis": {
+        "scaleanchor": "x",
+        "showgrid": false,
+        "visible": false,
+        "zeroline": false,
+      },
+    },
+    "traces": [
+      {
+        "hoverinfo": "skip",
+        "line": {
+          "color": "#2c3036",
+          "width": 1,
+        },
+        "mode": "lines",
+        "showlegend": false,
+        "type": "scatter",
+        "x": [
+          20.097231539087087,
+          -10.419646670539025,
+          null,
+          -10.419646670539025,
+          -13.9473552820657,
+          null,
+        ],
+        "y": [
+          4.725247927469991,
+          17.802540953514253,
+          null,
+          17.802540953514253,
+          -15.213410678547456,
+          null,
+        ],
+      },
+      {
+        "hoverinfo": "skip",
+        "line": {
+          "color": "#7ba3d9",
+          "width": 1,
+        },
+        "mode": "lines",
+        "showlegend": false,
+        "type": "scatter",
+        "x": [],
+        "y": [],
+      },
+      {
+        "customdata": [
+          1,
+          2,
+          3,
+        ],
+        "hovertemplate": "Psalm %{customdata}<extra></extra>",
+        "marker": {
+          "color": [
+            "#000001",
+            "#000002",
+            "#000003",
+          ],
+          "line": {
+            "color": "#1a1d21",
+            "width": 1,
+          },
+          "opacity": [
+            1,
+            1,
+            1,
+          ],
+          "size": [
+            9,
+            9,
+            9,
+          ],
+        },
+        "mode": "markers+text",
+        "showlegend": false,
+        "text": [
+          "",
+          "",
+          "",
+        ],
+        "textfont": {
+          "color": "#6b6f76",
+          "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
+          "size": 10.5,
+        },
+        "textposition": "top center",
+        "type": "scatter",
+        "x": [
+          20.097231539087087,
+          -10.419646670539025,
+          -13.9473552820657,
+        ],
+        "y": [
+          4.725247927469991,
+          17.802540953514253,
+          -15.213410678547456,
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`mountSimilarityMatrix > hands Plotly an unchanging payload 1`] = `
+[
+  {
+    "config": {
+      "displayModeBar": false,
+      "responsive": false,
+    },
+    "layout": {
+      "font": {
+        "color": "#9a9ea5",
+        "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "size": 11,
+      },
+      "hoverlabel": {
+        "bgcolor": "#1a1d21",
+        "bordercolor": "#2c3036",
+        "font": {
+          "color": "#e8e9eb",
+          "family": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "size": 12,
+        },
+      },
+      "margin": {
+        "b": 54,
+        "l": 8,
+        "r": 8,
+        "t": 8,
+      },
+      "paper_bgcolor": "#1a1d21",
+      "plot_bgcolor": "#1a1d21",
+      "shapes": [
+        {
+          "line": {
+            "color": "#6b6f76",
+            "width": 1,
+          },
+          "type": "line",
+          "x0": 1.5,
+          "x1": 1.5,
+          "xref": "x",
+          "y0": -0.5,
+          "y1": 2.5,
+          "yref": "y",
+        },
+        {
+          "line": {
+            "color": "#6b6f76",
+            "width": 1,
+          },
+          "type": "line",
+          "x0": -0.5,
+          "x1": 2.5,
+          "xref": "x",
+          "y0": 1.5,
+          "y1": 1.5,
+          "yref": "y",
+        },
+      ],
+      "xaxis": {
+        "fixedrange": true,
+        "range": [
+          -0.5,
+          2.5,
+        ],
+        "showgrid": false,
+        "showticklabels": false,
+        "ticks": "",
+        "zeroline": false,
+      },
+      "yaxis": {
+        "autorange": "reversed",
+        "fixedrange": true,
+        "range": [
+          -0.5,
+          2.5,
+        ],
+        "scaleanchor": "x",
+        "showgrid": false,
+        "showticklabels": false,
+        "ticks": "",
+        "zeroline": false,
+      },
+    },
+    "traces": [
+      {
+        "colorbar": {
+          "len": 0.6,
+          "orientation": "h",
+          "outlinewidth": 0,
+          "thickness": 10,
+          "tickfont": {
+            "color": "#6b6f76",
+            "family": "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
+            "size": 10.5,
+          },
+          "y": 0,
+          "yanchor": "top",
+          "ypad": 14,
+        },
+        "colorscale": [
+          [
+            0,
+            "#5b9bea",
+          ],
+          [
+            0.25,
+            "#5b9bea",
+          ],
+          [
+            0.25,
+            "#35c491",
+          ],
+          [
+            0.5,
+            "#35c491",
+          ],
+          [
+            0.5,
+            "#e8b53a",
+          ],
+          [
+            0.75,
+            "#e8b53a",
+          ],
+          [
+            0.75,
+            "#ea6a67",
+          ],
+          [
+            1,
+            "#ea6a67",
+          ],
+        ],
+        "hovertemplate": "%{text}<extra></extra>",
+        "text": [
+          [
+            "Psalm 1",
+            "Psalm 1 & Psalm 2<br>0.500 similarity",
+            "Psalm 1 & Psalm 3<br>0.250 similarity",
+          ],
+          [
+            "Psalm 2 & Psalm 1<br>0.500 similarity",
+            "Psalm 2",
+            "Psalm 2 & Psalm 3<br>0.750 similarity",
+          ],
+          [
+            "Psalm 3 & Psalm 1<br>0.250 similarity",
+            "Psalm 3 & Psalm 2<br>0.750 similarity",
+            "Psalm 3",
+          ],
+        ],
+        "type": "heatmap",
+        "z": [
+          [
+            null,
+            0.5,
+            0.25,
+          ],
+          [
+            0.5,
+            null,
+            0.75,
+          ],
+          [
+            0.25,
+            0.75,
+            null,
+          ],
+        ],
+        "zmax": 1,
+        "zmin": 0,
+      },
+      {
+        "colorscale": [
+          [
+            0,
+            "#6b6f76",
+          ],
+          [
+            1,
+            "#6b6f76",
+          ],
+        ],
+        "hoverinfo": "skip",
+        "showscale": false,
+        "type": "heatmap",
+        "z": [
+          [
+            1,
+            null,
+            null,
+          ],
+          [
+            null,
+            1,
+            null,
+          ],
+          [
+            null,
+            null,
+            1,
+          ],
+        ],
+      },
+    ],
+  },
+]
+`;

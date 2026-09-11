@@ -1,0 +1,5 @@
+/* The box Plotly draws into, holding a floor so a chart never lays out at zero height. */
+.chart-mount {
+  width: 100%;
+  min-height: 260px;
+}

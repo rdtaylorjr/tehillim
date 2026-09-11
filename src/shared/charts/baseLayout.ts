@@ -1,4 +1,4 @@
-import { TOKENS } from "../model/tokens";
+import { TOKENS } from "./tokens";
 
 /** Plotly config shared by every chart: no mode bar, and resizing driven by the mount, not Plotly. */
 export const PLOTLY_CONFIG = { displayModeBar: false, responsive: false };

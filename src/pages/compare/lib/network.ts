@@ -1,9 +1,7 @@
 import type { MethodPayload } from "../../../shared/model";
-import { bookOfPsalm } from "../../../shared/lib/corpus";
 
 export interface NetworkNode {
   id: number;
-  book: number;
 }
 
 export interface NetworkEdge {
@@ -21,10 +19,7 @@ export interface NetworkGraph {
 export function buildNetworkGraph(method: MethodPayload, threshold: number): NetworkGraph {
   const numbers = method.psalmNumbers;
 
-  const nodes: NetworkNode[] = numbers.map((id) => ({
-    id,
-    book: bookOfPsalm(id).index,
-  }));
+  const nodes: NetworkNode[] = numbers.map((id) => ({ id }));
 
   const edges: NetworkEdge[] = [];
   for (let i = 0; i < numbers.length; i++) {

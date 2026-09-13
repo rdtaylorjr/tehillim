@@ -28,7 +28,7 @@
 
 .alluvial-ribbon {
   stroke: none;
-  fill-opacity: 0.42;
+  fill-opacity: 0.6;
   transition: fill-opacity 0.15s;
 }
 

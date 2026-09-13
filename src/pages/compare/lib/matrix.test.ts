@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { boundaryShapes, hoverTextGrid, valueGrid } from "./matrix";
+import { hoverTextGrid, valueGrid } from "./matrix";
 
 describe("hoverTextGrid", () => {
   const psalms = [1, 2, 3];
@@ -48,23 +48,5 @@ describe("valueGrid", () => {
   it("leaves the matrix it was handed alone", () => {
     valueGrid(matrix);
     expect(matrix[0]?.[0]).toBe(1);
-  });
-});
-
-describe("boundaryShapes", () => {
-  it("draws one vertical and one horizontal rule per boundary", () => {
-    const shapes = boundaryShapes([41], 150, "#fff");
-    expect(shapes).toHaveLength(2);
-    expect(shapes.map((s) => s.type)).toEqual(["line", "line"]);
-  });
-
-  it("puts a rule between the last cell of one book and the first of the next", () => {
-    const [vertical] = boundaryShapes([41], 150, "#fff");
-    expect(vertical?.x0).toBe(40.5);
-    expect(vertical?.x1).toBe(40.5);
-  });
-
-  it("draws nothing when no boundary is given", () => {
-    expect(boundaryShapes([], 150, "#fff")).toEqual([]);
   });
 });

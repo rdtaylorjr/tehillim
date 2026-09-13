@@ -4,7 +4,7 @@ import { orderGroups, seriesColor } from "./curveStyle";
 describe("seriesColor", () => {
   const palette = { Hymn: "#e69f00", Lament: "#56b4e9" };
 
-  it("returns the accent color for the Combined series", () => {
+  it("returns the given neutral for the Combined series", () => {
     expect(seriesColor("Combined", palette, "#7c4f2a", "#948c78")).toBe("#7c4f2a");
   });
 

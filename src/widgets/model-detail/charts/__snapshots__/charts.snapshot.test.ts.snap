@@ -435,35 +435,35 @@ exports[`chart output is stable > the genre-mean matrix hands Plotly an unchangi
         "colorscale": [
           [
             0,
-            "#5b9bea",
+            "#7ba3d9",
           ],
           [
             0.25,
-            "#5b9bea",
+            "#7ba3d9",
           ],
           [
             0.25,
-            "#35c491",
+            "#69c071",
           ],
           [
             0.5,
-            "#35c491",
+            "#69c071",
           ],
           [
             0.5,
-            "#e8b53a",
+            "#d7ac57",
           ],
           [
             0.75,
-            "#e8b53a",
+            "#d7ac57",
           ],
           [
             0.75,
-            "#ea6a67",
+            "#e2737b",
           ],
           [
             1,
-            "#ea6a67",
+            "#e2737b",
           ],
         ],
         "customdata": [
@@ -537,6 +537,34 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
       },
       "paper_bgcolor": "#1a1d21",
       "plot_bgcolor": "#1a1d21",
+      "shapes": [
+        {
+          "line": {
+            "color": "#1a1d21",
+            "width": 1,
+          },
+          "type": "line",
+          "x0": 0.5,
+          "x1": 0.5,
+          "xref": "x",
+          "y0": -0.5,
+          "y1": 2.5,
+          "yref": "y",
+        },
+        {
+          "line": {
+            "color": "#1a1d21",
+            "width": 1,
+          },
+          "type": "line",
+          "x0": -0.5,
+          "x1": 2.5,
+          "xref": "x",
+          "y0": 0.5,
+          "y1": 0.5,
+          "yref": "y",
+        },
+      ],
       "width": 1020,
       "xaxis": {
         "fixedrange": true,
@@ -607,35 +635,35 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "colorscale": [
           [
             0,
-            "#5b9bea",
+            "#7ba3d9",
           ],
           [
             0.25,
-            "#5b9bea",
+            "#7ba3d9",
           ],
           [
             0.25,
-            "#35c491",
+            "#69c071",
           ],
           [
             0.5,
-            "#35c491",
+            "#69c071",
           ],
           [
             0.5,
-            "#e8b53a",
+            "#d7ac57",
           ],
           [
             0.75,
-            "#e8b53a",
+            "#d7ac57",
           ],
           [
             0.75,
-            "#ea6a67",
+            "#e2737b",
           ],
           [
             1,
-            "#ea6a67",
+            "#e2737b",
           ],
         ],
         "hovertemplate": "%{text}<extra></extra>",
@@ -682,11 +710,11 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "colorscale": [
           [
             0,
-            "#6b6f76",
+            "#1a1d21",
           ],
           [
             1,
-            "#6b6f76",
+            "#1a1d21",
           ],
         ],
         "hoverinfo": "skip",

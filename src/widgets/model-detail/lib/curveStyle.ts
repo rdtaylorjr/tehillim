@@ -1,11 +1,11 @@
-/** The color for a named ROC/PR series: accent for Combined, its palette color, or a fallback. */
+/** The color for a named ROC/PR series: the neutral for Combined, its palette color, or a fallback. */
 export function seriesColor(
   name: string,
   palette: Record<string, string>,
-  accentColor: string,
+  combinedColor: string,
   fallbackColor: string,
 ): string {
-  if (name === "Combined") return accentColor;
+  if (name === "Combined") return combinedColor;
   return palette[name] ?? fallbackColor;
 }
 

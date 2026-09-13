@@ -14,7 +14,7 @@ import type { ParallelismSection as Section } from "../../model/types";
 
 const groupColor = (key: string): string => {
   if (key === "baseline") return TOKENS.inkFaint;
-  if (key === "combined") return TOKENS.accent;
+  if (key === "combined") return TOKENS.ink;
   return PARALLELISM_TYPE_COLORS[key] ?? TOKENS.inkDim;
 };
 
@@ -29,7 +29,7 @@ export function ParallelismSection({
 }): React.ReactElement {
   const curveColor = useCallback(
     (name: string): string =>
-      seriesColor(name, PARALLELISM_TYPE_COLORS, TOKENS.accent, TOKENS.inkFaint),
+      seriesColor(name, PARALLELISM_TYPE_COLORS, TOKENS.ink, TOKENS.inkFaint),
     [],
   );
 

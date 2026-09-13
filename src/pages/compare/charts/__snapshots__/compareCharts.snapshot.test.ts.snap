@@ -175,7 +175,7 @@ exports[`mountSimilarityMatrix > hands Plotly an unchanging payload 1`] = `
       "shapes": [
         {
           "line": {
-            "color": "#6b6f76",
+            "color": "#1a1d21",
             "width": 1,
           },
           "type": "line",
@@ -188,7 +188,7 @@ exports[`mountSimilarityMatrix > hands Plotly an unchanging payload 1`] = `
         },
         {
           "line": {
-            "color": "#6b6f76",
+            "color": "#1a1d21",
             "width": 1,
           },
           "type": "line",
@@ -244,35 +244,35 @@ exports[`mountSimilarityMatrix > hands Plotly an unchanging payload 1`] = `
         "colorscale": [
           [
             0,
-            "#5b9bea",
+            "#7ba3d9",
           ],
           [
             0.25,
-            "#5b9bea",
+            "#7ba3d9",
           ],
           [
             0.25,
-            "#35c491",
+            "#69c071",
           ],
           [
             0.5,
-            "#35c491",
+            "#69c071",
           ],
           [
             0.5,
-            "#e8b53a",
+            "#d7ac57",
           ],
           [
             0.75,
-            "#e8b53a",
+            "#d7ac57",
           ],
           [
             0.75,
-            "#ea6a67",
+            "#e2737b",
           ],
           [
             1,
-            "#ea6a67",
+            "#e2737b",
           ],
         ],
         "hovertemplate": "%{text}<extra></extra>",
@@ -318,11 +318,11 @@ exports[`mountSimilarityMatrix > hands Plotly an unchanging payload 1`] = `
         "colorscale": [
           [
             0,
-            "#6b6f76",
+            "#1a1d21",
           ],
           [
             1,
-            "#6b6f76",
+            "#1a1d21",
           ],
         ],
         "hoverinfo": "skip",

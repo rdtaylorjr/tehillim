@@ -18,7 +18,7 @@ const GENRE_LIST = Object.keys(GENRE_COLORS);
 
 const groupColor = (key: string): string => {
   if (key === "different") return TOKENS.inkFaint;
-  if (key === "combined") return TOKENS.accent;
+  if (key === "combined") return TOKENS.ink;
   return GENRE_COLORS[key] ?? TOKENS.inkDim;
 };
 
@@ -32,7 +32,7 @@ export function GenreSection({
   readonly plot?: PlotFn;
 }): React.ReactElement {
   const curveColor = useCallback(
-    (name: string): string => seriesColor(name, GENRE_COLORS, TOKENS.accent, TOKENS.inkFaint),
+    (name: string): string => seriesColor(name, GENRE_COLORS, TOKENS.ink, TOKENS.inkFaint),
     [],
   );
 

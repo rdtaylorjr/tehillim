@@ -1,6 +1,6 @@
 import styles from "./DetailPanel.module.css";
 import panel from "../../../shared/ui/panel.module.css";
-import { createSimilarityColorScale } from "../../../shared/lib/color";
+import { HEATMAP_STEPS, steppedColorFn } from "../../../shared/charts";
 import { topMatches } from "../../../shared/lib/ranking";
 import type {
   ClusterMethodPayload,
@@ -98,7 +98,8 @@ export function DetailPanel({
 
   const matches = topMatches(method, psalmNumber, 10);
   const best = matches[0]?.score ?? 0;
-  const barColor = createSimilarityColorScale(Math.max(best, 0.01));
+  //: The same four bands as the matrix, so a bar and a cell at one score are one color.
+  const barColor = steppedColorFn(HEATMAP_STEPS, Math.max(best, 0.01));
 
   return (
     <>

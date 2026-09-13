@@ -59,20 +59,15 @@
   padding: 0;
   border: none;
   border-radius: 3px;
-  opacity: 0.62;
   cursor: pointer;
-  transition:
-    opacity 0.12s,
-    transform 0.12s;
+  transition: transform 0.12s;
 }
 
 .psalm-cell:hover {
-  opacity: 0.9;
   transform: scale(1.15);
 }
 
 .psalm-cell.is-selected {
-  opacity: 1;
   outline: 2px solid var(--ink);
   outline-offset: 1px;
   transform: scale(1.15);
@@ -100,13 +95,11 @@
   color: var(--ink-dim);
 }
 
-/* Matches the grid's resting opacity, so the legend reads as the same colour. */
 .legend-swatch {
   flex-shrink: 0;
   width: 10px;
   height: 10px;
   border-radius: 3px;
-  opacity: 0.62;
 }
 
 @media (max-width: 1100px) {

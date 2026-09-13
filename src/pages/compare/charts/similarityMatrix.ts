@@ -1,6 +1,7 @@
 import type { Data, Layout } from "plotly.js";
 import {
   baseLayout,
+  boundaryShapes,
   diagonalTrace,
   DIVERGING_COLORSCALE,
   PLOTLY_CONFIG,
@@ -8,11 +9,11 @@ import {
   TOKENS,
 } from "../../../shared/charts";
 import type { PlotApi } from "../../../shared/charts";
-import { boundaryShapes, hoverTextGrid, valueGrid } from "../lib/matrix";
+import { hoverTextGrid, valueGrid } from "../lib/matrix";
 import type { MethodPayload } from "../../../shared/model";
 
-/** The rule between books and the diagonal, in the page's own mid gray so neither reads as a value. */
-const STRUCTURE_COLOR = TOKENS.inkFaint;
+/** The rules between books and the diagonal, in the panel's gray so both read as ground rather than value. */
+const STRUCTURE_COLOR = TOKENS.bgPanel;
 
 export interface SimilarityMatrixOptions {
   readonly method: MethodPayload;

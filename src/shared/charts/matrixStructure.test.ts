@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { diagonalGrid, diagonalTrace } from "./matrixDiagonal";
+import {
+  boundaryShapes,
+  diagonalGrid,
+  diagonalTrace,
+  labelBoundaries,
+} from "./matrixStructure";
 
 describe("diagonalGrid", () => {
   it("marks every cell where a psalm meets itself", () => {
@@ -37,5 +42,37 @@ describe("diagonalTrace", () => {
   it("keeps its own bar and hover out of the way of the matrix beneath", () => {
     expect(trace["showscale"]).toBe(false);
     expect(trace["hoverinfo"]).toBe("skip");
+  });
+});
+
+describe("labelBoundaries", () => {
+  it("marks the first index of every run after the first", () => {
+    expect(labelBoundaries(["a", "a", "b", "b", "b", "c"])).toEqual([2, 5]);
+  });
+
+  it("finds nothing in a single run", () => {
+    expect(labelBoundaries(["a", "a", "a"])).toEqual([]);
+  });
+
+  it("finds nothing in an empty list", () => {
+    expect(labelBoundaries([])).toEqual([]);
+  });
+});
+
+describe("boundaryShapes", () => {
+  it("draws one vertical and one horizontal rule per boundary", () => {
+    const shapes = boundaryShapes([41], 150, "#fff");
+    expect(shapes).toHaveLength(2);
+    expect(shapes.map((s) => s.type)).toEqual(["line", "line"]);
+  });
+
+  it("puts a rule between the last cell of one run and the first of the next", () => {
+    const [vertical] = boundaryShapes([41], 150, "#fff");
+    expect(vertical?.x0).toBe(40.5);
+    expect(vertical?.x1).toBe(40.5);
+  });
+
+  it("draws nothing when no boundary is given", () => {
+    expect(boundaryShapes([], 150, "#fff")).toEqual([]);
   });
 });

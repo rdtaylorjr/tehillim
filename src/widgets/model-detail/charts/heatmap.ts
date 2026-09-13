@@ -3,7 +3,9 @@ import {
   PLOTLY_CONFIG,
   TOKENS,
   baseLayout,
+  boundaryShapes,
   diagonalTrace,
+  labelBoundaries,
   plotly,
 } from "../../../shared/charts";
 import type { PlotFn } from "../../../shared/charts";
@@ -18,8 +20,8 @@ import {
 } from "../lib/heatmapGrid";
 import type { GenreMeanCell, HeatmapCell, PsalmOrderEntry } from "../model/types";
 
-/** The diagonal is structure, not a reading, so it wears the page's own mid gray. */
-const STRUCTURE_COLOR = TOKENS.inkFaint;
+/** The rules between genres and the diagonal, in the panel's gray so both read as ground rather than value. */
+const STRUCTURE_COLOR = TOKENS.bgPanel;
 
 /** Every label around a matrix wears the face the table hangs a model's text variant off. */
 const LABEL_FONT = { family: TOKENS.mono, size: 10.5, color: TOKENS.inkFaint };
@@ -70,9 +72,11 @@ export function mountHeatmap(
   };
   const gridSize = 800;
   const margin = { l: 90, r: 130, t: 10, b: 70 };
+  const rules = boundaryShapes(labelBoundaries(genreOf), n, STRUCTURE_COLOR);
   const layout = baseLayout({
     xaxis: { ...axisCommon, tickangle: -40 },
     yaxis: { ...axisCommon, autorange: "reversed" },
+    shapes: rules,
     margin,
     width: gridSize + margin.l + margin.r,
     height: gridSize + margin.t + margin.b,
@@ -106,10 +110,10 @@ export function mountHeatmap(
         TOKENS.bgPanel,
         TOKENS.accent,
       );
-      void Plotly.relayout(gd, { shapes: dynamic });
+      void Plotly.relayout(gd, { shapes: [...rules, ...dynamic] });
     });
     gd.on("plotly_unhover", () => {
-      void Plotly.relayout(gd, { shapes: [] });
+      void Plotly.relayout(gd, { shapes: rules });
     });
   });
 }

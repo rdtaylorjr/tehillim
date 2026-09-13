@@ -1,4 +1,4 @@
-import { BOOK_HUES, FAMILY_HUES } from "../lib/color";
+import { BOOK_HUES, HUES } from "../lib/color";
 
 /** Literal hex colors for Plotly traces, matching the site's palette in src/index.css. */
 export const TOKENS = {
@@ -17,35 +17,33 @@ export const TOKENS = {
   heatmapNegMid: BOOK_HUES[2] ?? "",
   heatmapPosMid: BOOK_HUES[3] ?? "",
   heatmapPos: BOOK_HUES[4] ?? "",
-  trajWithin: "#5b9bea",
-  trajAcross: "#e8b53a",
+  trajWithin: BOOK_HUES[0] ?? "",
+  trajAcross: BOOK_HUES[3] ?? "",
   sans: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   mono: "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace",
 } as const;
 
 //: Read from the picker's own scales, so a chart can never drift from the colour a psalm wears.
-const [FAMILY_HYMN, FAMILY_LAMENT, FAMILY_ROYAL, FAMILY_THANKS, FAMILY_WISDOM, FAMILY_MINOR] =
-  FAMILY_HUES;
-const BOOK_PRAISE = BOOK_HUES[2];
+const [BLUE, ORANGE, GREEN, GOLD, RED, VIOLET, AQUA] = HUES;
 
-/** The families keep the hue the cluster page gives them, and the two genres that are not families take the rest. */
+/** The families keep the hue the cluster page gives them; Praise and Trust, not families, take the last two. */
 export const GENRE_COLORS: Record<string, string> = {
-  Hymn: FAMILY_HYMN ?? "",
-  Lament: FAMILY_LAMENT ?? "",
-  Praise: BOOK_PRAISE ?? "",
-  Royal: FAMILY_ROYAL ?? "",
-  Thanksgiving: FAMILY_THANKS ?? "",
-  Trust: FAMILY_MINOR ?? "",
-  Wisdom: FAMILY_WISDOM ?? "",
+  Hymn: BLUE ?? "",
+  Lament: ORANGE ?? "",
+  Praise: AQUA ?? "",
+  Royal: GREEN ?? "",
+  Thanksgiving: GOLD ?? "",
+  Trust: VIOLET ?? "",
+  Wisdom: RED ?? "",
 };
 
-/** Five of the same seven hues, ordered to match the canonical type order. */
+/** The first five hues in the canonical type order. */
 export const PARALLELISM_TYPE_COLORS: Record<string, string> = {
-  Synonymous: FAMILY_HYMN ?? "",
-  Antithetic: FAMILY_LAMENT ?? "",
-  Synthetic: BOOK_PRAISE ?? "",
-  Emblematic: FAMILY_ROYAL ?? "",
-  Staircase: FAMILY_THANKS ?? "",
+  Synonymous: BLUE ?? "",
+  Antithetic: ORANGE ?? "",
+  Synthetic: GREEN ?? "",
+  Emblematic: GOLD ?? "",
+  Staircase: RED ?? "",
 };
 
 /** Repeats each color across its own band, since Plotly steps between stops rather than holding one. */

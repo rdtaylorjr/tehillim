@@ -1,6 +1,6 @@
 {
  "collection": "Tehillim",
- "count": 235,
+ "count": 236,
  "sections": [
   {
    "name": "Hebrew Psalms",
@@ -267,19 +267,6 @@
        "container": "Digital Humanities 2013 Conference Abstracts",
        "detail": "Lincoln, Nebraska, 105–106",
        "url": "https://dh-abstracts.library.virginia.edu/works/1782"
-      },
-      {
-       "id": "G8CNQFN6",
-       "type": "Journal Article",
-       "title": "Unsupervised Learning of Two Bible Books: Proverbs and Psalms",
-       "titleStyle": "quoted",
-       "containerPrefix": "",
-       "creators": "Hu, Wei.",
-       "date": "2012",
-       "year": 2012,
-       "container": "Sociology Mind",
-       "detail": "2.3: 325–334",
-       "url": "https://www.scirp.org/journal/paperinformation?paperid=20943"
       },
       {
        "id": "9T4YU38T",
@@ -745,6 +732,19 @@
        "container": "Dead Sea Discoveries",
        "detail": "17.3: 270–288",
        "url": "https://doi.org/10.1163/156851710x513548"
+      },
+      {
+       "id": "3IIMSZF2",
+       "type": "Journal Article",
+       "title": "A Form-Critical Classification of the Psalms According to Hermann Gunkel",
+       "titleStyle": "quoted",
+       "containerPrefix": "",
+       "creators": "Williams, Tyler F.",
+       "date": "2006-10",
+       "year": 2006,
+       "container": "",
+       "detail": "",
+       "url": "https://three-things.ca/pdfs/Gunkel_Classification_of_the_Psalms.pdf"
       },
       {
        "id": "CWYBTZWY",
@@ -1628,6 +1628,19 @@
        "container": "",
        "detail": "",
        "url": ""
+      },
+      {
+       "id": "G8CNQFN6",
+       "type": "Journal Article",
+       "title": "Unsupervised Learning of Two Bible Books: Proverbs and Psalms",
+       "titleStyle": "quoted",
+       "containerPrefix": "",
+       "creators": "Hu, Wei.",
+       "date": "2012",
+       "year": 2012,
+       "container": "Sociology Mind",
+       "detail": "2.3: 325–334",
+       "url": "https://www.scirp.org/journal/paperinformation?paperid=20943"
       },
       {
        "id": "QT3X66NM",

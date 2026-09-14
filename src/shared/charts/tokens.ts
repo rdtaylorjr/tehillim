@@ -26,14 +26,14 @@ export const TOKENS = {
 //: Read from the picker's own scales, so a chart can never drift from the colour a psalm wears.
 const [BLUE, ORANGE, GREEN, GOLD, RED, VIOLET, AQUA] = HUES;
 
-/** The families keep the hue the cluster page gives them; Praise and Trust, not families, take the last two. */
+/** The families keep the hue the cluster page gives them; Praise takes the green and Trust the aqua. */
 export const GENRE_COLORS: Record<string, string> = {
   Hymn: BLUE ?? "",
   Lament: ORANGE ?? "",
-  Praise: AQUA ?? "",
-  Royal: GREEN ?? "",
+  Praise: GREEN ?? "",
+  Royal: VIOLET ?? "",
   Thanksgiving: GOLD ?? "",
-  Trust: VIOLET ?? "",
+  Trust: AQUA ?? "",
   Wisdom: RED ?? "",
 };
 

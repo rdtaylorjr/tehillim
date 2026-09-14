@@ -28,8 +28,15 @@ export function createBookColorScale(): (book: number) => string {
   return scaleOrdinal<number, string>().domain([1, 2, 3, 4, 5]).range(BOOK_HUES);
 }
 
-/** The books' five and a violet: Hymn, Lament, Royal, Thanksgiving, Wisdom, Minor/Mixed. */
-export const FAMILY_HUES: readonly string[] = HUES.slice(0, 6);
+/** Hymn, Lament, Royal, Thanksgiving, Wisdom, Minor/Mixed: the books' hues by name, Royal keeping the violet. */
+export const FAMILY_HUES: readonly string[] = [
+  HUES[0],
+  HUES[1],
+  HUES[5],
+  HUES[3],
+  HUES[4],
+  HUES[2],
+].map((hue) => hue ?? "");
 
 export function createGunkelFamilyColorScale(
   families: readonly string[],

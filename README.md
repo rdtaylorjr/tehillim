@@ -23,7 +23,7 @@ Tehillim works at several levels of textual organization. The shared Masoretic b
 
 The representation and parallelism work uses the BHSA `half_verse` section node. This follows the Masoretic accentual division and supplies a stable computational address across vector files and annotations. It is not established here as a theory-neutral poetic colon. Clause boundaries, phrase atoms, prosodic division, and annotated parallel members can coincide or diverge. That divergence is part of the research problem.
 
-The project also uses received classifications and external annotations. The benchmark suite evaluates licensed parallelism and seven-class genre materials. The clustering work compares selected partitions with a 14-category historical form-critical index. The text-type study accepts a runtime genre CSV for a separate test. The Trublet replication uses published wisdom lists. These targets record prior scholarly decisions. They organize comparison and falsification. They do not supply a final taxonomy of the Hebrew Psalms.
+The project also uses received classifications and external annotations. The benchmark suite evaluates licensed parallelism and seven-class genre materials. The clustering work compares selected partitions with a 14-category form-critical index, Gunkel's classification as compiled by Williams. The text-type study accepts a runtime genre CSV for a separate test. The Trublet replication uses published wisdom lists. These targets record prior scholarly decisions. They organize comparison and falsification. They do not supply a final taxonomy of the Hebrew Psalms.
 
 `tehillim-dss2etcbc` introduces a second textual witness. Its 11Q5 work retains glyphs, reconstruction, uncertainty, correction, removal, fragment, and morphology information beside each proposed correspondence with BHSA. A transferred clause or phrase boundary therefore remains conditional on a reading, a normalization, an alignment, and the Masoretic source structure.
 
@@ -47,7 +47,7 @@ The project begins by registering material before extending a claim about genre,
 
 The project has produced findings about its representations and targets. These findings are bounded results. They are not conclusions about the essence of Hebrew poetry or the history of an individual text.
 
-| Question                      | Registered result                                                                                                                                                                                                             | Scope and consequence                                                                                                                                         |
+| Question                      | Result                                                                                                                                                                                                                        | Scope and consequence                                                                                                                                         |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Parallelism retrieval         | The current public exports contain 148 variants. Semantic representations reach the highest retained average precision, 0.3951.                                                                                               | The result applies to 1,110 eligible pairs. The eligibility rule excludes many annotated members at the `half_verse` grain.                                   |
 | Genre-label separation        | The current public exports contain 222 variants. A lexical representation reaches the highest retained average precision, 0.4595.                                                                                             | No representation family leads both benchmark tasks. The difference prevents a single account of similarity.                                                  |
@@ -132,6 +132,8 @@ Sanders, James A. _The Psalms Scroll of Qumrân Cave 11 (11QPsa)._ Discoveries i
 Talstra, Eep. “Singers and Syntax: On the Balance of Grammar and Poetry in Psalm 8.” Pages 11-22 in _Give Ear to My Words: Psalms and Other Poetry in and around the Hebrew Bible_, 1996.
 
 Trublet, Jacques. “Le corpus sapientiel et le Psautier: approche informatique du lexique.” In _Congress Volume Leuven 1989_, 248-263. Brill, 1991.
+
+Williams, Tyler F. [_A Form-Critical Classification of the Psalms According to Hermann Gunkel_](https://three-things.ca/pdfs/Gunkel_Classification_of_the_Psalms.pdf). 2006.
 
 Van Peursen, Wido. [“Tracing Text Types in Biblical Hebrew.”](https://doi.org/10.1163/15685330-12341430) _Vetus Testamentum_ 70.1 (2020): 140-155.
 

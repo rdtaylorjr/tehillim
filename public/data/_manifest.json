@@ -1,0 +1,27 @@
+{
+  "cell": "ui.syntactic.payload",
+  "code_hash": "a0712ac17dbf020f18b2d1716bfcbeb1af347c6425d7ff6062037e1fe7fc2a85",
+  "duration_s": 0.226451,
+  "inputs": {
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=syntactic/stage=master/genre_metrics_wide.parquet": "474f735bf3b715facb5c9ed5ac8a75ff046e593ef8a8b14948daf94fd208196b",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=syntactic/stage=raw/by_genre.csv": "096897a6673a33c312e0bfcc20fb5098fa8d73fa7ff07b94dacc354cf1fa2802",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic/stage=master/model_metrics_by_type.parquet": "e05be05b31e40da0013f320da03b8cee60790d44fd1b9ccedda3e85c0316379d",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic/stage=master/model_metrics_overall.parquet": "f5c8431c7edb33c4ca949657b9ca15b6c581d8c952eacd10c5cee0e9b4a02e99",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows.json": "4eccf2efbe53f68e1066a4c762054de808a3f5378fd9defdafb8ef859771bba1",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows_by_genre.json": "871d8d37c72dc73c7bce91649c29e866781883191074d8af35ecbf4dc7f31bea"
+  },
+  "outputs": {
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic.json": "fc9ddb8415b696ea8e7c92fa550c7cc57ace7ba1ae33cce2170866e89d0dfbf8",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_adjacent_similarity_distance.json": "a95670e39a29e3b1a1448c738d1161ea5a61fcb462ce00dd6b76e23c512d5f70",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_content_distance.json": "03901247641d10cde8c89f0c99da5851030903a1e0d1f7bd7acb1a6d2bd5d7eb",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_step_magnitude_distance.json": "b943fdb988966baa96650a82f11e9e784eccd076835713553d802f233c6b22b0",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_structural_distance.json": "ddfa56ec6d698f7de2c58a460914d41d5ee2cd571eff8077eb42e228a532a60c",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_turning_angle_distance.json": "d0ecaf438e45b71056cb3d1410e83a2aa36fcaf9f2998fa20acf4af0be814232"
+  },
+  "parameters": {
+    "args": "syntactic --parallelism-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic --genre-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=syntactic --trajectory-ui-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows.json --trajectory-by-genre-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows_by_genre.json --output /Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic.json"
+  },
+  "repository_revision": "4c770869b2e632e74f49b24b159e4fbdbe37c3a0",
+  "rule": "cell__ui_syntactic_payload",
+  "started": "2026-09-13T22:57:09.391832+00:00"
+}

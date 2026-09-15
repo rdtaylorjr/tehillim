@@ -48,6 +48,16 @@ describe("steppedColorFn", () => {
     expect(color(0.75)).toBe("#d");
   });
 
+  it("measures from a floor when given one, so a narrow band still uses every step", () => {
+    const narrow = steppedColorFn(["#a", "#b", "#c", "#d"], 0.9, 0.8);
+    expect([narrow(0.79), narrow(0.82), narrow(0.87), narrow(0.95)]).toEqual([
+      "#a",
+      "#a",
+      "#c",
+      "#d",
+    ]);
+  });
+
   it("clamps at both ends rather than falling off the ramp", () => {
     expect(color(-5)).toBe("#a");
     expect(color(5)).toBe("#d");
@@ -60,6 +70,7 @@ describe("steppedColorFn", () => {
   it("refuses a domain or a list it cannot make a ramp from", () => {
     expect(() => steppedColorFn([], 1)).toThrow(RangeError);
     expect(() => steppedColorFn(["#a"], 0)).toThrow(RangeError);
+    expect(() => steppedColorFn(["#a"], 0.5, 0.5)).toThrow(RangeError);
   });
 });
 

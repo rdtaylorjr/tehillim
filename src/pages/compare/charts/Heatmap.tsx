@@ -3,12 +3,9 @@ import styles from "./Heatmap.module.css";
 import { PlotMount } from "../../../shared/ui";
 import { mountSimilarityMatrix } from "./similarityMatrix";
 import { bookBoundaries } from "../../../shared/lib/corpus";
-import { percentileOffDiagonal } from "../../../shared/lib/results";
+import { similarityColorDomain } from "../../../shared/lib/results";
 import type { PlotApi } from "../../../shared/charts";
 import type { MethodPayload } from "../../../shared/model";
-
-//: Scores are right-skewed, so a percentile spends the range where the data sits.
-const COLOR_DOMAIN_PERCENTILE = 95;
 
 export interface HeatmapProps {
   readonly method: MethodPayload;
@@ -25,10 +22,7 @@ export function Heatmap({ method, onSelect, api }: HeatmapProps): React.ReactEle
     onSelectRef.current = onSelect;
   }, [onSelect]);
 
-  const domainMax = useMemo(
-    () => Math.max(percentileOffDiagonal(method.matrix, COLOR_DOMAIN_PERCENTILE), 0.01),
-    [method],
-  );
+  const domain = useMemo(() => similarityColorDomain(method.matrix), [method]);
 
   const draw = useCallback(
     (mount: HTMLElement) => {
@@ -36,7 +30,8 @@ export function Heatmap({ method, onSelect, api }: HeatmapProps): React.ReactEle
         mount,
         {
           method,
-          domainMax,
+          domainMin: domain.min,
+          domainMax: domain.max,
           boundaries: bookBoundaries(),
           onSelect: (psalm) => {
             onSelectRef.current(psalm);
@@ -45,7 +40,7 @@ export function Heatmap({ method, onSelect, api }: HeatmapProps): React.ReactEle
         api,
       );
     },
-    [method, domainMax, api],
+    [method, domain, api],
   );
 
   return <PlotMount draw={draw} className={styles.matrixMount} />;

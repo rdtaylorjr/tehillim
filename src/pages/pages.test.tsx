@@ -5,16 +5,29 @@ import { ComparePage } from "./compare";
 import { HomePage } from "./home";
 import { ReferencesPage } from "./references";
 import type { ReferencesPayload } from "./references";
-import { CLUSTERING, GUNKEL, SIMILARITY } from "../test/fixtures";
+import {
+  CLUSTERING,
+  COMPARE_INDEX,
+  COMPARE_METHOD,
+  GUNKEL,
+  loadFixtureMethod,
+} from "../test/fixtures";
 import { capturePlot } from "../test/fakePlot";
 
 const navigate = vi.fn();
 
 const renderCompare = (
-  load = (): Promise<{ data: typeof SIMILARITY; gunkel: typeof GUNKEL }> =>
-    Promise.resolve({ data: SIMILARITY, gunkel: GUNKEL }),
+  load = (): Promise<{ index: typeof COMPARE_INDEX; gunkel: typeof GUNKEL }> =>
+    Promise.resolve({ index: COMPARE_INDEX, gunkel: GUNKEL }),
 ): ReturnType<typeof render> =>
-  render(<ComparePage navigate={navigate} load={load} api={capturePlot().api} />);
+  render(
+    <ComparePage
+      navigate={navigate}
+      load={load}
+      loadMethod={loadFixtureMethod}
+      api={capturePlot().api}
+    />,
+  );
 
 const renderCluster = (
   load = (): Promise<{ data: typeof CLUSTERING; gunkel: typeof GUNKEL }> =>
@@ -86,7 +99,9 @@ describe("ComparePage", () => {
   it("describes the method currently on screen", async () => {
     renderCompare();
     expect(
-      await screen.findByText(/Lexical similarity over shared content-word lexemes/),
+      await screen.findByText(
+        /Cosine similarity between mean-pooled half-verse lexeme profiles/,
+      ),
     ).toBeInTheDocument();
   });
 
@@ -100,10 +115,39 @@ describe("ComparePage", () => {
   it("fills the detail panel once a psalm with data is chosen", async () => {
     renderCompare();
     const grid = await screen.findByRole("listbox", { name: "Select a psalm" });
+    await screen.findAllByRole("tabpanel", { hidden: true });
     fireEvent.click(within(grid).getByRole("option", { name: "Psalm 1" }));
     const detail = screen.getByRole("complementary", { name: "Psalm detail" });
     expect(within(detail).getByText("Psalm 1")).toBeInTheDocument();
     expect(within(detail).getByText(/0\.420/)).toBeInTheDocument();
+  });
+
+  it("heads the page with the open representation and fetches its matrix by id", async () => {
+    const loadMethod = vi.fn(loadFixtureMethod);
+    render(
+      <ComparePage
+        navigate={navigate}
+        load={() => Promise.resolve({ index: COMPARE_INDEX, gunkel: GUNKEL })}
+        loadMethod={loadMethod}
+        api={capturePlot().api}
+      />,
+    );
+    await screen.findAllByRole("tabpanel", { hidden: true });
+    expect(loadMethod).toHaveBeenCalledWith("lexeme_icf-mean-pool-cosine");
+    expect(screen.getAllByText("lexeme_icf").length).toBeGreaterThan(0);
+  });
+
+  it("says when a method's matrix cannot be fetched, keeping the page up", async () => {
+    render(
+      <ComparePage
+        navigate={navigate}
+        load={() => Promise.resolve({ index: COMPARE_INDEX, gunkel: GUNKEL })}
+        loadMethod={() => Promise.resolve({ status: "failed" as const })}
+        api={capturePlot().api}
+      />,
+    );
+    expect(await screen.findByText(/could not be loaded/)).toBeInTheDocument();
+    expect(screen.queryAllByRole("tabpanel", { hidden: true })).toHaveLength(0);
   });
 
   it("offers both views, opening on the matrix", async () => {
@@ -116,7 +160,7 @@ describe("ComparePage", () => {
   it("keeps both views mounted so switching never restarts a layout", async () => {
     renderCompare();
     const tabs = await screen.findAllByRole("tab");
-    const panels = screen.getAllByRole("tabpanel", { hidden: true });
+    const panels = await screen.findAllByRole("tabpanel", { hidden: true });
     expect(panels).toHaveLength(2);
     fireEvent.click(tabs[1]!);
     expect(screen.getAllByRole("tabpanel", { hidden: true })).toHaveLength(2);
@@ -637,13 +681,21 @@ describe("the default loaders", () => {
     vi.unstubAllGlobals();
   });
 
-  it("Compare fetches the similarity and Gunkel payloads at their own URLs", async () => {
-    stubFetch({ detail_similarity: SIMILARITY, gunkel: GUNKEL });
+  it("Compare fetches the index, the Gunkel payload, and the chosen method at their own URLs", async () => {
+    stubFetch({
+      "compare.json": COMPARE_INDEX,
+      gunkel: GUNKEL,
+      "detail_compare_lexeme_icf-mean-pool-cosine.json": COMPARE_METHOD,
+    });
     render(<ComparePage navigate={navigate} api={capturePlot().api} />);
     expect(await screen.findByRole("navigation", { name: "Pages" })).toBeInTheDocument();
+    await screen.findAllByRole("tabpanel", { hidden: true });
     const urls = vi.mocked(fetch).mock.calls.map(([url]) => url as string);
-    expect(urls.some((u) => u.includes("data/detail_similarity.json"))).toBe(true);
+    expect(urls.some((u) => u.includes("data/compare.json"))).toBe(true);
     expect(urls.some((u) => u.includes("data/gunkel.json"))).toBe(true);
+    expect(
+      urls.some((u) => u.includes("data/detail_compare_lexeme_icf-mean-pool-cosine.json?v=")),
+    ).toBe(true);
   });
 
   it("Cluster fetches the clustering and Gunkel payloads at their own URLs", async () => {

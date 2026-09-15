@@ -81,6 +81,26 @@ describe("Toolbar dependent filters", () => {
     expect(screen.queryByLabelText("Text")).not.toBeInTheDocument();
   });
 
+  it("offers a Control only once a trajectory metric is chosen, and dispatches it", async () => {
+    renderToolbar({ benchmark: "genre" });
+    expect(screen.queryByLabelText("Control")).not.toBeInTheDocument();
+
+    const { dispatch } = renderToolbar({ benchmark: "genre", metric: "structural_distance" });
+    expect(
+      screen.getByRole("button", {
+        name: "Genre / Structural Distance / Length",
+      }),
+    ).toBeInTheDocument();
+    await userEvent.selectOptions(
+      screen.getByLabelText("Control"),
+      "length_and_content_controlled",
+    );
+    expect(dispatch).toHaveBeenCalledWith({
+      type: "control/selected",
+      control: "length_and_content_controlled",
+    });
+  });
+
   it("dispatches genre and metric choices under the genre benchmark", async () => {
     const { dispatch } = renderToolbar({ benchmark: "genre" });
 

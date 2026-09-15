@@ -121,14 +121,6 @@ const FEATURE_NAMES: Record<string, string> = {
     "Semantic (mE5-Large-Instruct, Soft-Alignment, Vocalized)",
 };
 
-//: A naming table, never a gate: an unlisted signal keeps its place in the picker.
-const FEATURE_RANK = new Map(Object.keys(FEATURE_NAMES).map((id, index) => [id, index]));
-
-/** Where a signal sits in the canonical order, or after everything named. */
-export function featureRank(baseId: string): number {
-  return FEATURE_RANK.get(baseFeatureId(baseId)) ?? Number.MAX_SAFE_INTEGER;
-}
-
 export interface FeatureDisplay {
   /** The leading word of the canonical name: "Lexical", "Syntactic", "Semantic". */
   readonly family: string;
@@ -152,22 +144,4 @@ export function featureDisplay(baseId: string): FeatureDisplay {
 /** Strips a method id's page-specific suffix, leaving the shared signal id. */
 export function baseFeatureId(methodId: string): string {
   return methodId.replace(/-tfidf-cosine$/, "").replace(/-spectral$/, "");
-}
-
-//: Falls back to the raw id for a method this table has not caught up with.
-export function featureNameFromMethodId(methodId: string): string {
-  return FEATURE_NAMES[baseFeatureId(methodId)] ?? methodId;
-}
-
-/** The canonical name as a slash path, each axis narrowing the one before it. */
-export function featurePhrase(methodId: string): string {
-  const display = featureDisplay(methodId);
-  if (!display.known) return featureNameFromMethodId(methodId);
-  if (display.detail === null) return display.family;
-  return [display.family, ...display.detail.split(",").map((part) => part.trim())].join(" / ");
-}
-
-/** Maps a Cluster method id to the Compare id for the same signal. */
-export function similarityIdForClusterMethodId(clusterMethodId: string): string {
-  return `${baseFeatureId(clusterMethodId)}-tfidf-cosine`;
 }

@@ -4,14 +4,13 @@ import { topMatches } from "./ranking";
 
 function makeMethod(): MethodPayload {
   return {
-    id: "lexical-tfidf-cosine",
+    id: "lexeme_icf-mean-pool-cosine",
     description: "",
     psalmNumbers: [1, 2, 3],
-    psalmStats: [],
     similar: {
       "1": [
-        { psalm: 2, score: 0.8, sharedTerms: [] },
-        { psalm: 3, score: 0.1, sharedTerms: [] },
+        { psalm: 2, score: 0.8 },
+        { psalm: 3, score: 0.1 },
       ],
       "2": [],
     },

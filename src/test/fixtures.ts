@@ -1,8 +1,10 @@
 import type {
   ClusteringPayload,
+  CompareIndex,
+  CompareMethodData,
   GunkelPayload,
+  MethodPayload,
   PsalmCore,
-  SimilarityPayload,
 } from "../shared/model";
 
 /** Three psalms, enough for every relationship the UI draws. */
@@ -25,51 +27,65 @@ export const GUNKEL: GunkelPayload = {
   }),
 };
 
-export const SIMILARITY: SimilarityPayload = {
+/** One method's matrix file, the shape the compare page fetches on selection. */
+export const COMPARE_METHOD: CompareMethodData = {
+  id: "lexeme_icf-mean-pool-cosine",
+  psalmNumbers: [1, 2, 3],
+  similar: {
+    "1": [
+      { psalm: 2, score: 0.42 },
+      { psalm: 3, score: 0.21 },
+    ],
+    "2": [{ psalm: 1, score: 0.42 }],
+    "3": [{ psalm: 1, score: 0.21 }],
+  },
+  matrix: [
+    [1, 0.42, 0.21],
+    [0.42, 1, 0.1],
+    [0.21, 0.1, 1],
+  ],
+};
+
+export const COMPARE_INDEX: CompareIndex = {
   generatedAt: "2026-01-01T00:00:00Z",
   corpus: { name: "ETCBC/BHSA", version: "2021" },
   psalms: PSALMS,
   methods: [
     {
-      id: "lexical-tfidf-cosine",
-      description: "Lexical similarity over shared content-word lexemes.",
-      psalmNumbers: [1, 2, 3],
-      psalmStats: [
-        {
-          number: 1,
-          termCount: 40,
-          uniqueTermCount: 30,
-          topTerms: [
-            { label: "אשׁר", description: "happy", category: "lexeme", score: 0.9 },
-            { label: "דרך", description: "way", category: "lexeme", score: 0.7 },
-          ],
-        },
-        { number: 2, termCount: 50, uniqueTermCount: 35, topTerms: [] },
-        { number: 3, termCount: 30, uniqueTermCount: 25, topTerms: [] },
-      ],
-      similar: {
-        "1": [
-          {
-            psalm: 2,
-            score: 0.42,
-            sharedTerms: [
-              { label: "יהוה", description: "YHWH", category: "lexeme", score: 0.5 },
-            ],
-          },
-          { psalm: 3, score: 0.21, sharedTerms: [] },
-        ],
-        "2": [{ psalm: 1, score: 0.42, sharedTerms: [] }],
-        "3": [{ psalm: 1, score: 0.21, sharedTerms: [] }],
-      },
-      matrix: [
-        [1, 0.42, 0.21],
-        [0.42, 1, 0.1],
-        [0.21, 0.1, 1],
-      ],
+      id: "lexeme_icf-mean-pool-cosine",
+      description: "Cosine similarity between mean-pooled half-verse lexeme profiles.",
+      domain: "lexical",
+      representation: "lexeme_icf",
+      modelBase: "lexeme_icf",
+      textVariant: null,
+      aggregation: "mean-pool",
+      correction: null,
+    },
+    {
+      id: "gemini_embedding_2_cantillation-mean-pool-cosine",
+      description: "Cosine similarity between mean-pooled half-verse embeddings. Gemini.",
+      domain: "semantic",
+      representation: "gemini_embedding_2_cantillation",
+      modelBase: "gemini_embedding_2",
+      textVariant: "cantillation",
+      aggregation: "mean-pool",
+      correction: null,
     },
   ],
-  defaultMethod: "lexical-tfidf-cosine",
+  defaultMethod: "lexeme_icf-mean-pool-cosine",
 };
+
+/** The default method's identity and matrix together, as the views receive it. */
+export const SIMILARITY_METHOD: MethodPayload = {
+  ...COMPARE_METHOD,
+  description: "Cosine similarity between mean-pooled half-verse lexeme profiles.",
+};
+
+/** Serves every fixture method's matrix from memory. */
+export const loadFixtureMethod = (
+  id: string,
+): Promise<{ status: "loaded"; data: CompareMethodData }> =>
+  Promise.resolve({ status: "loaded" as const, data: { ...COMPARE_METHOD, id } });
 
 /** Mirrors the shipped schema, which predates `kStability` and `structureCaptured`. */
 export const CLUSTERING: ClusteringPayload = {

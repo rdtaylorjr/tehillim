@@ -5,6 +5,7 @@ import type {
   Genre,
   ParallelismType,
   TextVariant,
+  TrajectoryControl,
   TrajectoryMetric,
 } from "../corpus";
 
@@ -22,6 +23,8 @@ export interface Selection {
   readonly parallelismType: ParallelismType | All;
   readonly genre: Genre | All;
   readonly metric: Metric;
+  /** Which confounds a trajectory metric is read net of, moot under any other metric. */
+  readonly control: TrajectoryControl;
   readonly facet: string;
   readonly text: TextVariant | All;
   readonly query: string;
@@ -37,6 +40,7 @@ export type SelectionAction =
   | { type: "parallelismType/selected"; parallelismType: ParallelismType | All }
   | { type: "genre/selected"; genre: Genre | All }
   | { type: "metric/selected"; metric: Metric }
+  | { type: "control/selected"; control: TrajectoryControl }
   | { type: "facet/selected"; facet: string }
   | { type: "text/selected"; text: TextVariant | All }
   | { type: "query/changed"; query: string }
@@ -49,12 +53,18 @@ export const INITIAL_SELECTION: Selection = {
   parallelismType: "all",
   genre: "all",
   metric: "genre",
+  control: "length_controlled",
   facet: "all",
   text: "all",
   query: "",
   model: null,
   view: "table",
 };
+
+/** A trajectory metric is read net of a control, where genre discrimination has none. */
+export function showsControl(selection: Pick<Selection, "benchmark" | "metric">): boolean {
+  return selection.benchmark === "genre" && selection.metric !== "genre";
+}
 
 /** Families divided into units or levels get an extra selector for that division. */
 export function showsFacet(family: FamilyId): boolean {
@@ -97,6 +107,10 @@ export function selectionReducer(state: Selection, action: SelectionAction): Sel
     case "metric/selected": {
       if (action.metric === state.metric) return state;
       return { ...state, metric: action.metric };
+    }
+    case "control/selected": {
+      if (action.control === state.control) return state;
+      return { ...state, control: action.control };
     }
     case "facet/selected": {
       if (action.facet === state.facet) return state;

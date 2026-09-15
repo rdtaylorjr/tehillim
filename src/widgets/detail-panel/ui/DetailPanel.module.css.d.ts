@@ -3,12 +3,9 @@ declare const styles: {
   readonly detailEmpty: string;
   readonly detailHeader: string;
   readonly detailIncipit: string;
-  readonly detailLexemes: string;
   readonly detailNumber: string;
   readonly detailPanel: string;
   readonly detailStats: string;
-  readonly lemma: string;
-  readonly lexemeChip: string;
   readonly similarHeading: string;
   readonly similarItem: string;
   readonly similarItemBarFill: string;
@@ -16,7 +13,6 @@ declare const styles: {
   readonly similarItemIncipit: string;
   readonly similarItemPsalm: string;
   readonly similarItemScore: string;
-  readonly similarItemShared: string;
   readonly similarItemTop: string;
   readonly similarList: string;
 };

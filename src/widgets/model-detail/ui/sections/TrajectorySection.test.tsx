@@ -3,6 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { TrajectorySection } from "./TrajectorySection";
 import type { PlotFn } from "../../../../shared/charts";
 import type { TrajectorySection as Section, TrajectorySourceData } from "../../model/types";
+import type { TrajectoryControl } from "../../../../shared/lib/corpus";
 
 const mounted: unknown[] = [];
 const fakePlot: PlotFn = (_mount, traces, layout) => {
@@ -38,41 +39,44 @@ const section: Section = {
   },
 };
 
-const show = (): void => {
+const show = (control: TrajectoryControl = "length_controlled"): void => {
   cleanup();
   mounted.length = 0;
-  render(<TrajectorySection section={section} plot={fakePlot} />);
+  render(<TrajectorySection section={section} control={control} plot={fakePlot} />);
 };
 
 describe("TrajectorySection", () => {
-  it("shows both controlled sources, each named by what it controls for", () => {
+  it("shows the chosen control alone, named by what it controls for", () => {
     show();
     const titles = screen.getAllByRole("heading", { level: 4 }).map((h) => h.textContent);
     expect(titles).toEqual([
-      "Residual distance by genre · Length-controlled",
-      "Pairwise distance by psalm · Length-controlled",
-      "Residual distance by genre · Length + content-controlled",
-      "Pairwise distance by psalm · Length + content-controlled",
+      "Residual distance by genre · Length",
+      "Pairwise distance by psalm · Length",
     ]);
+    show("length_and_content_controlled");
+    expect(screen.getAllByRole("heading", { level: 4 })[0]).toHaveTextContent(
+      "Length + Content",
+    );
   });
 
   it("marks a significant gap and flags one that is not", () => {
     show();
     expect(screen.getByText("0.003")).toHaveClass("good");
+    show("length_and_content_controlled");
     const weak = screen.getByText(/0.420/);
     expect(weak).toHaveClass("warn");
     expect(weak).toHaveTextContent("not significant");
   });
 
-  it("states each source's gap and effect size", () => {
+  it("states the chosen control's gap and effect size", () => {
     show();
     expect(screen.getByText("0.0612")).toBeInTheDocument();
-    expect(screen.getByText("0.0012")).toBeInTheDocument();
+    expect(screen.queryByText("0.0012")).not.toBeInTheDocument();
   });
 
-  it("mounts a raincloud and a matrix pair for each source", () => {
+  it("mounts a raincloud and a matrix pair", () => {
     show();
-    expect(mounted).toHaveLength(6);
+    expect(mounted).toHaveLength(3);
   });
 
   it("draws no ROC or PR curve, since a permutation gap is not a classifier", () => {

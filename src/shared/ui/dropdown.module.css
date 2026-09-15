@@ -1,10 +1,11 @@
-/* Label and toggle wrap as one unit. */
+/* Claims the band's room from a small footing, so the name shows whole where it fits. */
 .dropdown {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  flex: 0 1 auto;
+  flex: 1 1 0;
   min-width: 0;
+  max-width: max-content;
 }
 
 .dropdown-label {
@@ -20,18 +21,17 @@
 .anchor {
   position: relative;
   display: inline-flex;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
-/* Sized to the name shown, capped, and shrinkable before the band wraps. */
+/* Sized to the name shown, and truncated rather than wrapping the band. */
 .toggle {
   position: relative;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   height: var(--control-h);
   width: max-content;
   min-width: 96px;
-  max-width: 330px;
   padding: 0 28px 0 10px;
   border: 1px solid var(--rule);
   border-radius: 4px;

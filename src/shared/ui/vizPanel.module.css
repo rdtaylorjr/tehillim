@@ -15,6 +15,7 @@
   padding: 9px 16px;
   border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
   background: var(--bg-inset);
+  border-bottom: 1px solid var(--rule);
 }
 
 /* An ellipsis takes the overflowing box's colour, so the box wears what it cuts. */
@@ -33,13 +34,27 @@
   text-overflow: ellipsis;
 }
 
+/* The page name leads and is the last thing to go. */
 .viz-name {
+  flex-shrink: 0;
+  margin-right: 10px;
   color: var(--ink);
   font-weight: 600;
 }
 
-.viz-state {
-  margin-left: 10px;
+.viz-crumb,
+.viz-crumb-x {
+  margin-right: 5px;
+}
+
+.viz-subject :last-child {
+  margin-right: 0;
+}
+
+.viz-crumb-x {
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 13px;
 }
 
 .viz-body {

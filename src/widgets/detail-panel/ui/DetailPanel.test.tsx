@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ClusterDetailPanel, DetailPanel, DetailShell, EmptyDetail } from "./DetailPanel";
-import { CLUSTERING, PSALMS, SIMILARITY } from "../../../test/fixtures";
+import { CLUSTERING, PSALMS, SIMILARITY_METHOD } from "../../../test/fixtures";
 
-const METHOD = SIMILARITY.methods[0]!;
+const METHOD = SIMILARITY_METHOD;
 const CLUSTER_METHOD = CLUSTERING.clusterMethods[0]!;
 
 const renderCompare = (
@@ -54,17 +54,10 @@ describe("DetailPanel", () => {
     expect(screen.getByText("אַשְׁרֵי־הָאִישׁ")).toBeInTheDocument();
   });
 
-  it("states verses, words and distinct terms", () => {
+  it("states verses and words", () => {
     renderCompare(1);
     expect(screen.getByText("6").parentElement?.textContent).toContain("verses");
     expect(screen.getByText("90").parentElement?.textContent).toContain("words");
-    expect(screen.getByText("30").parentElement?.textContent).toContain("distinct terms");
-  });
-
-  it("lists the psalm's own top terms", () => {
-    renderCompare(1);
-    expect(screen.getByText("אשׁר")).toBeInTheDocument();
-    expect(screen.getByText("happy")).toBeInTheDocument();
   });
 
   it("ranks matches highest first, with their scores", () => {
@@ -80,32 +73,22 @@ describe("DetailPanel", () => {
     expect(screen.getByText("לָמָּה רָגְשׁוּ גוֹיִם")).toBeInTheDocument();
   });
 
-  it("shows the terms a match shares with the selected psalm", () => {
-    renderCompare(1);
-    expect(screen.getByText("יהוה")).toBeInTheDocument();
-  });
-
   it("reports the match a reader clicks, so the panel can walk the corpus", () => {
     const onSelect = renderCompare(1);
     fireEvent.click(screen.getByRole("button", { name: /Psalm 3/ }));
     expect(onSelect).toHaveBeenCalledWith(3);
   });
 
-  it("falls back to the empty state for a psalm the method has no stats for", () => {
+  it("falls back to the empty state for a psalm the method does not cover", () => {
     render(
       <DetailPanel
         psalms={PSALMS}
-        method={{ ...METHOD, psalmStats: [] }}
+        method={{ ...METHOD, psalmNumbers: [2, 3] }}
         psalmNumber={1}
         onSelectPsalm={vi.fn()}
       />,
     );
     expect(screen.getByText(/Select a psalm/)).toBeInTheDocument();
-  });
-
-  it("renders a psalm with no top terms without an empty chip row", () => {
-    renderCompare(2);
-    expect(screen.getByText("Psalm 2")).toBeInTheDocument();
   });
 });
 

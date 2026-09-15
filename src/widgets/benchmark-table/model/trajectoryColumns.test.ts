@@ -28,13 +28,16 @@ function makeRow(overrides: Partial<ValidationRow> = {}): ValidationRow {
 }
 
 describe("trajectoryColumns", () => {
-  it("shows length-controlled and content-controlled columns, never raw: raw tracks length-controlled almost exactly (r=0.91-0.99 across every domain), so it adds no independent evidence", () => {
-    const keys = trajectoryColumns([makeRow()]).map((c) => c.key);
-    expect(keys).toEqual([
+  it("shows the chosen control's columns alone, never raw, whose gap tracks length-controlled at r=0.91-0.99", () => {
+    expect(trajectoryColumns([makeRow()], "length_controlled").map((c) => c.key)).toEqual([
       "length_controlled_effect_size",
       "length_controlled_gap",
       "length_controlled_p",
       "length_controlled_q",
+    ]);
+    expect(
+      trajectoryColumns([makeRow()], "length_and_content_controlled").map((c) => c.key),
+    ).toEqual([
       "length_and_content_controlled_effect_size",
       "length_and_content_controlled_gap",
       "length_and_content_controlled_p",
@@ -42,7 +45,7 @@ describe("trajectoryColumns", () => {
     ]);
   });
 
-  it("omits the content-controlled columns for a content_distance group, the self-covariate case", () => {
+  it("offers no columns for the content control of a content_distance group, the self-covariate case", () => {
     const rows = [
       makeRow({
         metric: "content_distance",
@@ -52,43 +55,23 @@ describe("trajectoryColumns", () => {
         length_and_content_controlled_q: NaN,
       }),
     ];
-    const keys = trajectoryColumns(rows).map((c) => c.key);
-    expect(keys).toEqual([
-      "length_controlled_effect_size",
-      "length_controlled_gap",
-      "length_controlled_p",
-      "length_controlled_q",
+    expect(trajectoryColumns(rows, "length_and_content_controlled")).toEqual([]);
+    expect(trajectoryColumns(rows, "length_controlled")).toHaveLength(4);
+  });
+
+  it("marks the p and q columns as pills with their prefix, for significance styling", () => {
+    const columns = trajectoryColumns([makeRow()], "length_controlled");
+    const pills = columns.filter((c) => c.type === "pill").map((c) => [c.key, c.pillPrefix]);
+    expect(pills).toEqual([
+      ["length_controlled_p", "p"],
+      ["length_controlled_q", "q"],
     ]);
   });
 
-  it("marks the p and q columns as pill-typed for significance styling", () => {
-    const columns = trajectoryColumns([makeRow()]);
-    const pillKeys = columns.filter((c) => c.type === "pill").map((c) => c.key);
-    expect(pillKeys).toEqual([
-      "length_controlled_p",
-      "length_controlled_q",
-      "length_and_content_controlled_p",
-      "length_and_content_controlled_q",
-    ]);
-  });
-
-  it("marks p columns with a p prefix and q columns with a q prefix, for pill display text", () => {
-    const columns = trajectoryColumns([makeRow()]);
-    const byKey = Object.fromEntries(columns.map((c) => [c.key, c.pillPrefix]));
-    expect(byKey["length_controlled_p"]).toBe("p");
-    expect(byKey["length_controlled_q"]).toBe("q");
-    expect(byKey["length_and_content_controlled_p"]).toBe("p");
-    expect(byKey["length_and_content_controlled_q"]).toBe("q");
-  });
-
-  it("gives every column a human-readable label; length-controlled is bare since every source is length-controlled (stated once in the section-note prose), so only content-controlled needs a prefix", () => {
-    const columns = trajectoryColumns([makeRow()]);
-    const byKey = Object.fromEntries(columns.map((c) => [c.key, c.label]));
-    expect(byKey["length_controlled_effect_size"]).toBe("Effect size");
-    expect(byKey["length_controlled_gap"]).toBe("Gap");
-    expect(byKey["length_controlled_p"]).toBe("p");
-    expect(byKey["length_controlled_q"]).toBe("q");
-    expect(byKey["length_and_content_controlled_effect_size"]).toBe("Content-ctrl effect size");
-    expect(byKey["length_and_content_controlled_q"]).toBe("Content-ctrl q");
+  it("labels the statistics bare, since the control is named once above the table", () => {
+    const labels = trajectoryColumns([makeRow()], "length_and_content_controlled").map(
+      (c) => c.label,
+    );
+    expect(labels).toEqual(["Effect size", "Gap", "p", "q"]);
   });
 });

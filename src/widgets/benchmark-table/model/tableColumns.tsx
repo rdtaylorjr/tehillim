@@ -10,6 +10,7 @@ import type {
 } from "../../../shared/lib/results";
 import { ciPill } from "../../../shared/ui/Pill";
 import type { TableColumn } from "../../../shared/lib/results";
+import type { TrajectoryControl } from "../../../shared/lib/corpus";
 
 /** AUC's chance level is fixed at 0.5, and AP's varies per row with prevalence. */
 const AUC_CHANCE_LEVEL = 0.5;
@@ -144,30 +145,19 @@ export function genreByGenreColumns(): TableColumn<GenreByGenreRow>[] {
 
 export function trajectoryOverallColumns(
   rows: TrajectoryOverallRow[],
+  control: TrajectoryControl,
 ): TableColumn<TrajectoryOverallRow>[] {
   return [
     nameColumn<TrajectoryOverallRow>(),
-    ...trajectoryColumns(rows),
+    ...trajectoryColumns(rows, control),
     { key: "n_pairs_valid", label: "n pairs", type: "num", digits: 0 },
   ];
 }
 
-/** Raw is the length-confounded distance, so it is named as such wherever it is read. */
-const SOURCE_LABELS: Record<string, string> = {
-  raw: "Raw (uncontrolled)",
-  length_controlled: "Length controlled",
-  length_and_content_controlled: "Length + content controlled",
-};
-
+/** The rows are already one control's, named above the table, so no column restates it. */
 export function trajectoryByGenreColumns(): TableColumn<TrajectoryByGenreRow>[] {
   return [
     nameColumn<TrajectoryByGenreRow>(),
-    {
-      key: "source",
-      label: "Source",
-      type: "text",
-      render: (row) => SOURCE_LABELS[row.source] ?? row.source,
-    },
     { key: "gap", label: "Gap", type: "num", digits: 5 },
     { key: "p_perm", label: "p (perm)", type: "pill", pillPrefix: "p" },
     {

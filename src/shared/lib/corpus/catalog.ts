@@ -55,6 +55,21 @@ export const TRAJECTORY_METRICS = [
   "turning_angle_distance",
 ] as const;
 
+export type TrajectoryControl = (typeof TRAJECTORY_CONTROLS)[number]["id"];
+
+/** The confounds partialled out of a trajectory distance before genres are compared. */
+export const TRAJECTORY_CONTROLS = [
+  { id: "length_controlled", label: "Length" },
+  { id: "length_and_content_controlled", label: "Length + Content" },
+] as const;
+
+/** The label a control is read under, the same wherever it is named. */
+export function controlLabel(control: TrajectoryControl): string {
+  const found = TRAJECTORY_CONTROLS.find((c) => c.id === control);
+  if (!found) throw new Error(`Unknown trajectory control: ${control}`);
+  return found.label;
+}
+
 export type Genre = (typeof GENRES)[number];
 
 export const GENRES = [

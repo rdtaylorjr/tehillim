@@ -8,46 +8,38 @@ import { ScaledPlot } from "../ScaledPlot";
 import { GapStat } from "../StatLine";
 import { mountRainclouds } from "../../charts/rainclouds";
 import { mountGenreMeanMatrix, mountHeatmap } from "../../charts/heatmap";
-import type { PsalmOrderEntry, RaincloudGroup, TrajectorySourceData } from "../../model/types";
+import { controlLabel } from "../../../../shared/lib/corpus";
+import type { TrajectoryControl } from "../../../../shared/lib/corpus";
+import type { RaincloudGroup } from "../../model/types";
 import type { TrajectorySection as Section } from "../../model/types";
 
 const GENRE_LIST = Object.keys(GENRE_COLORS);
 const sourceColor = (key: string): string =>
   key === "different" ? TOKENS.trajAcross : TOKENS.trajWithin;
 
-const SOURCES = [
-  { key: "length_controlled", suffix: "length", heading: "Length-controlled" },
-  {
-    key: "length_and_content_controlled",
-    suffix: "content",
-    heading: "Length + content-controlled",
-  },
-] as const;
-
-function SourceCharts({
-  source,
-  metric,
-  order,
-  suffix,
-  heading,
+/** Within- against across-genre distance, net of the chosen control. */
+export function TrajectorySection({
+  section,
+  control,
   plot,
 }: {
-  readonly source: TrajectorySourceData;
-  readonly metric: string;
-  readonly order: PsalmOrderEntry[];
-  readonly suffix: string;
-  readonly heading: string;
+  readonly section: Section;
+  readonly control: TrajectoryControl;
+  /** Injected in tests so a section renders without a real Plotly canvas. */
   readonly plot?: PlotFn;
 }): React.ReactElement {
+  const source = section.sources[control];
+  const { metric, order } = section;
+  const heading = controlLabel(control);
   const drawRaincloud = useCallback(
     (el: HTMLElement) => {
       const groups: RaincloudGroup[] = [
         { ...source.raincloud.different, key: "different", label: "Across genre" },
         { ...source.raincloud.same, key: "combined", label: "Within genre" },
       ];
-      mountRainclouds(el, groups, sourceColor, `${metric} (${suffix}-ctrl residual)`, plot);
+      mountRainclouds(el, groups, sourceColor, `${metric} (${heading} residual)`, plot);
     },
-    [source.raincloud, metric, suffix, plot],
+    [source.raincloud, metric, heading, plot],
   );
 
   const drawMean = useCallback(
@@ -65,7 +57,7 @@ function SourceCharts({
   );
 
   return (
-    <>
+    <div className={styles.grid}>
       <Card
         title={`Residual distance by genre · ${heading}`}
         stat={<GapStat stats={source.gap_stats} />}
@@ -78,32 +70,6 @@ function SourceCharts({
           <ScaledPlot draw={drawFull} />
         </div>
       </Card>
-    </>
-  );
-}
-
-/** Within- against across-genre distance, for both controlled sources. */
-export function TrajectorySection({
-  section,
-  plot,
-}: {
-  readonly section: Section;
-  /** Injected in tests so a section renders without a real Plotly canvas. */
-  readonly plot?: PlotFn;
-}): React.ReactElement {
-  return (
-    <div className={styles.grid}>
-      {SOURCES.map((s) => (
-        <SourceCharts
-          key={s.key}
-          source={section.sources[s.key]}
-          metric={section.metric}
-          order={section.order}
-          suffix={s.suffix}
-          heading={s.heading}
-          {...(plot === undefined ? {} : { plot })}
-        />
-      ))}
     </div>
   );
 }

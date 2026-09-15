@@ -157,9 +157,13 @@ describe("every toolbar permutation renders a coherent table", () => {
     for (const metric of TRAJECTORY_METRICS) {
       await choose("Metric", metric);
       expectCellsMatchHeaders(`trajectory / ${metric}`);
+      await choose("Control", "length_and_content_controlled");
+      expectCellsMatchHeaders(`trajectory / ${metric} / content`);
 
       await choose("Genre", "Wisdom");
-      await screen.findByRole("columnheader", { name: /source/i });
+      await screen.findByRole("columnheader", { name: /^gap$/i });
+      expectCellsMatchHeaders(`trajectory / ${metric} / Wisdom / content`);
+      await choose("Control", "length_controlled");
       expectCellsMatchHeaders(`trajectory / ${metric} / Wisdom`);
       await choose("Genre", "all");
     }
@@ -171,11 +175,11 @@ describe("every toolbar permutation renders a coherent table", () => {
     await choose("Genre", "Praise");
 
     await choose("Metric", "structural_distance");
-    expect(await screen.findByRole("columnheader", { name: /source/i })).toBeInTheDocument();
+    expect(await screen.findByRole("columnheader", { name: /^gap$/i })).toBeInTheDocument();
     expectCellsMatchHeaders("trajectory / Praise");
 
     await choose("Metric", "genre");
-    expect(screen.queryByRole("columnheader", { name: /source/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("columnheader", { name: /^gap$/i })).not.toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: /auc 95% ci/i })).toBeInTheDocument();
     expectCellsMatchHeaders("genre / Praise");
   });
@@ -213,7 +217,7 @@ describe("every toolbar permutation renders a coherent table", () => {
     expect(slice).not.toHaveBeenCalled();
 
     await choose("Genre", "Wisdom");
-    await screen.findByRole("columnheader", { name: /source/i });
+    await screen.findByRole("columnheader", { name: /^gap$/i });
     expect(slice).toHaveBeenCalledWith("semantic", "structural_distance");
   });
 });

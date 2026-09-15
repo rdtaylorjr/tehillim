@@ -2,12 +2,7 @@ import styles from "./DetailPanel.module.css";
 import panel from "../../../shared/ui/panel.module.css";
 import { HEATMAP_STEPS, steppedColorFn } from "../../../shared/charts";
 import { topMatches } from "../../../shared/lib/ranking";
-import type {
-  ClusterMethodPayload,
-  FeatureScore,
-  MethodPayload,
-  PsalmCore,
-} from "../../../shared/model";
+import type { ClusterMethodPayload, MethodPayload, PsalmCore } from "../../../shared/model";
 
 export interface DetailShellProps {
   readonly children: React.ReactNode;
@@ -28,15 +23,6 @@ export interface EmptyDetailProps {
 
 export function EmptyDetail({ children }: EmptyDetailProps): React.ReactElement {
   return <div className={styles.detailEmpty}>{children}</div>;
-}
-
-function FeatureChip({ feature }: { readonly feature: FeatureScore }): React.ReactElement {
-  return (
-    <span className={styles.lexemeChip}>
-      <span className={styles.lemma}>{feature.label}</span>
-      <span>{feature.description || feature.category}</span>
-    </span>
-  );
 }
 
 interface StatProps {
@@ -79,7 +65,7 @@ export interface DetailPanelProps {
   readonly onSelectPsalm: (psalm: number) => void;
 }
 
-/** The psalm's facts, the terms driving its score, and its closest matches. */
+/** The psalm's facts and its closest matches under the method. */
 export function DetailPanel({
   psalms,
   method,
@@ -87,8 +73,7 @@ export function DetailPanel({
   onSelectPsalm,
 }: DetailPanelProps): React.ReactElement {
   const psalm = psalms.find((p) => p.number === psalmNumber);
-  const stats = method.psalmStats.find((s) => s.number === psalmNumber);
-  if (!psalm || !stats) {
+  if (!psalm || !method.psalmNumbers.includes(psalmNumber)) {
     return (
       <EmptyDetail>
         Select a psalm from the grid or the visualization to see its closest matches.
@@ -108,17 +93,8 @@ export function DetailPanel({
         stats={[
           { value: String(psalm.verseCount), label: "verses" },
           { value: String(psalm.wordCount), label: "words" },
-          { value: String(stats.uniqueTermCount), label: "distinct terms" },
         ]}
       />
-
-      {stats.topTerms.length > 0 ? (
-        <div className={styles.detailLexemes}>
-          {stats.topTerms.slice(0, 6).map((term) => (
-            <FeatureChip key={`${term.category}/${term.label}`} feature={term} />
-          ))}
-        </div>
-      ) : null}
 
       <h2 className={styles.similarHeading}>Most similar psalms</h2>
       <ul className={styles.similarList}>
@@ -148,11 +124,6 @@ export function DetailPanel({
                   />
                 </span>
                 <p className={styles.similarItemIncipit}>{matchPsalm?.incipit ?? ""}</p>
-                <span className={styles.similarItemShared}>
-                  {match.sharedTerms.slice(0, 4).map((term) => (
-                    <FeatureChip key={`${term.category}/${term.label}`} feature={term} />
-                  ))}
-                </span>
               </button>
             </li>
           );

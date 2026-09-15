@@ -61,15 +61,18 @@ export function steppedColorscale(colors: readonly string[]): [number, string][]
 export function steppedColorFn(
   colors: readonly string[],
   max: number,
+  min = 0,
 ): (value: number) => string {
   if (colors.length === 0) {
     throw new RangeError("steppedColorFn: at least one color is needed to make a ramp");
   }
-  if (max <= 0) {
-    throw new RangeError(`steppedColorFn: max must be positive, got ${String(max)}`);
+  if (max <= min) {
+    throw new RangeError(
+      `steppedColorFn: max must exceed min, got ${String(min)}..${String(max)}`,
+    );
   }
   return (value) => {
-    const position = Math.min(Math.max(value / max, 0), 1);
+    const position = Math.min(Math.max((value - min) / (max - min), 0), 1);
     const index = Math.min(Math.floor(position * colors.length), colors.length - 1);
     return colors[index] ?? "";
   };

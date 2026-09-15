@@ -5,21 +5,21 @@ import band from "../../../shared/ui/controlBand.module.css";
 import {
   BENCHMARKS,
   GENRES,
-  MODEL_FAMILIES,
   PARALLELISM_TYPES,
-  TEXT_VARIANTS,
+  TRAJECTORY_CONTROLS,
   TRAJECTORY_METRICS,
-  facetFor,
+  controlLabel,
   sentenceCase,
   titleCase,
 } from "../../../shared/lib/corpus";
-import { ALL, showsFacet, showsText } from "../../../shared/lib/navigation";
+import { ALL, headCrumbs, showsControl } from "../../../shared/lib/navigation";
 import type { Selection, SelectionAction } from "../../../shared/lib/navigation";
 import { Dropdown, DropdownPills, DropdownRow } from "../../../shared/ui/Dropdown";
 import { PillGroup } from "../../../shared/ui/PillGroup";
 import type { PillOption } from "../../../shared/ui/PillGroup";
-import type { SelectOption } from "../../../shared/ui/SelectControl";
-import { SelectionPath } from "./SelectionPath";
+import { VizHead } from "../../../shared/ui/VizHead";
+import { ModelDropdown } from "./ModelDropdown";
+import { asOptions } from "../lib/options";
 
 export interface ToolbarProps {
   readonly selection: Selection;
@@ -34,16 +34,6 @@ export interface ToolbarProps {
 
 const ALL_OPTION = { value: ALL, label: "All" } as const;
 
-/** Keeps each dropdown's option type exactly the union its values came from. */
-const asOptions = <V extends string>(
-  values: readonly V[],
-  label: (value: V) => string,
-): SelectOption<V>[] => values.map((value) => ({ value, label: label(value) }));
-
-const FAMILY_PILLS: readonly PillOption[] = MODEL_FAMILIES.map((f) => ({
-  id: f.id,
-  label: f.label,
-}));
 const BENCHMARK_PILLS: readonly PillOption[] = BENCHMARKS.map((b) => ({
   id: b.id,
   label: b.label,
@@ -62,39 +52,25 @@ export function Toolbar({
   onOpenModel,
 }: ToolbarProps): React.ReactElement {
   const filterId = useId();
-  const facet = facetFor(selection.family);
   const isDetail = selection.view === "detail";
-  const family = MODEL_FAMILIES.find((f) => f.id === selection.family);
   const benchmark = BENCHMARKS.find((b) => b.id === selection.benchmark);
 
   //: With the menu shut the toggle is the only place the choice is legible.
   const named = (value: string): string | null => (value === ALL ? null : sentenceCase(value));
-  const modelState = [
-    family?.label ?? "",
-    showsFacet(selection.family) ? named(selection.facet) : null,
-    showsText(selection.family, selection.facet) ? named(selection.text) : null,
-    isDetail ? selection.model : null,
-  ]
-    .filter(Boolean)
-    .join(" / ");
   const benchmarkState = [
     benchmark?.label ?? "",
     selection.benchmark === "parallelism"
       ? named(selection.parallelismType)
       : named(selection.genre),
-    selection.benchmark === "genre" && selection.metric !== "genre"
-      ? titleCase(selection.metric)
-      : null,
+    showsControl(selection) ? titleCase(selection.metric) : null,
+    showsControl(selection) ? controlLabel(selection.control) : null,
   ]
     .filter(Boolean)
     .join(" / ");
 
   return (
-    <div
-      className={[styles.toolbar, isDetail ? styles.isDetail : ""].filter(Boolean).join(" ")}
-    >
-      <div className={styles.summary}>
-        <SelectionPath selection={selection} />
+    <div className={styles.toolbar}>
+      <VizHead subject="Benchmark" crumbs={headCrumbs(selection)}>
         {/* No way back here: the Table pill in the band below is the way back,
             and a second control for the same move is one too many. */}
         {isDetail ? null : (
@@ -110,83 +86,19 @@ export function Toolbar({
             />
           </div>
         )}
-      </div>
+      </VizHead>
 
       {/* One band, one control per choice. It stays mounted on a detail page
           rather than being replaced, so the filters keep their state and the
           pane below is the only part that swaps. */}
       <div className={band.band}>
-        <Dropdown label="Model" current={modelState}>
-          <DropdownRow>
-            <DropdownPills>
-              <PillGroup
-                label="Models"
-                options={FAMILY_PILLS}
-                value={selection.family}
-                onSelect={(id) => {
-                  dispatch({ type: "family/selected", family: id as Selection["family"] });
-                }}
-              />
-            </DropdownPills>
-          </DropdownRow>
-          {showsFacet(selection.family) && facet ? (
-            <DropdownRow label={facet.label}>
-              <select
-                aria-label={facet.label}
-                value={selection.facet}
-                onChange={(event) => {
-                  dispatch({ type: "facet/selected", facet: event.target.value });
-                }}
-              >
-                {[ALL_OPTION, ...asOptions(facet.values, sentenceCase)].map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </DropdownRow>
-          ) : null}
-          {showsText(selection.family, selection.facet) ? (
-            <DropdownRow label="Text">
-              <select
-                aria-label="Text"
-                value={selection.text}
-                onChange={(event) => {
-                  dispatch({
-                    type: "text/selected",
-                    text: event.target.value as Selection["text"],
-                  });
-                }}
-              >
-                {[ALL_OPTION, ...asOptions(TEXT_VARIANTS, sentenceCase)].map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </DropdownRow>
-          ) : null}
-          {/* The rung below the group. The table shows every model at once, so
-              only a detail page - which shows exactly one - has to ask which. */}
-          {isDetail && models.length > 0 && selection.model !== null ? (
-            <DropdownRow label="Model">
-              <select
-                aria-label="Model"
-                value={selection.model}
-                onChange={(event) => {
-                  if (onOpenModel !== undefined) onOpenModel(event.target.value);
-                  else dispatch({ type: "model/selected", model: event.target.value });
-                }}
-              >
-                {models.map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
-                ))}
-              </select>
-            </DropdownRow>
-          ) : null}
-        </Dropdown>
+        <ModelDropdown
+          selection={selection}
+          dispatch={dispatch}
+          //: The table shows every model at once, so only a detail page has to ask which.
+          models={isDetail ? asOptions(models, (model) => model) : []}
+          {...(onOpenModel === undefined ? {} : { onOpenModel })}
+        />
 
         <Dropdown label="Benchmark" current={benchmarkState}>
           <DropdownRow>
@@ -264,6 +176,26 @@ export function Toolbar({
                   ))}
                 </select>
               </DropdownRow>
+              {showsControl(selection) ? (
+                <DropdownRow label="Control">
+                  <select
+                    aria-label="Control"
+                    value={selection.control}
+                    onChange={(event) => {
+                      dispatch({
+                        type: "control/selected",
+                        control: event.target.value as Selection["control"],
+                      });
+                    }}
+                  >
+                    {TRAJECTORY_CONTROLS.map((control) => (
+                      <option key={control.id} value={control.id}>
+                        {control.label}
+                      </option>
+                    ))}
+                  </select>
+                </DropdownRow>
+              ) : null}
             </>
           )}
         </Dropdown>

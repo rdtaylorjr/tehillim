@@ -18,6 +18,7 @@ const METHOD: MethodPayload = {
 
 const options = {
   method: METHOD,
+  domainMin: 0,
   domainMax: 1,
   boundaries: [2],
   onSelect: () => undefined,
@@ -28,6 +29,17 @@ describe("mountSimilarityMatrix", () => {
     const { api, calls } = capturePlot();
     await mountSimilarityMatrix(document.createElement("div"), options, api);
     expect(calls).toMatchSnapshot();
+  });
+
+  it("clips the ramp to the band it is given, so a narrow-band method still reads", async () => {
+    const { api, calls } = capturePlot();
+    await mountSimilarityMatrix(
+      document.createElement("div"),
+      { ...options, domainMin: 0.9, domainMax: 0.99 },
+      api,
+    );
+    const { traces } = calls[0] as { traces: { zmin: number; zmax: number }[] };
+    expect([traces[0]?.zmin, traces[0]?.zmax]).toEqual([0.9, 0.99]);
   });
 
   it("selects the clicked cell's row psalm, not its column", async () => {

@@ -1,24 +1,5 @@
 import styles from "../../../shared/ui/vizPanel.module.css";
 
-export interface VizHeadProps {
-  /** The page name, exactly as its nav tab reads it. */
-  readonly subject: string;
-  /** What is on screen right now, which qualifies the name rather than replacing it. */
-  readonly state: string;
-}
-
-/** The panel head: the page name in the title face, then the selection, dimmed. */
-export function VizHead({ subject, state }: VizHeadProps): React.ReactElement {
-  return (
-    <div className={styles.vizHead}>
-      <span className={styles.vizSubject}>
-        <span className={styles.vizName}>{subject}</span>
-        <span className={styles.vizState}>{state}</span>
-      </span>
-    </div>
-  );
-}
-
 export interface ViewTab<T extends string> {
   readonly id: T;
   readonly label: string;

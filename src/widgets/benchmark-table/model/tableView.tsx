@@ -48,10 +48,14 @@ export function resolveTableView(data: DomainData, selection: Selection): TableV
 
   if (selection.genre === "all") {
     const rows = data.trajectory.filter((r) => r.metric === selection.metric);
-    return view(rows, trajectoryOverallColumns(rows), "raw_effect_size");
+    const columns = trajectoryOverallColumns(rows, selection.control);
+    return view(rows, columns, `${selection.control}_effect_size`);
   }
   const rows = data.trajectory_by_genre.filter(
-    (r) => r.metric === selection.metric && r.genre === selection.genre,
+    (r) =>
+      r.metric === selection.metric &&
+      r.genre === selection.genre &&
+      r.source === selection.control,
   );
   return view(rows, trajectoryByGenreColumns(), "gap");
 }

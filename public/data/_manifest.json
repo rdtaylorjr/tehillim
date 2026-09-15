@@ -1,27 +1,27 @@
 {
-  "cell": "ui.morphological.payload",
-  "code_hash": "a0712ac17dbf020f18b2d1716bfcbeb1af347c6425d7ff6062037e1fe7fc2a85",
-  "duration_s": 0.224906,
-  "inputs": {
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=morphological/stage=master/genre_metrics_wide.parquet": "fadd4ae4aa7098701ebe2db3773a4c94c23e3576ca8d7636b921eb3fc56def85",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=morphological/stage=raw/by_genre.csv": "f5f8d8c1b8b1131da69f4b08bc6495041f7e147d5b6a89709f1b8dbddb96425e",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological/stage=master/model_metrics_by_type.parquet": "02887a1f99eddf60dfbbf5f3bb2368b1b43efc4da938a037e97d86b687722ea2",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological/stage=master/model_metrics_overall.parquet": "53acacf923b9b4277add898d4983460a80f1e327770d4fa54fac2281270b4a83",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows.json": "766b3562b4d7e08ee06162f7ceda54a7fa99a5c39c656c418f5e11111ae9ef80",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows_by_genre.json": "65536eb553616490f17c9606639613845905d737d2814c3b4e1c16fe26a34834"
-  },
-  "outputs": {
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological.json": "5a1b0fb18a73ecccf4f7d6005d1b97a403675b7b2474e92b0c341145dc179d94",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_adjacent_similarity_distance.json": "d9dd4a8c0aa5fee82089e7c3f9a0008fb96c7ec87ed381f48a8bb78ce882384c",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_content_distance.json": "1817f1dd7a5c364071f676e2678d2018ddb278a3face4d74a9128e4e2659812f",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_step_magnitude_distance.json": "602536cc7d32295ef247fa27e326d9a20ad694686b93d593e0b7d06a302f0cd4",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_structural_distance.json": "6f47ddc94bffba6a7c6ef66c3ec2b41669c87d0974ccba1f389d4417ebffc6d7",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_turning_angle_distance.json": "e3b92f99c6d31dfce21231942e6547193ce82ddeb661ca4e8dcdf76f493cfbbe"
-  },
-  "parameters": {
-    "args": "morphological --parallelism-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological --genre-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=morphological --trajectory-ui-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows.json --trajectory-by-genre-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows_by_genre.json --output /Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological.json"
-  },
-  "repository_revision": "4c770869b2e632e74f49b24b159e4fbdbe37c3a0",
-  "rule": "cell__ui_morphological_payload",
-  "started": "2026-09-14T17:45:29.403158+00:00"
+  "compare.ui": {
+    "cell": "compare.ui",
+    "code_hash": "901f2ad3d8cb7c383b83726c6dbdd771b472afa1cc0e754036989c805ed62644",
+    "duration_s": 42.935375,
+    "inputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/domain=lexical/stage=raw/methods.parquet": "c5a24fade5353d6ce40f855ff463601820a987e32525059a4adea0393d5f56a4",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/domain=lexical/stage=raw/similarity.parquet": "c7ee641efcf049c856035fce5030878adf446807fb28cee54314c1eda0d5f045",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/domain=morphological/stage=raw/methods.parquet": "dbd227823e54791a4986c85a6dbd3c775fa0a74d50d603749f10407d250e619b",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/domain=morphological/stage=raw/similarity.parquet": "70afdef03f02b144c44054708a816c1d64ed6f8d7f4ad72b4d0af1b1f2e99243",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/domain=semantic/stage=raw/methods.parquet": "5281c15fad52fd2a225c20dcd7a4f0a0f73ac8a2efffe818000acc58c62cf332",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/domain=semantic/stage=raw/similarity.parquet": "af3bfa2c9f993833c599ad8cbe6da56c6f6e63f0bf9255d9a91fc3a101aa25cb",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/domain=syntactic/stage=raw/methods.parquet": "2cb0eec0c3615f9b48abd2e9ce3361b6b0ddcd52413324c9f65556f4a36ceaf9",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/domain=syntactic/stage=raw/similarity.parquet": "d5c39afa734b6c72b64ac86be75f392db0b3c44fb3df67ed057377c29344c099",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=compare/stage=raw/psalms.parquet": "b67063a5e48581167b14016e2a7f4b484e2c8763226869aeacc216348e6845c8"
+    },
+    "outputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/compare.json": "e5299ae1b8fe469088f9d6eef9f13985796a2b7fc0fd9a735d5c7842be0f6645"
+    },
+    "parameters": {
+      "args": "ui --data-root /Users/rdtaylorjr/Developer/tehillim/tehillim-data --embeddings-root /Users/rdtaylorjr/Developer/tehillim/tehillim-embeddings/data --ui-root /Users/rdtaylorjr/Developer/tehillim/tehillim"
+    },
+    "repository_revision": "bb7fbd6c1e18d50f0ac6e302f22b2fc3be49679e",
+    "rule": "cell__compare_ui",
+    "started": "2026-09-15T20:19:08.039889+00:00"
+  }
 }

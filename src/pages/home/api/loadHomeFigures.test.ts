@@ -3,7 +3,7 @@ import { HOME_FIGURES_URL, loadHomeFigures } from "./loadHomeFigures";
 
 const figures = {
   benchmark: { rows: [] },
-  compare: { psalms: [1], matrix: [[1]], domainMax: 0.2 },
+  compare: { psalms: [1], matrix: [[1]] },
   cluster: { alignment: { genres: [] } },
 };
 

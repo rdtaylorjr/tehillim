@@ -65,7 +65,7 @@ export function ModelDetail({
         <GenreSection section={data.genre} />
       ) : null}
       {section === "trajectory" && data.trajectory !== undefined ? (
-        <TrajectorySection section={data.trajectory} />
+        <TrajectorySection section={data.trajectory} control={selection.control} />
       ) : null}
     </div>
   );

@@ -11,10 +11,11 @@ declare const styles: {
   readonly viewTab: string;
   readonly viewTabs: string;
   readonly vizBody: string;
+  readonly vizCrumb: string;
+  readonly vizCrumbX: string;
   readonly vizHead: string;
   readonly vizName: string;
   readonly vizPanel: string;
-  readonly vizState: string;
   readonly vizSubject: string;
 };
 export default styles;

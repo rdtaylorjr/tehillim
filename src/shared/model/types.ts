@@ -1,11 +1,4 @@
-/** Mirrors the JSON payload written by pipeline/src/tehillim/export.py */
-
-export interface FeatureScore {
-  label: string;
-  description: string;
-  category: string;
-  score: number;
-}
+/** Mirrors the compare files written by tehillim_compare.ui_export. */
 
 /** Psalm facts that don't depend on the comparison method. */
 export interface PsalmCore {
@@ -15,35 +8,45 @@ export interface PsalmCore {
   incipit: string;
 }
 
-/** Per-method, per-psalm stats (what counts as a "term" varies by method). */
-export interface MethodPsalmStats {
-  number: number;
-  termCount: number;
-  uniqueTermCount: number;
-  topTerms: FeatureScore[];
-}
-
 export interface SimilarEntry {
   psalm: number;
   score: number;
-  sharedTerms: FeatureScore[];
 }
 
-export interface MethodPayload {
+/** One method's identity in the compare index, mirroring tehillim_compare.ui_export. */
+export interface CompareMethodMeta {
   id: string;
   description: string;
+  /** The representation domain: lexical, morphological, syntactic, or semantic. */
+  domain: string;
+  /** The benchmark's identifier for the representation. */
+  representation: string;
+  modelBase: string;
+  textVariant: string | null;
+  aggregation: string;
+  correction: string | null;
+}
+
+/** The compare index the page loads first: every method by identity, no matrices. */
+export interface CompareIndex {
+  generatedAt: string;
+  corpus: { name: string; version: string };
+  psalms: PsalmCore[];
+  methods: CompareMethodMeta[];
+  defaultMethod: string;
+}
+
+/** One method's matrix file, fetched when the method is chosen. */
+export interface CompareMethodData {
+  id: string;
   psalmNumbers: number[];
-  psalmStats: MethodPsalmStats[];
   similar: Record<string, SimilarEntry[]>;
   matrix: number[][];
 }
 
-export interface SimilarityPayload {
-  generatedAt: string;
-  corpus: { name: string; version: string };
-  psalms: PsalmCore[];
-  methods: MethodPayload[];
-  defaultMethod: string;
+/** A chosen method's identity and matrix together, the shape every compare view reads. */
+export interface MethodPayload extends CompareMethodData {
+  description: string;
 }
 
 /** Mirrors the payload written by pipeline/src/tehillim/export_clustering.py. */

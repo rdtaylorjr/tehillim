@@ -30,12 +30,26 @@ describe("modelNames", () => {
     expect(result).toEqual(["berel", "alephbert"]);
   });
 
-  it("names a model once even where the table carries several of its rows", () => {
-    //: Those tables repeat a model per source, but a detail page is one model.
+  it("names only the models scored under the chosen control, each once", () => {
     const slice = [
-      { ...row("berel"), metric: "content_distance", genre: "Hymn", source: "a" },
-      { ...row("berel"), metric: "content_distance", genre: "Hymn", source: "b" },
-      { ...row("alephbert"), metric: "content_distance", genre: "Hymn", source: "a" },
+      {
+        ...row("berel"),
+        metric: "content_distance",
+        genre: "Hymn",
+        source: "length_controlled",
+      },
+      {
+        ...row("berel"),
+        metric: "content_distance",
+        genre: "Hymn",
+        source: "length_and_content_controlled",
+      },
+      {
+        ...row("alephbert"),
+        metric: "content_distance",
+        genre: "Hymn",
+        source: "length_controlled",
+      },
     ];
     const result = modelNames(
       data({}),

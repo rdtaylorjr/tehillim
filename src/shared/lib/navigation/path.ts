@@ -1,5 +1,5 @@
-import { familyFor, sentenceCase } from "../corpus";
-import { showsText } from "./selection";
+import { controlLabel, familyFor, sentenceCase } from "../corpus";
+import { showsControl, showsText } from "./selection";
 import type { Selection } from "./selection";
 
 /** Majors are the crossed trees, minors the filters, model the open row. */
@@ -29,9 +29,17 @@ export function selectionPath(selection: Selection): Crumb[] {
   } else if (selection.genre !== "all") {
     minor(selection.genre);
   }
+  if (showsControl(selection)) minor(controlLabel(selection.control));
 
   if (selection.model !== null) path.push({ kind: "model", label: selection.model });
   return path;
+}
+
+/** What qualifies a page name: the open model alone, else the crossed trees. */
+export function headCrumbs(selection: Selection): Crumb[] {
+  const crumbs = selectionPath(selection);
+  const model = crumbs.find((crumb) => crumb.kind === "model");
+  return model === undefined ? crumbs.filter((crumb) => crumb.kind === "major") : [model];
 }
 
 /** The same path as a sentence, for a caption or any other place prose reads better than crumbs. */

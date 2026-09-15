@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { maxOffDiagonal, percentile, percentileOffDiagonal } from "./matrix";
+import {
+  maxOffDiagonal,
+  percentile,
+  percentileOffDiagonal,
+  similarityColorDomain,
+} from "./matrix";
 
 describe("maxOffDiagonal", () => {
   it("ignores the diagonal even when it holds the largest values", () => {
@@ -117,5 +122,28 @@ describe("percentile", () => {
 
   it("handles a single-value array", () => {
     expect(percentile([0.42], 37)).toBeCloseTo(0.42);
+  });
+});
+
+describe("similarityColorDomain", () => {
+  it("spends the ramp between the 5th and 95th off-diagonal percentiles", () => {
+    const matrix = [
+      [1, 0.1, 0.2, 0.3],
+      [0.1, 1, 0.4, 0.5],
+      [0.2, 0.4, 1, 0.6],
+      [0.3, 0.5, 0.6, 1],
+    ];
+    const domain = similarityColorDomain(matrix);
+    expect(domain.min).toBeCloseTo(percentileOffDiagonal(matrix, 5));
+    expect(domain.max).toBeCloseTo(percentileOffDiagonal(matrix, 95));
+  });
+
+  it("keeps a floor of width under a flat matrix, so the ramp never divides by zero", () => {
+    const flat = [
+      [1, 0.5, 0.5],
+      [0.5, 1, 0.5],
+      [0.5, 0.5, 1],
+    ];
+    expect(similarityColorDomain(flat)).toEqual({ min: 0.5, max: 0.51 });
   });
 });

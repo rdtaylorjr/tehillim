@@ -4,8 +4,18 @@ import viz from "../../../shared/ui/vizPanel.module.css";
 import band from "../../../shared/ui/controlBand.module.css";
 import { PageFooter, PageHeader } from "../../../widgets/layout";
 import { PsalmPicker } from "../../../widgets/psalm-picker";
-import { RepresentationSelector } from "../../../widgets/representation-selector";
-import { Caption, Caveat, LoadError, VizHead, ViewTabs } from "../../../widgets/viz-panel";
+import { MethodAxisRows, ModelDropdown } from "../../../widgets/toolbar";
+import { identityOfClusterMethod } from "../lib/methodIdentity";
+import {
+  axisLabels,
+  choiceOfMethod,
+  headCrumbs,
+  methodChoiceReducer,
+  methodFamilies,
+  resolveMethod,
+} from "../../../shared/lib/navigation";
+import { VizHead } from "../../../shared/ui/VizHead";
+import { Caption, Caveat, LoadError, ViewTabs } from "../../../widgets/viz-panel";
 import { ClusterDetailPanel, DetailShell, EmptyDetail } from "../../../widgets/detail-panel";
 import { GenreAlignmentView } from "./GenreAlignmentView";
 import { ScatterPlot } from "../charts/ScatterPlot";
@@ -14,9 +24,8 @@ import { alignmentFor, selectedAlignmentCell } from "../../../shared/lib/results
 import { describeKStability } from "../lib/kStabilityConfidence";
 import { describeScatterConfidence } from "../lib/scatterConfidence";
 import { createReferenceColoring } from "../../../shared/lib/color";
-import { featurePhrase } from "../../../shared/lib/corpus";
 import type { ReferenceColorMode } from "../../../shared/lib/color";
-import { initialClusterState, reduceCluster } from "../../../shared/model";
+import { INITIAL_CLUSTER_STATE, reduceCluster } from "../../../shared/model";
 import type { ClusterViewMode } from "../../../shared/model";
 import type {
   ClusteringPayload,
@@ -91,27 +100,35 @@ interface ClusterViewProps {
 
 /** Split from the loader so every hook below can assume the payload is present. */
 function ClusterView({ navigate, data, gunkel }: ClusterViewProps): React.ReactElement {
-  const [state, dispatch] = useReducer(
-    reduceCluster,
-    data.defaultClusterMethod,
-    initialClusterState,
+  const [state, dispatch] = useReducer(reduceCluster, INITIAL_CLUSTER_STATE);
+  const identities = useMemo(() => data.clusterMethods.map(identityOfClusterMethod), [data]);
+  const [choice, choose] = useReducer(methodChoiceReducer, data, (loaded) => {
+    const opening =
+      loaded.clusterMethods.find((m) => m.id === loaded.defaultClusterMethod) ??
+      loaded.clusterMethods[0];
+    if (!opening) throw new Error("Clustering payload carries no methods");
+    return choiceOfMethod(identityOfClusterMethod(opening));
+  });
+  const families = useMemo(() => methodFamilies(identities), [identities]);
+  const resolved = useMemo(() => resolveMethod(identities, choice), [identities, choice]);
+  //: The dropdown and the head both read the settled model, never the one merely asked for.
+  const selection = useMemo(
+    () => ({ ...choice.selection, model: resolved.model }),
+    [choice.selection, resolved.model],
   );
 
-  //: The validator rejects an empty method list, so this covers a stale id.
+  //: The validator rejects an empty method list, so a family with none still shows a method.
   const method: ClusterMethodPayload = useMemo(() => {
     const found =
-      data.clusterMethods.find((m) => m.id === state.selectedClusterMethodId) ??
-      data.clusterMethods[0];
+      data.clusterMethods.find((m) => m.id === resolved.method?.id) ?? data.clusterMethods[0];
     if (!found) throw new Error("Clustering payload carries no methods");
     return found;
-  }, [data.clusterMethods, state.selectedClusterMethodId]);
+  }, [data.clusterMethods, resolved.method]);
 
   const coloring = useMemo(
     () => createReferenceColoring(state.referenceColorMode, gunkel),
     [gunkel, state.referenceColorMode],
   );
-
-  const methodIds = useMemo(() => data.clusterMethods.map((m) => m.id), [data.clusterMethods]);
 
   //: The picker's Gunkel scale, so the alluvial adds no second colour meaning.
   const genreColorOf = useMemo(() => {
@@ -152,10 +169,6 @@ function ClusterView({ navigate, data, gunkel }: ClusterViewProps): React.ReactE
     dispatch({ type: "SELECT_PSALM", psalm: null });
   }, []);
 
-  const setMethod = useCallback((methodId: string): void => {
-    dispatch({ type: "SET_CLUSTER_METHOD", methodId });
-  }, []);
-
   return (
     <>
       <PageHeader current="cluster" navigate={navigate} />
@@ -173,15 +186,19 @@ function ClusterView({ navigate, data, gunkel }: ClusterViewProps): React.ReactE
           />
 
           <section className={viz.vizPanel} aria-label="Clustering results">
-            <VizHead subject="Cluster" state={featurePhrase(method.id)} />
+            <VizHead subject="Cluster" crumbs={headCrumbs(selection)} />
             {/* One band, the same shape the benchmark toolbar carries: the
                 choices as dropdowns on the left, the view switch on the rail. */}
             <div className={band.band}>
-              <RepresentationSelector
-                availableIds={methodIds}
-                value={state.selectedClusterMethodId}
-                onChange={setMethod}
-              />
+              <ModelDropdown
+                selection={selection}
+                dispatch={choose}
+                families={families}
+                models={resolved.models}
+                axes={axisLabels(identityOfClusterMethod(method))}
+              >
+                <MethodAxisRows resolved={resolved} dispatch={choose} />
+              </ModelDropdown>
               <div className={band.bandYield}>
                 <ViewTabs
                   tabs={TABS}

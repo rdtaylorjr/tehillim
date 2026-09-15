@@ -24,8 +24,19 @@ const DATA: DomainData = {
     { model: "t2", metric: "turning_angle_distance", length_controlled_p: 0.01 },
   ] as never,
   trajectory_by_genre: [
-    { model: "tg1", metric: "structural_distance", genre: "Hymn" },
-    { model: "tg2", metric: "structural_distance", genre: "Wisdom" },
+    { model: "tg1", metric: "structural_distance", genre: "Hymn", source: "length_controlled" },
+    {
+      model: "tg1c",
+      metric: "structural_distance",
+      genre: "Hymn",
+      source: "length_and_content_controlled",
+    },
+    {
+      model: "tg2",
+      metric: "structural_distance",
+      genre: "Wisdom",
+      source: "length_controlled",
+    },
   ] as never,
 };
 
@@ -68,16 +79,38 @@ describe("resolveTableView trajectory", () => {
       DATA,
       at({ benchmark: "genre", metric: "structural_distance" }),
     );
-    expect(view.defaultSortKey).toBe("raw_effect_size");
+    expect(view.defaultSortKey).toBe("length_controlled_effect_size");
   });
 
-  it("narrows to one genre and leads on the gap itself", () => {
+  it("narrows to one genre under the chosen control and leads on the gap itself", () => {
     const view = resolveTableView(
       DATA,
       at({ benchmark: "genre", metric: "structural_distance", genre: "Hymn" }),
     );
     expect(view.rows.map((r) => (r as { model: string }).model)).toEqual(["tg1"]);
     expect(view.defaultSortKey).toBe("gap");
+    const content = resolveTableView(
+      DATA,
+      at({
+        benchmark: "genre",
+        metric: "structural_distance",
+        genre: "Hymn",
+        control: "length_and_content_controlled",
+      }),
+    );
+    expect(content.rows.map((r) => (r as { model: string }).model)).toEqual(["tg1c"]);
+  });
+
+  it("leads the overall table on the chosen control's effect size", () => {
+    const view = resolveTableView(
+      DATA,
+      at({
+        benchmark: "genre",
+        metric: "structural_distance",
+        control: "length_and_content_controlled",
+      }),
+    );
+    expect(view.defaultSortKey).toBe("length_and_content_controlled_effect_size");
   });
 });
 
@@ -93,7 +126,7 @@ describe("resolveTableView columns", () => {
     );
     expect(
       labels(at({ benchmark: "genre", metric: "structural_distance", genre: "Hymn" })),
-    ).toContain("Source");
+    ).toContain("Gap");
   });
 });
 

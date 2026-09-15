@@ -12,11 +12,6 @@ const PUBLIC_PAYLOADS = [
   ["reference/stage=ui/gunkel.json", "public/data/gunkel.json"],
 ];
 
-/** Streamed by the dev server from detail-data rather than bundled, being large. */
-const DETAIL_PAYLOADS = [
-  ["analysis=compare/stage=ui/similarity.json", "detail-data/detail_similarity.json"],
-];
-
 function copy(from, to) {
   const source = join(DATA_ROOT, from);
   if (!existsSync(source)) {
@@ -27,27 +22,28 @@ function copy(from, to) {
   return { to, ok: true };
 }
 
-/** The per-domain benchmark payloads, which tehillim-benchmark's ui_export writes. */
-function reportBenchmarkPayloads() {
+/** The benchmark and compare payloads, which their own drivers write into this checkout. */
+function reportDriverPayloads() {
   const present = existsSync("public/data")
-    ? readdirSync("public/data").filter((n) => n.startsWith("ui_")).length
+    ? readdirSync("public/data").filter((n) => n.startsWith("ui_") || n === "compare.json")
+        .length
     : 0;
   console.log(
-    `  public/data holds ${present} ui_*.json benchmark payloads ` +
-      "(written by tehillim-benchmark's ui_export, not by this script)",
+    `  public/data holds ${present} benchmark and compare payloads ` +
+      "(written by tehillim-benchmark and tehillim-compare, not by this script)",
   );
 }
 
-const results = [...PUBLIC_PAYLOADS, ...DETAIL_PAYLOADS].map(([from, to]) => copy(from, to));
+const results = PUBLIC_PAYLOADS.map(([from, to]) => copy(from, to));
 for (const r of results) {
   console.log(r.ok ? `  copied ${r.to}` : `  SKIPPED ${r.to}: ${r.reason}`);
 }
-reportBenchmarkPayloads();
+reportDriverPayloads();
 
 const missing = results.filter((r) => !r.ok);
 if (missing.length > 0) {
   console.error(
-    `\n${missing.length} payload(s) missing. Run tehillim-compare then tehillim-cluster ` +
+    `\n${missing.length} payload(s) missing. Run tehillim-cluster ` +
       `against ${DATA_ROOT}, then rerun this script.`,
   );
   process.exit(1);

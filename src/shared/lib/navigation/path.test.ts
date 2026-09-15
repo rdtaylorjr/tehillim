@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { INITIAL_SELECTION } from "./selection";
 import type { Selection } from "./selection";
-import { pathSentence, selectionPath } from "./path";
+import { headCrumbs, pathSentence, selectionPath } from "./path";
 
 const at = (over: Partial<Selection>): Selection => ({ ...INITIAL_SELECTION, ...over });
 
@@ -51,6 +51,17 @@ describe("selectionPath", () => {
     expect(path.map((crumb) => crumb.label)).not.toContain("Turning Angle Distance");
   });
 
+  it("names the control a trajectory metric is read under, and nothing under discrimination", () => {
+    const trajectory = at({ benchmark: "genre", metric: "turning_angle_distance" });
+    expect(selectionPath(trajectory).at(-1)).toEqual({
+      kind: "minor",
+      label: "Length",
+    });
+    expect(selectionPath(at({ benchmark: "genre" })).filter((c) => c.kind === "minor")).toEqual(
+      [],
+    );
+  });
+
   it("ends with the open model, marked apart from the filters before it", () => {
     const path = selectionPath(at({ family: "lexical", facet: "word", model: "model_03" }));
     expect(path.at(-1)).toEqual({ kind: "model", label: "model_03" });
@@ -70,5 +81,20 @@ describe("pathSentence", () => {
 
   it("leaves the open model out, since a caption describes the table not the row", () => {
     expect(pathSentence(at({ model: "bge_m3" }))).toBe("Semantic \u00d7 Parallelism");
+  });
+});
+
+describe("headCrumbs", () => {
+  it("qualifies the page name with the two crossed trees while no model is open", () => {
+    expect(headCrumbs(at({ family: "lexical", facet: "word" }))).toEqual([
+      { kind: "major", label: "Lexical" },
+      { kind: "major", label: "Parallelism" },
+    ]);
+  });
+
+  it("names only the open model, since the toolbar below states the rest", () => {
+    expect(headCrumbs(at({ family: "lexical", facet: "word", model: "bge_m3" }))).toEqual([
+      { kind: "model", label: "bge_m3" },
+    ]);
   });
 });

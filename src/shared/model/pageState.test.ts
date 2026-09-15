@@ -1,33 +1,25 @@
 import { describe, expect, it } from "vitest";
 import {
+  INITIAL_CLUSTER_STATE,
+  INITIAL_COMPARE_STATE,
   OPENING_PSALM,
-  initialClusterState,
-  initialCompareState,
   reduceCluster,
   reduceCompare,
 } from "./pageState";
-import type { ClusterState, CompareState } from "./pageState";
 
-describe("initialCompareState", () => {
-  it("takes its method from the payload rather than a hardcoded guess", () => {
-    expect(initialCompareState("verb-morphology-tfidf-cosine").selectedMethodId).toBe(
-      "verb-morphology-tfidf-cosine",
-    );
-  });
-
+describe("INITIAL_COMPARE_STATE", () => {
   it("opens on a psalm with legible similarity structure", () => {
-    expect(initialCompareState("x").selectedPsalm).toBe(OPENING_PSALM);
+    expect(INITIAL_COMPARE_STATE.selectedPsalm).toBe(OPENING_PSALM);
   });
 
   it("opens on the matrix, colored by the traditional book division", () => {
-    const state = initialCompareState("x");
-    expect(state.view).toBe("matrix");
-    expect(state.referenceColorMode).toBe("book");
+    expect(INITIAL_COMPARE_STATE.view).toBe("matrix");
+    expect(INITIAL_COMPARE_STATE.referenceColorMode).toBe("book");
   });
 });
 
 describe("reduceCompare", () => {
-  const base: CompareState = initialCompareState("lexical-tfidf-cosine");
+  const base = INITIAL_COMPARE_STATE;
 
   it("selects a psalm", () => {
     expect(reduceCompare(base, { type: "SELECT_PSALM", psalm: 42 }).selectedPsalm).toBe(42);
@@ -35,11 +27,6 @@ describe("reduceCompare", () => {
 
   it("clears the selection when given null", () => {
     expect(reduceCompare(base, { type: "SELECT_PSALM", psalm: null }).selectedPsalm).toBeNull();
-  });
-
-  it("switches method", () => {
-    const next = reduceCompare(base, { type: "SET_METHOD", methodId: "root-tfidf-cosine" });
-    expect(next.selectedMethodId).toBe("root-tfidf-cosine");
   });
 
   it("switches view", () => {
@@ -54,7 +41,6 @@ describe("reduceCompare", () => {
   it("leaves every other field untouched when one changes", () => {
     const next = reduceCompare(base, { type: "SET_VIEW", view: "network" });
     expect(next.selectedPsalm).toBe(base.selectedPsalm);
-    expect(next.selectedMethodId).toBe(base.selectedMethodId);
     expect(next.referenceColorMode).toBe(base.referenceColorMode);
   });
 
@@ -65,27 +51,20 @@ describe("reduceCompare", () => {
   });
 });
 
-describe("initialClusterState", () => {
-  it("takes its method from the payload rather than a hardcoded guess", () => {
-    expect(initialClusterState("lexical-spectral").selectedClusterMethodId).toBe(
-      "lexical-spectral",
-    );
-  });
-
+describe("INITIAL_CLUSTER_STATE", () => {
   it("opens colored by Gunkel family, since genre recovery is the page's point", () => {
     //: This page checks a clustering against the taxonomy, so the picker shows it.
-    expect(initialClusterState("x").referenceColorMode).toBe("family");
+    expect(INITIAL_CLUSTER_STATE.referenceColorMode).toBe("family");
   });
 
   it("opens on the alignment view, and on the same psalm Compare does", () => {
-    const state = initialClusterState("x");
-    expect(state.clusterView).toBe("alignment");
-    expect(state.selectedPsalm).toBe(OPENING_PSALM);
+    expect(INITIAL_CLUSTER_STATE.clusterView).toBe("alignment");
+    expect(INITIAL_CLUSTER_STATE.selectedPsalm).toBe(OPENING_PSALM);
   });
 });
 
 describe("reduceCluster", () => {
-  const base: ClusterState = initialClusterState("lexical-spectral");
+  const base = INITIAL_CLUSTER_STATE;
 
   it("selects a psalm", () => {
     expect(reduceCluster(base, { type: "SELECT_PSALM", psalm: 42 }).selectedPsalm).toBe(42);
@@ -93,11 +72,6 @@ describe("reduceCluster", () => {
 
   it("clears the selection when given null", () => {
     expect(reduceCluster(base, { type: "SELECT_PSALM", psalm: null }).selectedPsalm).toBeNull();
-  });
-
-  it("switches cluster method", () => {
-    const next = reduceCluster(base, { type: "SET_CLUSTER_METHOD", methodId: "root-spectral" });
-    expect(next.selectedClusterMethodId).toBe("root-spectral");
   });
 
   it("switches view", () => {
@@ -114,7 +88,6 @@ describe("reduceCluster", () => {
   it("leaves every other field untouched when one changes", () => {
     const next = reduceCluster(base, { type: "SET_CLUSTER_VIEW", view: "scatter" });
     expect(next.selectedPsalm).toBe(base.selectedPsalm);
-    expect(next.selectedClusterMethodId).toBe(base.selectedClusterMethodId);
     expect(next.referenceColorMode).toBe(base.referenceColorMode);
   });
 
@@ -122,18 +95,5 @@ describe("reduceCluster", () => {
     const snapshot = { ...base };
     reduceCluster(base, { type: "SELECT_PSALM", psalm: 99 });
     expect(base).toEqual(snapshot);
-  });
-});
-
-describe("the two pages' reducers", () => {
-  it("keep their own selections apart", () => {
-    //: They overlap on two fields, which is why they stay two small reducers.
-    const compare = reduceCompare(initialCompareState("a"), {
-      type: "SELECT_PSALM",
-      psalm: 7,
-    });
-    const cluster = initialClusterState("b");
-    expect(compare.selectedPsalm).toBe(7);
-    expect(cluster.selectedPsalm).toBe(OPENING_PSALM);
   });
 });

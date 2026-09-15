@@ -7,7 +7,6 @@ function makeMethod(): MethodPayload {
     id: "lexical-tfidf-cosine",
     description: "",
     psalmNumbers: [1, 2, 3],
-    psalmStats: [],
     similar: {},
     matrix: [
       [1, 0.8, 0.1],

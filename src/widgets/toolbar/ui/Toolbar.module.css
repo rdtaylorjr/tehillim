@@ -1,93 +1,18 @@
-/* Toolbar: the path heads it, each branch's filters sit on a shared right rail. */
+/* Toolbar: the head names the selection, the band below holds each choice's control. */
 .toolbar {
   display: flex;
   flex-direction: column;
 }
 
-/* Path strip keeps the panel ground, and the band below drops to the page black. */
-.summary {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 3px 7px;
-  padding: 9px 16px;
-  background: var(--bg-inset);
-  border-bottom: 1px solid var(--rule);
-}
-
-/* Shrinks before the filter, truncating in the dimmed selection's face. */
-.crumbs {
-  flex: 0 1 auto;
-  min-width: 0;
-  color: var(--ink-dim);
-  font-family: var(--serif);
-  font-size: 18.5px;
-  font-weight: 400;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /* Pinned so the strip's height follows the controls, not the serif's own metrics. */
-  height: var(--control-h);
-  line-height: var(--control-h);
-}
-
-.crumb,
-.crumb-x {
-  margin-right: 5px;
-  font-size: 12.5px;
-}
-
-.crumbs :last-child {
-  margin-right: 0;
-}
-
-/* The page name leads, in the title face, and is the last thing to go. */
-.page-name {
-  flex-shrink: 0;
-  margin-right: 10px;
-  color: var(--ink);
-  font-family: var(--serif);
-  font-size: 18.5px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-/* The selection qualifies the name, so it steps back from it. */
-.crumb {
-  color: var(--ink-dim);
-  font-family: var(--serif);
-  font-size: 18.5px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-}
-
-.crumb-x {
-  color: var(--ink-faint);
-  font-family: var(--mono);
-  font-size: 13px;
-}
-
-/* Hidden on detail rather than unmounted, so the filters keep their state. */
-.is-detail .bands {
-  display: none;
-}
-
-/* Last resort in detail: the model name truncates, the floor keeping the two trees whole. */
-.is-detail .crumbs {
-  flex: 0 1 auto;
-  min-width: 192px;
-}
-
-/* The filters share one right rail, wrapping among themselves and staying against the edge. */
-.summary .summary-control {
+/* Outweighs the field's default margin, so the filter sits on the head's right rail. */
+.toolbar .summary-control {
   flex: 0 1 auto;
   min-width: 0;
   margin-left: auto;
 }
 
 /* A step below the row, so the field reads as a well rather than a flat patch. */
-.summary .summary-control input[type="text"] {
+.summary-control input[type="text"] {
   flex: 0 1 auto;
   width: 200px;
   min-width: 110px;
@@ -95,21 +20,21 @@
   font-weight: 400;
 }
 
+/* Keyed to the panel, not the window, so the order holds whatever the row is given. */
+@container (max-width: 430px) {
+  .summary-control input[type="text"] {
+    min-width: 96px;
+  }
+}
+
 @container (max-width: 400px) {
-  .summary .control label {
+  .summary-control label {
     display: none;
   }
 }
 
 @container (max-width: 320px) {
-  .summary .summary-control input[type="text"] {
+  .summary-control input[type="text"] {
     min-width: 40px;
-  }
-}
-
-/* Keyed to the panel, not the window, so the order holds whatever the row is given. */
-@container (max-width: 430px) {
-  .summary .summary-control input[type="text"] {
-    min-width: 96px;
   }
 }

@@ -17,6 +17,8 @@ const STRUCTURE_COLOR = TOKENS.bgPanel;
 
 export interface SimilarityMatrixOptions {
   readonly method: MethodPayload;
+  /** The value the ramp starts at, below which every cell reads the same. */
+  readonly domainMin: number;
   /** The value the ramp tops out at, past which every cell reads the same. */
   readonly domainMax: number;
   readonly boundaries: readonly number[];
@@ -29,7 +31,7 @@ export function mountSimilarityMatrix(
   options: SimilarityMatrixOptions,
   api: PlotApi = plotApi,
 ): Promise<void> {
-  const { method, domainMax, boundaries, onSelect } = options;
+  const { method, domainMin, domainMax, boundaries, onSelect } = options;
   const psalmNumbers = method.psalmNumbers;
   const n = psalmNumbers.length;
 
@@ -37,7 +39,7 @@ export function mountSimilarityMatrix(
     type: "heatmap",
     z: valueGrid(method.matrix),
     text: hoverTextGrid(psalmNumbers, method.matrix),
-    zmin: 0,
+    zmin: domainMin,
     zmax: domainMax,
     colorscale: DIVERGING_COLORSCALE,
     colorbar: {

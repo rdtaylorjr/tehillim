@@ -10,8 +10,6 @@ export interface HomeFigures {
     readonly psalms: readonly number[];
     /** The 150x150 matrix for the compare page's default method. */
     readonly matrix: readonly (readonly number[])[];
-    /** The 95th-percentile domain the compare page's scale uses. */
-    readonly domainMax: number;
   };
   readonly cluster: { readonly alignment: GenreAlignment };
 }

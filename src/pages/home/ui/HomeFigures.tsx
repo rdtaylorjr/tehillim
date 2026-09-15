@@ -6,6 +6,7 @@ import { ResultsTable, parallelismOverallColumns } from "../../../widgets/benchm
 import { createGunkelFamilyColorScale } from "../../../shared/lib/color";
 import { HEATMAP_STEPS, steppedColorFn } from "../../../shared/charts";
 import { bookBoundaries } from "../../../shared/lib/corpus";
+import { similarityColorDomain } from "../../../shared/lib/results";
 import type { HomeFigures } from "../api/loadHomeFigures";
 
 /** Complete rows the card shows. The payload carries more, so the table is cut. */
@@ -72,14 +73,15 @@ export function CompareFigure({
   useEffect(() => {
     const container = containerRef.current;
     if (container === null) return undefined;
-    const { matrix, psalms, domainMax } = figures.compare;
+    const { matrix, psalms } = figures.compare;
+    const domain = similarityColorDomain(matrix);
     const plot = new MatrixHeatmap(
       {
         container,
         psalmNumbers: psalms,
         matrix,
         boundaries: bookBoundaries(),
-        colorScale: steppedColorFn(HEATMAP_STEPS, Math.max(domainMax, 0.01)),
+        colorScale: steppedColorFn(HEATMAP_STEPS, domain.max, domain.min),
         tooltipFor: () => "",
         onSelect: () => undefined,
       },

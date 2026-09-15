@@ -8,7 +8,7 @@ import {
   trajectoryByGenreColumns,
   trajectoryOverallColumns,
 } from "./tableColumns";
-import type { TrajectoryByGenreRow, TrajectoryOverallRow } from "../../../shared/lib/results";
+import type { TrajectoryOverallRow } from "../../../shared/lib/results";
 
 /** The CI cells render React nodes now, so assertions read the produced DOM. */
 function cell(node: React.ReactNode): HTMLElement {
@@ -205,54 +205,35 @@ describe("genreByGenreColumns", () => {
 });
 
 describe("trajectoryOverallColumns", () => {
-  it("prepends a Name column ahead of the visible-source stat columns", () => {
-    const columns = trajectoryOverallColumns([makeValidationRow()]);
+  it("prepends a Name column ahead of the chosen control's stat columns", () => {
+    const columns = trajectoryOverallColumns([makeValidationRow()], "length_controlled");
     expect(columns[0]!.key).toBe("model_base");
     expect(columns[0]!.label).toBe("Name");
   });
 
   it("shows the valid-pair sample size last, after the stats it supports", () => {
-    const columns = trajectoryOverallColumns([makeValidationRow()]);
+    const columns = trajectoryOverallColumns([makeValidationRow()], "length_controlled");
     expect(columns.at(-1)!.key).toBe("n_pairs_valid");
   });
 
-  it("omits length_and_content_controlled columns when no row in the group has them", () => {
-    const columns = trajectoryOverallColumns([makeValidationRow()]);
-    expect(columns.some((c) => c.key.startsWith("length_and_content_controlled"))).toBe(false);
+  it("omits the content control's columns when no row in the group has them", () => {
+    const columns = trajectoryOverallColumns(
+      [makeValidationRow()],
+      "length_and_content_controlled",
+    );
+    expect(columns.map((c) => c.key)).toEqual(["model_base", "n_pairs_valid"]);
   });
 });
 
 describe("trajectoryByGenreColumns", () => {
-  it("matches the by-genre trajectory field set, source shown as plain text", () => {
+  it("matches the by-genre trajectory field set, the control named above the table", () => {
     const columns = trajectoryByGenreColumns();
     expect(columns.map((c) => c.key)).toEqual([
       "model_base",
-      "source",
       "gap",
       "p_perm",
       "perm_q",
       "maxT_q",
     ]);
-    expect(columns.find((c) => c.key === "source")?.type).toBe("text");
-  });
-
-  const sourceCell = (source: string): HTMLElement => {
-    const column = trajectoryByGenreColumns().find((c) => c.key === "source");
-    return cell(column?.render?.({ source } as TrajectoryByGenreRow));
-  };
-
-  it("marks the raw source uncontrolled, since it is the length-confounded quantity", () => {
-    expect(sourceCell("raw")).toHaveTextContent("Raw (uncontrolled)");
-  });
-
-  it("names each controlled source by what it controls for", () => {
-    expect(sourceCell("length_controlled")).toHaveTextContent("Length controlled");
-    expect(sourceCell("length_and_content_controlled")).toHaveTextContent(
-      "Length + content controlled",
-    );
-  });
-
-  it("shows an unrecognised source verbatim rather than blanking the cell", () => {
-    expect(sourceCell("something_new")).toHaveTextContent("something_new");
   });
 });

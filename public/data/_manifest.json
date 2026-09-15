@@ -1,27 +1,27 @@
 {
-  "cell": "ui.syntactic.payload",
+  "cell": "ui.morphological.payload",
   "code_hash": "a0712ac17dbf020f18b2d1716bfcbeb1af347c6425d7ff6062037e1fe7fc2a85",
-  "duration_s": 0.226451,
+  "duration_s": 0.224906,
   "inputs": {
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=syntactic/stage=master/genre_metrics_wide.parquet": "474f735bf3b715facb5c9ed5ac8a75ff046e593ef8a8b14948daf94fd208196b",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=syntactic/stage=raw/by_genre.csv": "096897a6673a33c312e0bfcc20fb5098fa8d73fa7ff07b94dacc354cf1fa2802",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic/stage=master/model_metrics_by_type.parquet": "e05be05b31e40da0013f320da03b8cee60790d44fd1b9ccedda3e85c0316379d",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic/stage=master/model_metrics_overall.parquet": "f5c8431c7edb33c4ca949657b9ca15b6c581d8c952eacd10c5cee0e9b4a02e99",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows.json": "4eccf2efbe53f68e1066a4c762054de808a3f5378fd9defdafb8ef859771bba1",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows_by_genre.json": "871d8d37c72dc73c7bce91649c29e866781883191074d8af35ecbf4dc7f31bea"
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=morphological/stage=master/genre_metrics_wide.parquet": "fadd4ae4aa7098701ebe2db3773a4c94c23e3576ca8d7636b921eb3fc56def85",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=morphological/stage=raw/by_genre.csv": "f5f8d8c1b8b1131da69f4b08bc6495041f7e147d5b6a89709f1b8dbddb96425e",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological/stage=master/model_metrics_by_type.parquet": "02887a1f99eddf60dfbbf5f3bb2368b1b43efc4da938a037e97d86b687722ea2",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological/stage=master/model_metrics_overall.parquet": "53acacf923b9b4277add898d4983460a80f1e327770d4fa54fac2281270b4a83",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows.json": "766b3562b4d7e08ee06162f7ceda54a7fa99a5c39c656c418f5e11111ae9ef80",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows_by_genre.json": "65536eb553616490f17c9606639613845905d737d2814c3b4e1c16fe26a34834"
   },
   "outputs": {
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic.json": "fc9ddb8415b696ea8e7c92fa550c7cc57ace7ba1ae33cce2170866e89d0dfbf8",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_adjacent_similarity_distance.json": "a95670e39a29e3b1a1448c738d1161ea5a61fcb462ce00dd6b76e23c512d5f70",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_content_distance.json": "03901247641d10cde8c89f0c99da5851030903a1e0d1f7bd7acb1a6d2bd5d7eb",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_step_magnitude_distance.json": "b943fdb988966baa96650a82f11e9e784eccd076835713553d802f233c6b22b0",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_structural_distance.json": "ddfa56ec6d698f7de2c58a460914d41d5ee2cd571eff8077eb42e228a532a60c",
-    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_turning_angle_distance.json": "d0ecaf438e45b71056cb3d1410e83a2aa36fcaf9f2998fa20acf4af0be814232"
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological.json": "5a1b0fb18a73ecccf4f7d6005d1b97a403675b7b2474e92b0c341145dc179d94",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_adjacent_similarity_distance.json": "d9dd4a8c0aa5fee82089e7c3f9a0008fb96c7ec87ed381f48a8bb78ce882384c",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_content_distance.json": "1817f1dd7a5c364071f676e2678d2018ddb278a3face4d74a9128e4e2659812f",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_step_magnitude_distance.json": "602536cc7d32295ef247fa27e326d9a20ad694686b93d593e0b7d06a302f0cd4",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_structural_distance.json": "6f47ddc94bffba6a7c6ef66c3ec2b41669c87d0974ccba1f389d4417ebffc6d7",
+    "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_turning_angle_distance.json": "e3b92f99c6d31dfce21231942e6547193ce82ddeb661ca4e8dcdf76f493cfbbe"
   },
   "parameters": {
-    "args": "syntactic --parallelism-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic --genre-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=syntactic --trajectory-ui-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows.json --trajectory-by-genre-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows_by_genre.json --output /Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic.json"
+    "args": "morphological --parallelism-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological --genre-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/domain=morphological --trajectory-ui-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows.json --trajectory-by-genre-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows_by_genre.json --output /Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological.json"
   },
   "repository_revision": "4c770869b2e632e74f49b24b159e4fbdbe37c3a0",
-  "rule": "cell__ui_syntactic_payload",
-  "started": "2026-09-13T22:57:09.391832+00:00"
+  "rule": "cell__ui_morphological_payload",
+  "started": "2026-09-14T17:45:29.403158+00:00"
 }

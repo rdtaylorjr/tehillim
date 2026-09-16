@@ -74,9 +74,9 @@ export function ModelDropdown({
         </DropdownPills>
       </DropdownRow>
       {facetValues.length > 0 ? (
-        <DropdownRow label={facet?.label ?? "Unit"}>
+        <DropdownRow label={facet?.label ?? "Facet"}>
           <select
-            aria-label={facet?.label ?? "Unit"}
+            aria-label={facet?.label ?? "Facet"}
             value={selection.facet}
             onChange={(event) => {
               dispatch({ type: "facet/selected", facet: event.target.value });

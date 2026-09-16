@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "./App";
 import type { DomainData } from "../shared/lib/results";
@@ -109,6 +109,11 @@ async function choose(label: string, value: string): Promise<void> {
   await user.selectOptions(screen.getByLabelText(label), value);
 }
 
+/** Chooses inside one menu, since the model and benchmark menus can both offer a Type. */
+async function chooseIn(menu: string, label: string, value: string): Promise<void> {
+  await user.selectOptions(within(screen.getByLabelText(menu)).getByLabelText(label), value);
+}
+
 /** Renders the page and waits for the first family's rows. */
 async function open(): Promise<void> {
   cleanup();
@@ -134,7 +139,7 @@ describe("every toolbar permutation renders a coherent table", () => {
     expectCellsMatchHeaders("parallelism overall");
 
     for (const type of PARALLELISM_TYPES) {
-      await choose("Type", type);
+      await chooseIn("Benchmark", "Type", type);
       expectCellsMatchHeaders(`parallelism / ${type}`);
     }
   });

@@ -60,13 +60,13 @@ export function methodFamilies(methods: readonly CompareMethodMeta[]): readonly 
   return MODEL_FAMILIES.filter((f) => present.has(f.id));
 }
 
-/** The unit or level a method's model name carries, as the benchmark's rows are bucketed. */
+/** The type or level a method's model name carries, as the benchmark's rows are bucketed. */
 export function facetOfMethod(method: CompareMethodMeta): string | null {
   const facet = facetFor(method.domain as FamilyId);
   return facet === undefined ? null : facetOf(method.modelBase, facet.values);
 }
 
-/** The benchmark's row filters: the family, then its unit and text variant where not "all". */
+/** The benchmark's row filters: the family, then its facet and text variant where not "all". */
 function matchesFilters(
   method: CompareMethodMeta,
   selection: Pick<Selection, "family" | "facet" | "text">,

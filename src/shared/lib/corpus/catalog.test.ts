@@ -30,9 +30,9 @@ describe("MODEL_FAMILIES", () => {
 });
 
 describe("facetFor", () => {
-  it("gives lexical a Unit facet of homograph, lexeme, and word", () => {
+  it("gives lexical a Type facet of homograph, lexeme, and word", () => {
     expect(facetFor("lexical")).toEqual({
-      label: "Unit",
+      label: "Type",
       values: ["homograph", "lexeme", "word"],
     });
   });
@@ -95,21 +95,21 @@ describe("sentenceCase", () => {
 });
 
 describe("facetOf", () => {
-  const units = ["homograph", "lexeme", "word"];
+  const types = ["homograph", "lexeme", "word"];
 
   it("matches a model named exactly for its facet", () => {
-    expect(facetOf("word", units)).toBe("word");
+    expect(facetOf("word", types)).toBe("word");
   });
 
   it("matches a model prefixed with its facet", () => {
-    expect(facetOf("lexeme_tfidf", units)).toBe("lexeme");
+    expect(facetOf("lexeme_tfidf", types)).toBe("lexeme");
   });
 
   it("does not match a name that merely starts with the same letters", () => {
-    expect(facetOf("wordnet", units)).toBeNull();
+    expect(facetOf("wordnet", types)).toBeNull();
   });
 
   it("returns null for a model in no facet", () => {
-    expect(facetOf("bge_m3", units)).toBeNull();
+    expect(facetOf("bge_m3", types)).toBeNull();
   });
 });

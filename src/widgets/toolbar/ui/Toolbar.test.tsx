@@ -18,6 +18,10 @@ function renderToolbar(overrides: Partial<Selection> = {}): {
 
 const modelsGroup = (): HTMLElement => screen.getByRole("radiogroup", { name: "Models" });
 
+/** The benchmark menu, since the model menu offers a Type of its own under the lexical family. */
+const benchmarkMenu = (): HTMLElement => screen.getByLabelText("Benchmark");
+const modelMenu = (): HTMLElement => screen.getByLabelText("Model");
+
 describe("Toolbar model families", () => {
   it("offers every family, including those with no data", () => {
     renderToolbar();
@@ -50,7 +54,7 @@ describe("Toolbar model families", () => {
 describe("Toolbar dependent filters", () => {
   it("shows Type under parallelism and Genre plus Metric under genre", () => {
     renderToolbar();
-    expect(screen.getByLabelText("Type")).toBeInTheDocument();
+    expect(within(benchmarkMenu()).getByLabelText("Type")).toBeInTheDocument();
     expect(screen.queryByLabelText("Genre")).not.toBeInTheDocument();
 
     renderToolbar({ benchmark: "genre" });
@@ -58,19 +62,19 @@ describe("Toolbar dependent filters", () => {
     expect(screen.getByLabelText("Metric")).toBeInTheDocument();
   });
 
-  it("shows Unit for lexical and Level for syntactic, and neither for semantic", () => {
+  it("shows Type for lexical and Level for syntactic, and neither for semantic", () => {
     renderToolbar({ family: "lexical" });
-    expect(screen.getByLabelText("Unit")).toBeInTheDocument();
+    expect(within(modelMenu()).getByLabelText("Type")).toBeInTheDocument();
 
     renderToolbar({ family: "syntactic" });
     expect(screen.getByLabelText("Level")).toBeInTheDocument();
 
     renderToolbar({ family: "morphological" });
-    expect(screen.queryByLabelText("Unit")).not.toBeInTheDocument();
+    expect(within(modelMenu()).queryByLabelText("Type")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Level")).not.toBeInTheDocument();
   });
 
-  it("shows Text for semantic always and for lexical only at the word unit", () => {
+  it("shows Text for semantic always and for lexical only at the word type", () => {
     renderToolbar({ family: "semantic" });
     expect(screen.getByLabelText("Text")).toBeInTheDocument();
 
@@ -117,7 +121,7 @@ describe("Toolbar dependent filters", () => {
   it("dispatches facet and text choices under a family that offers them", async () => {
     const { dispatch } = renderToolbar({ family: "lexical", facet: "word" });
 
-    await userEvent.selectOptions(screen.getByLabelText("Unit"), "lexeme");
+    await userEvent.selectOptions(within(modelMenu()).getByLabelText("Type"), "lexeme");
     expect(dispatch).toHaveBeenCalledWith({ type: "facet/selected", facet: "lexeme" });
 
     await userEvent.selectOptions(screen.getByLabelText("Text"), "vocalized");
@@ -126,7 +130,7 @@ describe("Toolbar dependent filters", () => {
 
   it("dispatches the chosen value from a dependent select", async () => {
     const { dispatch } = renderToolbar();
-    await userEvent.selectOptions(screen.getByLabelText("Type"), "Staircase");
+    await userEvent.selectOptions(within(benchmarkMenu()).getByLabelText("Type"), "Staircase");
     expect(dispatch).toHaveBeenCalledWith({
       type: "parallelismType/selected",
       parallelismType: "Staircase",

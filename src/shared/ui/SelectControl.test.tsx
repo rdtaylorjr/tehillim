@@ -10,41 +10,41 @@ const OPTIONS = [
 describe("SelectControl", () => {
   it("labels the select, so the control names what it sets", () => {
     render(
-      <SelectControl label="Unit" options={OPTIONS} value="all" onSelect={() => undefined} />,
+      <SelectControl label="Type" options={OPTIONS} value="all" onSelect={() => undefined} />,
     );
-    expect(screen.getByLabelText("Unit")).toBeInTheDocument();
+    expect(screen.getByLabelText("Type")).toBeInTheDocument();
   });
 
   it("shows the value it was given", () => {
     render(
-      <SelectControl label="Unit" options={OPTIONS} value="word" onSelect={() => undefined} />,
+      <SelectControl label="Type" options={OPTIONS} value="word" onSelect={() => undefined} />,
     );
-    expect(screen.getByLabelText<HTMLSelectElement>("Unit").value).toBe("word");
+    expect(screen.getByLabelText<HTMLSelectElement>("Type").value).toBe("word");
   });
 
   it("reports the chosen value", () => {
     const onSelect = vi.fn();
-    render(<SelectControl label="Unit" options={OPTIONS} value="all" onSelect={onSelect} />);
-    fireEvent.change(screen.getByLabelText("Unit"), { target: { value: "word" } });
+    render(<SelectControl label="Type" options={OPTIONS} value="all" onSelect={onSelect} />);
+    fireEvent.change(screen.getByLabelText("Type"), { target: { value: "word" } });
     expect(onSelect).toHaveBeenCalledWith("word");
   });
 
   it("ignores a value none of its options carries", () => {
     const onSelect = vi.fn();
-    render(<SelectControl label="Unit" options={OPTIONS} value="all" onSelect={onSelect} />);
-    fireEvent.change(screen.getByLabelText("Unit"), { target: { value: "mystery" } });
+    render(<SelectControl label="Type" options={OPTIONS} value="all" onSelect={onSelect} />);
+    fireEvent.change(screen.getByLabelText("Type"), { target: { value: "mystery" } });
     expect(onSelect).not.toHaveBeenCalled();
   });
 
   it("generates an id per instance, so two can share a page", () => {
     render(
       <>
-        <SelectControl label="Unit" options={OPTIONS} value="all" onSelect={() => undefined} />
+        <SelectControl label="Type" options={OPTIONS} value="all" onSelect={() => undefined} />
         <SelectControl label="Text" options={OPTIONS} value="all" onSelect={() => undefined} />
       </>,
     );
-    const unit = screen.getByLabelText("Unit");
+    const type = screen.getByLabelText("Type");
     const text = screen.getByLabelText("Text");
-    expect(unit.id).not.toBe(text.id);
+    expect(type.id).not.toBe(text.id);
   });
 });

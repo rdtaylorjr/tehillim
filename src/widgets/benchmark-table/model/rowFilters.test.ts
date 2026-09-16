@@ -8,7 +8,7 @@ describe("applyFacetFilter", () => {
     { model: "bge_m3", model_base: "bge_m3" },
   ];
 
-  it("returns every row unfiltered when unit is all", () => {
+  it("returns every row unfiltered when the facet value is all", () => {
     expect(applyFacetFilter(rows, "syntactic", "all")).toEqual(rows);
   });
 

@@ -131,11 +131,15 @@ describe("App", () => {
 
   it("swaps the benchmark filters when the benchmark changes", async () => {
     renderApp();
-    expect(screen.getByLabelText("Type")).toBeInTheDocument();
+    expect(
+      within(screen.getByLabelText("Benchmark")).getByLabelText("Type"),
+    ).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("radio", { name: "Genre" }));
 
-    expect(screen.queryByLabelText("Type")).not.toBeInTheDocument();
+    expect(
+      within(screen.getByLabelText("Benchmark")).queryByLabelText("Type"),
+    ).not.toBeInTheDocument();
     expect(screen.getByLabelText("Genre")).toBeInTheDocument();
     expect(screen.getByLabelText("Metric")).toBeInTheDocument();
   });

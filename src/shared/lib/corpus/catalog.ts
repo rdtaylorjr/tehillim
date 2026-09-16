@@ -31,7 +31,7 @@ export const BENCHMARKS: readonly { readonly id: BenchmarkId; readonly label: st
 ];
 
 const FACETS: Partial<Record<FamilyId, Facet>> = {
-  lexical: { label: "Unit", values: ["homograph", "lexeme", "word"] },
+  lexical: { label: "Type", values: ["homograph", "lexeme", "word"] },
   syntactic: { label: "Level", values: ["phrase", "clause"] },
 };
 

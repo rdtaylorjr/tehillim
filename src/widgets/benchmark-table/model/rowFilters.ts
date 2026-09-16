@@ -10,12 +10,12 @@ export interface FacetableRow {
 export function applyFacetFilter<T extends FacetableRow>(
   rows: readonly T[],
   family: FamilyId,
-  unit: string,
+  value: string,
 ): T[] {
-  if (unit === "all") return [...rows];
+  if (value === "all") return [...rows];
   const facet = facetFor(family);
   if (!facet) return [...rows];
-  return rows.filter((r) => facetOf(r.model_base ?? r.model ?? "", facet.values) === unit);
+  return rows.filter((r) => facetOf(r.model_base ?? r.model ?? "", facet.values) === value);
 }
 
 export interface TextVariantRow {

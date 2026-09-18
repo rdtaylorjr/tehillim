@@ -14,29 +14,18 @@ const DATA: DomainData = {
     { model: "syn", scope: "Synonymous" },
     { model: "ant", scope: "Antithetic" },
   ] as never,
-  genre_overall: [{ model: "g" }] as never,
+  genre_registers: [
+    { taxonomy: "logos", unit: null, genres: ["Hymn", "Wisdom"] },
+    { taxonomy: "gunkel", unit: "song", genres: ["Lament"] },
+  ],
+  genre_overall: [
+    { model: "g", taxonomy: "logos", unit: null },
+    { model: "gs", taxonomy: "gunkel", unit: "song" },
+  ] as never,
   genre_by_genre: [
-    { model: "hymn", genre: "Hymn" },
-    { model: "wis", genre: "Wisdom" },
-  ] as never,
-  trajectory: [
-    { model: "t1", metric: "structural_distance", length_controlled_p: 0.01 },
-    { model: "t2", metric: "turning_angle_distance", length_controlled_p: 0.01 },
-  ] as never,
-  trajectory_by_genre: [
-    { model: "tg1", metric: "structural_distance", genre: "Hymn", source: "length_controlled" },
-    {
-      model: "tg1c",
-      metric: "structural_distance",
-      genre: "Hymn",
-      source: "length_and_content_controlled",
-    },
-    {
-      model: "tg2",
-      metric: "structural_distance",
-      genre: "Wisdom",
-      source: "length_controlled",
-    },
+    { model: "hymn", genre: "Hymn", taxonomy: "logos", unit: null },
+    { model: "wis", genre: "Wisdom", taxonomy: "logos", unit: null },
+    { model: "lam", genre: "Lament", taxonomy: "gunkel", unit: "song" },
   ] as never,
 };
 
@@ -55,62 +44,36 @@ describe("resolveTableView parallelism", () => {
 
 describe("resolveTableView genre discrimination", () => {
   it("uses the overall rows while no genre is chosen", () => {
-    const view = resolveTableView(DATA, at({ benchmark: "genre" }));
+    const view = resolveTableView(DATA, at({ benchmark: "genre", source: "logos" }));
     expect(view.rows.map((r) => (r as { model: string }).model)).toEqual(["g"]);
   });
 
   it("narrows to the chosen genre's rows", () => {
-    const view = resolveTableView(DATA, at({ benchmark: "genre", genre: "Wisdom" }));
+    const view = resolveTableView(
+      DATA,
+      at({ benchmark: "genre", source: "logos", genre: "Wisdom" }),
+    );
     expect(view.rows.map((r) => (r as { model: string }).model)).toEqual(["wis"]);
   });
-});
 
-describe("resolveTableView trajectory", () => {
-  it("switches to the trajectory rows for the chosen metric", () => {
-    const view = resolveTableView(
-      DATA,
-      at({ benchmark: "genre", metric: "structural_distance" }),
-    );
-    expect(view.rows.map((r) => (r as { model: string }).model)).toEqual(["t1"]);
+  it("reads a source's register at its first unit when none is chosen", () => {
+    const view = resolveTableView(DATA, at({ benchmark: "genre" }));
+    expect(view.rows.map((r) => (r as { model: string }).model)).toEqual(["gs"]);
   });
 
-  it("leads on effect size, the headline metric for a gap test", () => {
+  it("narrows to one Gattung and heads its count column with that word", () => {
     const view = resolveTableView(
       DATA,
-      at({ benchmark: "genre", metric: "structural_distance" }),
+      at({ benchmark: "genre", unit: "song", genre: "Lament" }),
     );
-    expect(view.defaultSortKey).toBe("length_controlled_effect_size");
+    expect(view.rows.map((r) => (r as { model: string }).model)).toEqual(["lam"]);
+    expect(view.columns.map((c) => c.label)).toContain("n same-gattung");
   });
 
-  it("narrows to one genre under the chosen control and leads on the gap itself", () => {
-    const view = resolveTableView(
-      DATA,
-      at({ benchmark: "genre", metric: "structural_distance", genre: "Hymn" }),
-    );
-    expect(view.rows.map((r) => (r as { model: string }).model)).toEqual(["tg1"]);
-    expect(view.defaultSortKey).toBe("gap");
-    const content = resolveTableView(
-      DATA,
-      at({
-        benchmark: "genre",
-        metric: "structural_distance",
-        genre: "Hymn",
-        control: "length_and_content_controlled",
-      }),
-    );
-    expect(content.rows.map((r) => (r as { model: string }).model)).toEqual(["tg1c"]);
-  });
-
-  it("leads the overall table on the chosen control's effect size", () => {
-    const view = resolveTableView(
-      DATA,
-      at({
-        benchmark: "genre",
-        metric: "structural_distance",
-        control: "length_and_content_controlled",
-      }),
-    );
-    expect(view.defaultSortKey).toBe("length_and_content_controlled_effect_size");
+  it("shows no rows for a source the export never scored", () => {
+    const data = { ...DATA, genre_registers: [] };
+    const view = resolveTableView(data, at({ benchmark: "genre" }));
+    expect(view.rows).toEqual([]);
   });
 });
 
@@ -121,12 +84,7 @@ describe("resolveTableView columns", () => {
 
     expect(labels(INITIAL_SELECTION)).toContain("MRR (fwd)");
     expect(labels(at({ benchmark: "genre" }))).toContain("AUC 95% CI");
-    expect(labels(at({ benchmark: "genre", metric: "structural_distance" }))).toContain(
-      "Effect size",
-    );
-    expect(
-      labels(at({ benchmark: "genre", metric: "structural_distance", genre: "Hymn" })),
-    ).toContain("Gap");
+    expect(labels(at({ benchmark: "genre", genre: "Lament" }))).toContain("n same-gattung");
   });
 });
 

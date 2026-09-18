@@ -74,13 +74,15 @@
 }
 
 /* Class-driven because display cannot transition and visibility can. */
+/* A two-column grid: labels size the first column to the widest of them, controls share the second. */
 .menu {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   z-index: 20;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: start;
   gap: 12px;
   width: max-content;
   max-width: min(560px, 90vw);
@@ -106,16 +108,15 @@
   transition-delay: 0s;
 }
 
+/* A row places its label and control in the menu's columns rather than boxing them. */
 .row {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  display: contents;
 }
 
 /* Pills name themselves, so only the selects take a label. */
 .row-label {
-  flex-shrink: 0;
-  width: 82px;
+  grid-column: 1;
+  white-space: nowrap;
   color: var(--ink-faint);
   font-family: var(--mono);
   font-size: 9.5px;
@@ -124,10 +125,15 @@
   text-transform: uppercase;
 }
 
-/* The control takes the width left over and wraps inside it. */
+/* The control takes the second column and wraps inside it. */
 .row > :not(.row-label) {
-  flex: 1;
+  grid-column: 2;
   min-width: 0;
+}
+
+/* A row without a label spans both columns, so its pills start at the menu's left edge. */
+.row.row-unlabelled > * {
+  grid-column: 1 / -1;
 }
 
 /* PillGroup is display:contents, so its pills need a box to set their gap. */

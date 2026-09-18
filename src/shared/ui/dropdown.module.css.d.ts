@@ -8,6 +8,7 @@ declare const styles: {
   readonly pills: string;
   readonly row: string;
   readonly rowLabel: string;
+  readonly rowUnlabelled: string;
   readonly toggle: string;
 };
 export default styles;

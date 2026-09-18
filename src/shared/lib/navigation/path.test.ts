@@ -39,26 +39,25 @@ describe("selectionPath", () => {
     expect(path.at(-1)).toEqual({ kind: "minor", label: "Synonymous" });
   });
 
-  it("carries the genre when the genre benchmark is chosen", () => {
-    const path = selectionPath(at({ benchmark: "genre", genre: "Wisdom" }));
-    expect(path.at(-1)).toEqual({ kind: "minor", label: "Wisdom" });
-  });
-
-  it("never shows the metric, which its own dropdown already states", () => {
-    const path = selectionPath(
-      at({ benchmark: "genre", metric: "turning_angle_distance", genre: "Wisdom" }),
+  it("names the source, then its unit register, then the class, under the genre benchmark", () => {
+    const path = selectionPath(at({ benchmark: "genre", source: "logos", genre: "Wisdom" }));
+    expect(path.filter((c) => c.kind === "minor")).toEqual([
+      { kind: "minor", label: "Logos" },
+      { kind: "minor", label: "Wisdom" },
+    ]);
+    const gunkel = selectionPath(
+      at({ benchmark: "genre", source: "gunkel", unit: "song_component", genre: "Hymnus" }),
     );
-    expect(path.map((crumb) => crumb.label)).not.toContain("Turning Angle Distance");
+    expect(gunkel.filter((c) => c.kind === "minor").map((c) => c.label)).toEqual([
+      "Gunkel",
+      "Lied, Stück",
+      "Hymnus",
+    ]);
   });
 
-  it("names the control a trajectory metric is read under, and nothing under discrimination", () => {
-    const trajectory = at({ benchmark: "genre", metric: "turning_angle_distance" });
-    expect(selectionPath(trajectory).at(-1)).toEqual({
-      kind: "minor",
-      label: "Length",
-    });
+  it("always names the source under the genre benchmark, since neither is a default", () => {
     expect(selectionPath(at({ benchmark: "genre" })).filter((c) => c.kind === "minor")).toEqual(
-      [],
+      [{ kind: "minor", label: "Gunkel" }],
     );
   });
 

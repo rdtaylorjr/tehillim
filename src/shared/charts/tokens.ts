@@ -1,3 +1,4 @@
+import { interpolateRgb } from "d3-interpolate";
 import { BOOK_HUES, HUES } from "../lib/color";
 
 /** Literal hex colors for Plotly traces, matching the site's palette in src/index.css. */
@@ -36,6 +37,28 @@ export const GENRE_COLORS: Record<string, string> = {
   Trust: AQUA ?? "",
   Wisdom: RED ?? "",
 };
+
+/** The seven hues, then each tinted toward the ink, then toward the ground, for a wider class list. */
+const CLASS_POOL: readonly string[] = [
+  ...HUES,
+  ...HUES.map((hue) => interpolateRgb(hue, "#e8e9eb")(0.4)),
+  ...HUES.map((hue) => interpolateRgb(hue, "#1a1d21")(0.4)),
+];
+
+/** A colour per class: the named hue where one exists, otherwise the next unclaimed from the pool. */
+export function genreColors(genres: readonly string[]): Record<string, string> {
+  const named = genres
+    .filter((genre) => genre in GENRE_COLORS)
+    .map((genre) => GENRE_COLORS[genre]);
+  const pool = CLASS_POOL.filter((hue) => !named.includes(hue));
+  let next = 0;
+  return Object.fromEntries(
+    genres.map((genre) => {
+      const hue = GENRE_COLORS[genre] ?? pool[next++ % pool.length] ?? "";
+      return [genre, hue];
+    }),
+  );
+}
 
 /** The first five hues in the canonical type order. */
 export const PARALLELISM_TYPE_COLORS: Record<string, string> = {

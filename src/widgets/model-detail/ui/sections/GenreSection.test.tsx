@@ -6,9 +6,9 @@ import type { GenreSection as Section } from "../../model/types";
 
 const section: Section = {
   genre_order: [
-    { psalm: 1, genre: "Wisdom" },
-    { psalm: 2, genre: "Royal" },
-    { psalm: 3, genre: "Royal" },
+    { item: "1", psalm: 1, label: "Ps 1", genre: "Wisdom" },
+    { item: "2", psalm: 2, label: "Ps 2", genre: "Royal" },
+    { item: "3", psalm: 3, label: "Ps 3", genre: "Royal" },
   ],
   raincloud_groups: [
     {
@@ -49,8 +49,8 @@ const section: Section = {
     },
   ],
   heatmap: [
-    { psalm_a: 1, psalm_b: 2, value: 0.4 },
-    { psalm_a: 2, psalm_b: 3, value: -0.2 },
+    { item_a: "1", item_b: "2", value: 0.4 },
+    { item_a: "2", item_b: "3", value: -0.2 },
   ],
   heatmap_genre_mean: [
     { genre_a: "Wisdom", genre_b: "Royal", value: 0.3 },
@@ -73,10 +73,24 @@ const fakePlot: PlotFn = (_mount, traces, layout) => {
   return Promise.resolve({ on: () => undefined } as never);
 };
 
+const GENRES = ["Royal", "Wisdom"];
+
+const renderSection = (category = "Genre", itemName = "psalm"): void => {
+  cleanup();
+  render(
+    <GenreSection
+      section={section}
+      genres={GENRES}
+      category={category}
+      itemName={itemName}
+      plot={fakePlot}
+    />,
+  );
+};
+
 describe("GenreSection", () => {
   it("leads with the discrimination claim, then the scores, then the structure", () => {
-    cleanup();
-    render(<GenreSection section={section} plot={fakePlot} />);
+    renderSection();
     const titles = screen.getAllByRole("heading", { level: 4 }).map((h) => h.textContent);
     expect(titles).toEqual([
       "ROC curve",
@@ -86,26 +100,37 @@ describe("GenreSection", () => {
     ]);
   });
 
+  it("heads the charts with the register's words for its classes and items", () => {
+    renderSection("Gattung", "passage");
+    const titles = screen.getAllByRole("heading", { level: 4 }).map((h) => h.textContent);
+    expect(titles).toContain("Calibrated score by gattung");
+    expect(titles).toContain("Pairwise similarity by passage");
+  });
+
+  it("labels the full matrix by the export's passage labels", () => {
+    mounted.length = 0;
+    renderSection();
+    const full = mounted.at(-1) as { traces: { text?: string[][] }[] };
+    expect(full.traces[0]?.text?.[0]?.[0]).toBe("Ps 1");
+    expect(full.traces[0]?.text?.[0]?.[1]).toBe("Ps 1 vs Ps 2<br>calibrated_z: 0.400");
+  });
+
   it("states the bootstrapped AUC and AP with their intervals", () => {
-    cleanup();
-    render(<GenreSection section={section} plot={fakePlot} />);
+    renderSection();
     expect(screen.getByText("0.664")).toBeInTheDocument();
     expect(screen.getByText("[0.611, 0.709]")).toBeInTheDocument();
     expect(screen.getByText("0.394")).toBeInTheDocument();
   });
 
   it("names every series once, in one key for the whole section", () => {
-    cleanup();
-    render(<GenreSection section={section} plot={fakePlot} />);
+    renderSection();
     expect(screen.getAllByText("Combined")).toHaveLength(1);
     expect(screen.getAllByText("Wisdom")).toHaveLength(1);
   });
 
   it("mounts every chart the section declares, matrices included", () => {
-    cleanup();
-    cleanup();
     mounted.length = 0;
-    render(<GenreSection section={section} plot={fakePlot} />);
+    renderSection();
     expect(mounted).toHaveLength(5);
   });
 });

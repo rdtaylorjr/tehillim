@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository is the public entry point for Tehillim, a linked research project on the Hebrew Psalms. The project registers formal, lexical, syntactic, contextual, and textual-critical patterns in specified textual representations, then asks what each representation can and cannot make visible. It brings together the seven active repositories that produce, evaluate, preserve, and qualify those records:
+This repository is the public entry point for Tehillim, a linked research project on the Hebrew Psalms. The project registers formal, lexical, syntactic, contextual, and textual-critical patterns in specified textual representations, then asks what each representation can and cannot make visible. It brings together twelve linked repositories that produce, evaluate, preserve, and qualify those records:
 
 | Repository                                                               | Function in the project                                                                                      |
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
@@ -14,6 +14,10 @@ This repository is the public entry point for Tehillim, a linked research projec
 | [tehillim-trublet](https://github.com/rdtaylorjr/tehillim-trublet)       | Replicates and tests a published computational account of wisdom vocabulary in the Hebrew Psalms.            |
 | [tehillim-texttype](https://github.com/rdtaylorjr/tehillim-texttype)     | Audits the ETCBC text-type analysis across the Hebrew Psalms and its historical versions.                    |
 | [tehillim-dss2etcbc](https://github.com/rdtaylorjr/tehillim-dss2etcbc)   | Transfers selected BHSA structural annotations to Dead Sea Scroll witnesses through explicit alignment.      |
+| [tehillim-scribes](https://github.com/rdtaylorjr/tehillim-scribes)       | Collates selected Psalms witnesses against the Masoretic Text with source-specific evidence records.         |
+| [tehillim-gunkel](https://github.com/rdtaylorjr/tehillim-gunkel)         | Registers Gunkel's Psalm classifications and qualifications against BHSA words, with source citations.       |
+| [tehillim-lxx2etcbc](https://github.com/rdtaylorjr/tehillim-lxx2etcbc)   | Projects the Rahlfs Greek Psalter onto BHSA half-verses through recorded source units.                       |
+| [tehillim-mss](https://github.com/rdtaylorjr/tehillim-mss)               | Maintains manuscript and attestation records used by the textual-critical studies.                           |
 
 The project does not treat a score, cluster, or database field as a literary judgment. A computational result records the behavior of an encoding under a stated operation. Interpretation remains answerable to the text, the source material, the unit of analysis, and the decisions that made the result possible.
 
@@ -23,7 +27,11 @@ Tehillim works at several levels of textual organization. The shared Masoretic b
 
 The representation and parallelism work uses the BHSA `half_verse` section node. This follows the Masoretic accentual division and supplies a stable computational address across vector files and annotations. It is not established here as a theory-neutral poetic colon. Clause boundaries, phrase atoms, prosodic division, and annotated parallel members can coincide or diverge. That divergence is part of the research problem.
 
-The project also uses received classifications and external annotations. The benchmark suite evaluates licensed parallelism and seven-class genre materials. The clustering work compares selected partitions with a 14-category form-critical index, Gunkel's classification as compiled by Williams. The text-type study accepts a runtime genre CSV for a separate test. The Trublet replication uses published wisdom lists. These targets record prior scholarly decisions. They organize comparison and falsification. They do not supply a final taxonomy of the Hebrew Psalms.
+Embedding paths identify the source corpus and node unit. The current representation corpus uses
+`corpus=bhsa/unit=half_verse/`, which keeps vectors in the same scope as the BHSA annotations that
+the benchmark and comparison stages read.
+
+The project also uses received classifications and external annotations. The benchmark suite evaluates licensed parallelism and seven-class genre materials. `tehillim-gunkel` registers classifications and qualifications from Gunkel's 1926 _Die Psalmen_ and Gunkel and Begrich's 1933 _Einleitung in die Psalmen_ at BHSA-word granularity. The text-type study accepts a runtime genre CSV for a separate test. The Trublet replication uses published wisdom lists. These targets record prior scholarly decisions. They organize comparison and falsification. They do not supply a final taxonomy of the Hebrew Psalms.
 
 `tehillim-dss2etcbc` introduces a second textual witness. Its 11Q5 work retains glyphs, reconstruction, uncertainty, correction, removal, fragment, and morphology information beside each proposed correspondence with BHSA. A transferred clause or phrase boundary therefore remains conditional on a reading, a normalization, an alignment, and the Masoretic source structure.
 
@@ -35,9 +43,9 @@ The project begins by registering material before extending a claim about genre,
 
 `tehillim-embeddings` constructs multiple representations from the same BHSA material. Lexical representations distinguish consonantal word forms, homographs, and disambiguated lexemes. Morphological and syntactic representations use closed vocabularies and preserve non-applicability as part of a distribution. Semantic representations pool or align half-verse vectors. Each representation therefore states a different question. Shared lexical material, grammatical profile, and contextual-vector proximity cannot be treated as interchangeable evidence.
 
-`tehillim-benchmark` evaluates these representations on two limited tasks. Parallelism evaluation retains 1,110 eligible cross-`half_verse` pairs derived from 2,292 annotation groups. It uses retrieval metrics, pair-separation measures, local controls, permutation procedures, and order-shuffle controls. Genre evaluation compares psalm-pair similarities inside and across received labels. The metrics test a representation against the selected target and control construction. They do not settle whether a given pair is parallel or whether a psalm belongs to a genre.
+`tehillim-benchmark` evaluates these representations on two limited tasks. Its current parallelism rule retains 2,392 cross-`half_verse` relations from 2,000 of 2,292 annotation groups. It uses retrieval metrics, pair-separation measures, local controls, permutation procedures, and order-shuffle controls. Genre evaluation compares psalm-pair similarities inside and across received labels. The metrics test a representation against the selected target and control construction. They do not settle whether a given pair is parallel or whether a psalm belongs to a genre.
 
-`tehillim-compare` builds the similarity matrices those partitions are drawn from. `tehillim-cluster` turns them into spectral partitions after a gap-style screen, silhouette selection, eigengap diagnostics, label permutations, and subsampling stability checks. It compares resulting partitions with the historical index through contingency tables, purity, adjusted mutual information, and adjusted Rand index. These statistics record correspondence between two constructed partitions. The underlying category systems remain open to criticism.
+`tehillim-compare` builds the similarity matrices those partitions are drawn from. `tehillim-cluster` turns them into spectral partitions after a gap-style screen, silhouette selection, eigengap diagnostics, label permutations, and subsampling stability checks. It compares resulting partitions with specified historical classifications through contingency tables, purity, adjusted mutual information, and adjusted Rand index. `tehillim-gunkel` makes the source classifications and their qualifications available at a finer grain than a one-label-per-psalm index. These statistics record correspondence between constructed partitions and specified source records. The underlying category systems remain open to criticism.
 
 `tehillim-texttype` reads the full BHSA `txt` string for each clause, including embedded domains and undecided values. It measures distribution, nesting, transitions, boundary association, and profile similarity before asking whether those formal patterns correspond with divisions or genre labels. `tehillim-trublet` rebuilds a published lexical study, exposes unresolved reconstruction points, and removes specified vocabulary before recalculating lexical, syntactic, and contextual comparisons. `tehillim-dss2etcbc` applies string alignment with an evidential mask, rejects disagreement among independent passes, and reports textual variation only over fully legible aligned opportunities.
 
@@ -49,7 +57,7 @@ The project has produced findings about its representations and targets. These f
 
 | Question                      | Result                                                                                                                                                                                                                        | Scope and consequence                                                                                                                                         |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Parallelism retrieval         | The current public exports contain 148 variants. Semantic representations reach the highest retained average precision, 0.3951.                                                                                               | The result applies to 1,110 eligible pairs. The eligibility rule excludes many annotated members at the `half_verse` grain.                                   |
+| Parallelism retrieval         | The current pairing rule yields 2,392 relations from 2,000 of 2,292 annotation groups. The existing public score exports use a superseded 1,110-relation rule.                                                                | Current representation scores await a versioned release. The archived score maximum of 0.3951 applies only to the superseded relation set.                    |
 | Genre-label separation        | The current public exports contain 222 variants. A lexical representation reaches the highest retained average precision, 0.4595.                                                                                             | No representation family leads both benchmark tasks. The difference prevents a single account of similarity.                                                  |
 | Received `Hymn` label         | Across 43 semantic genre rows, the mean AUC is 0.3852 and the maximum is 0.4694.                                                                                                                                              | This is evidence against the coherence of this supplied label under these representations. It requires review of label construction and representation scope. |
 | Clause-level text type        | The 2021 Hebrew Psalms contain 7,283 clauses, 37 attested text-type strings, 706 transitions, and 12 uniform psalms. Full-profile genre separation reaches AUC 0.537 with permutation p 0.059.                                | The reported profile signal is weak. Depth and transition-rate summaries provide weaker results.                                                              |
@@ -65,7 +73,7 @@ The project has no theory-free layer. BHSA features, Masoretic section nodes, re
 
 The `half_verse` unit is a major current constraint. It gives the representation and benchmark work a common address, while it can be coarser or differently organized than syntactic clauses and finer-grained annotations. The retained parallelism benchmark measures an eligible subset formed by this unit, signature decomposition, ambiguity rules, and control selection. Its outcomes cannot be generalized to every annotated relation.
 
-Several targets remain partly opaque. The licensed parallelism and genre materials have no public annotation manual, adjudication record, or inter-annotator agreement measure. The clustering index assigns one primary category to 144 psalms after excluding six composite or partial cases. Thirteen cross-listed psalms and four hedged cases remain as primary labels. Agreement with any of these targets describes source consistency under a procedure. It does not validate the source.
+Several targets remain partly opaque. The licensed parallelism and genre materials have no public annotation manual, adjudication record, or inter-annotator agreement measure. `tehillim-gunkel` preserves source qualifications, competing placements, and component-level assignments. Any comparison that reduces those records to a one-label-per-psalm target makes a further analytical choice. Agreement with any of these targets describes source consistency under a procedure. It does not validate the source.
 
 The project also has a provenance problem. The public interface contains 148 parallelism and 222 genre variants. `tehillim-data` stores 766 parallelism model rows across historical and intermediate outputs, alongside 222 genre models. No manifest maps each interface payload to exact inputs, code revisions, configuration values, seeds, and checksums. A numerical result can therefore be inspected without yet being fully reconstructed from a release record.
 
@@ -117,8 +125,6 @@ Roorda, Dirk, Christiaan Erwich, Cody Kingham, and SeHoon Park. 2023. [_ETCBC/bh
 
 Gillmayr-Bucher, Susanne. [“Relecture of Biblical Psalms: A Computer Aided Analysis of Textual Relations Based on Semantic Domains.”](https://doi.org/10.1163/9789004493339_021) Pages 309-321 in _Bible and Computer: The Stellenbosch AIBI-6 Conference_. Leiden: Brill, 2002.
 
-Gunkel, Hermann, and Joachim Begrich. _Einleitung in die Psalmen: Die Gattungen der religiösen Lyrik Israels_. Vandenhoeck & Ruprecht, 1933.
-
 Logos Bible Software. [_Psalms Explorer Dataset_](https://www.logos.com/product/54188/psalms-explorer-dataset).
 
 Montaner, Luis Vegas. “Masoretic Tradition and Syntactic Analysis of the Psalms.” Pages 317-335 in _Tradition and Innovation in Biblical Interpretation: Studies Presented to Professor Eep Talstra on the Occasion of His Sixty-Fifth Birthday_, 2011.
@@ -133,7 +139,9 @@ Talstra, Eep. “Singers and Syntax: On the Balance of Grammar and Poetry in Psa
 
 Trublet, Jacques. “Le corpus sapientiel et le Psautier: approche informatique du lexique.” In _Congress Volume Leuven 1989_, 248-263. Brill, 1991.
 
-Williams, Tyler F. [_A Form-Critical Classification of the Psalms According to Hermann Gunkel_](https://three-things.ca/pdfs/Gunkel_Classification_of_the_Psalms.pdf). 2006.
+Gunkel, Hermann. _Die Psalmen: Übersetzt und erklärt_. 4th ed. Göttinger Handkommentar zum Alten Testament II/2. Vandenhoeck & Ruprecht, 1926.
+
+Gunkel, Hermann, and Joachim Begrich. _Einleitung in die Psalmen: Die Gattungen der religiösen Lyrik Israels_. Göttinger Handkommentar zum Alten Testament, Ergänzungsband zu II/2. Vandenhoeck & Ruprecht, 1933.
 
 Van Peursen, Wido. [“Tracing Text Types in Biblical Hebrew.”](https://doi.org/10.1163/15685330-12341430) _Vetus Testamentum_ 70.1 (2020): 140-155.
 

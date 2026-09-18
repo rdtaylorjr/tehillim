@@ -12,11 +12,8 @@ describe("detailDataPath", () => {
   });
 
   it("names the section it was given", () => {
-    expect(detailDataPath("semantic", "berel", "genre")).toBe(
-      `/data/detail_semantic_berel_genre.json${V}`,
-    );
-    expect(detailDataPath("semantic", "berel", "trajectory")).toBe(
-      `/data/detail_semantic_berel_trajectory.json${V}`,
+    expect(detailDataPath("semantic", "berel", "genre_gunkel_song")).toBe(
+      `/data/detail_semantic_berel_genre_gunkel_song.json${V}`,
     );
   });
 
@@ -27,7 +24,7 @@ describe("detailDataPath", () => {
   });
 
   it("carries the export's version, so a regenerated payload is a new URL to every cache", () => {
-    const path = detailDataPath("semantic", "berel", "genre");
+    const path = detailDataPath("semantic", "berel", "genre_logos");
 
     expect(path).toContain("?v=");
     expect(path.split("?v=")[1]).toBeTruthy();
@@ -35,8 +32,8 @@ describe("detailDataPath", () => {
 
   it("keys R2 on the path alone, so the version never changes the object name", () => {
     /** The Worker slices the pathname; a query would break the lookup if it were in the name. */
-    const [name] = detailDataPath("semantic", "berel", "genre").split("?");
+    const [name] = detailDataPath("semantic", "berel", "genre_logos").split("?");
 
-    expect(name).toBe("/data/detail_semantic_berel_genre.json");
+    expect(name).toBe("/data/detail_semantic_berel_genre_logos.json");
   });
 });

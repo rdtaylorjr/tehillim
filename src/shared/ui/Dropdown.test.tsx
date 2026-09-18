@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Dropdown, DropdownPills, DropdownRow } from "./Dropdown";
+import styles from "./dropdown.module.css";
 
 function setup(): { toggle: () => HTMLElement; menu: () => HTMLElement } {
   render(
@@ -80,5 +81,13 @@ describe("Dropdown", () => {
     setup();
     expect(screen.getByText("Encoder")).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: "Encoder" })).toBeInTheDocument();
+  });
+
+  it("marks a row without a label so it spans the label column too", () => {
+    setup();
+    const bare = screen.getByRole("button", { name: "Semantic" }).parentElement?.parentElement;
+    const labelled = screen.getByRole("combobox", { name: "Encoder" }).parentElement;
+    expect(bare?.className).toContain(styles.rowUnlabelled);
+    expect(labelled?.className).not.toContain(styles.rowUnlabelled);
   });
 });

@@ -77,7 +77,7 @@ const METHODS: CompareMethodMeta[] = [
 const lexical = { ...INITIAL_SELECTION, family: "lexical" as const };
 
 describe("facetOfMethod", () => {
-  it("files a representation under the unit its name carries, or none where the family has no units", () => {
+  it("files a representation under the type its name carries, or none where the family has no facet", () => {
     expect(facetOfMethod(METHODS[0]!)).toBe("lexeme");
     expect(facetOfMethod(METHODS[3]!)).toBe("word");
     expect(facetOfMethod(METHODS[5]!)).toBeNull();
@@ -123,7 +123,7 @@ describe("resolveMethod", () => {
     expect(resolved.models[0]).toEqual({ value: "homograph_icf", label: "homograph_icf" });
   });
 
-  it("narrows the models by unit and by text, as the benchmark's rows are narrowed", () => {
+  it("narrows the models by facet and by text, as the benchmark's rows are narrowed", () => {
     const at = (over: Partial<typeof lexical>): string[] =>
       resolveMethod(METHODS, { selection: { ...lexical, ...over }, axes }).models.map(
         (m) => m.value,

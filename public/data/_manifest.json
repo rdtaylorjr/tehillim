@@ -23,5 +23,169 @@
     "repository_revision": "bb7fbd6c1e18d50f0ac6e302f22b2fc3be49679e",
     "rule": "cell__compare_ui",
     "started": "2026-09-15T20:19:08.039889+00:00"
+  },
+  "ui.lexical.payload": {
+    "cell": "ui.lexical.payload",
+    "code_hash": "7ba0376e84edfaf5d73451e3356915a52219cefbc5ccf6492bcad2667ec561e9",
+    "duration_s": 0.596576,
+    "inputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=lexical/stage=master/genre_metrics_wide.parquet": "37916fc0608e2db707d9af7c5de1f96c80c86ad5deaf2bf70dfd3e1a44ec4d78",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=lexical/stage=raw/baseline.csv": "1872149e58685faa708b65bf6dccaf5f98f6d152667d91efdfab823da484d9a7",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=lexical/stage=raw/by_genre.csv": "f57d1821fd71b19b99386a260105370ee4e0ce14768487c848b3da870d668ae8",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=lexical/stage=master/genre_metrics_wide.parquet": "0d54df73d2803ce2df530f09cfa2a945317343591952f9f26b32530666b1df15",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=lexical/stage=raw/baseline.csv": "85bda81274c7a27868c5b7c131c50d16e682337efc70250a78b7b8ba1c23b2d9",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=lexical/stage=raw/by_genre.csv": "691caead69392e5cbd5452694de001bd05daa42db71f0b18e69c3eeedfebb123",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=lexical/stage=master/genre_metrics_wide.parquet": "1929beff29e75c34baf69d6c5baad37721893a9616ad6873d2bbfb303f374621",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=lexical/stage=raw/baseline.csv": "423e48d95980cfb78adca4f8750e4df7f31acd9748dcab1b988937125f93ebcd",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=lexical/stage=raw/by_genre.csv": "a7d55eeccf2f6a6e9be3944fe9508fa27b12fd6fc3082db33427b23167fa055f",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=lexical/stage=master/genre_metrics_wide.parquet": "8a03c9abcf42bf17132c985048808071cb64317bb27127863afd8c6dfed7aa46",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=lexical/stage=raw/baseline.csv": "71898e264a20b3ed96b33ccf13dba9f420182b0289dc1e9384aaf0fce7c3ae5a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=lexical/stage=raw/by_genre.csv": "82deb71d60382f2b1b1619954f1b54cca70554738864e6fbfb060850aff1d43b",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=lexical/stage=master/model_metrics_by_type.parquet": "9987e60be967363fd217bca0a9f5dab95d649c4ff790eecb446ccd35a4a365ba",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=lexical/stage=master/model_metrics_overall.parquet": "6262925e8b90f55b92d01061093c52220f664b3cd662bf5c33fed82003dc7c96",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=lexical/stage=ui/ui_rows.json": "28fedb4a9870a359a83a5316aeed6ce1393ff69031adcd3c6ba794c9c0737c98",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=lexical/stage=ui/ui_rows_by_genre.json": "c4363423439cb9713f073f1efe3390449fa1717aa56906991eee49905f149b78"
+    },
+    "outputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical.json": "4172dcfcad0605889cd42536ecb86f08880927710114b342ba0266925115d539",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_genre_gunkel_song.json": "cf17c9a63b744d693dde60663b47f859120b085bafaa9203549d357670ee3b44",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_genre_gunkel_song_component.json": "b9d1cb64f7e117feef6428de02ba4c4466ad3c3a1e39134137a62e5e07adf7a5",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_genre_gunkel_song_component_motif.json": "736c4b10cefab8582094d3ca71e7f1fe94d1e00205e68bdd18878bc192729a42",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_genre_logos.json": "b40710f572aab204361a54aaf37882f018d565ebbc8e2d77a449c0c5a70dbb8f",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_trajectory_adjacent_similarity_distance.json": "7ed4644f7940e4444213acb2a6e7842b1bf4e99fa214981836eeaea6e907e80a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_trajectory_content_distance.json": "c0023ba6241c63cbdec62481db64fe933c24d906d088ca7828aa61c90506acdf",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_trajectory_step_magnitude_distance.json": "9f2e9c15e78d72fb45320b5c52edb00ca43a2c668718c74f9ca5ea17db3d7883",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_trajectory_structural_distance.json": "e2cb0b5bed0cdbcebbacbfe7741b8291862c782a88385d48620f27403087a06a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical_trajectory_turning_angle_distance.json": "9e7c3d6f0454732f868021ad02b8e0213b149f4c73e7697e1c5fe87e0af030c7"
+    },
+    "parameters": {
+      "args": "lexical --parallelism-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=lexical --data-root /Users/rdtaylorjr/Developer/tehillim/tehillim-data --trajectory-ui-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=lexical/stage=ui/ui_rows.json --trajectory-by-genre-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=lexical/stage=ui/ui_rows_by_genre.json --output /Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_lexical.json"
+    },
+    "repository_revision": "c9fd0ce441cef769764b7b12a87b28489fb37fb0",
+    "rule": "cell__ui_lexical_payload",
+    "started": "2026-09-17T23:51:09.176576+00:00"
+  },
+  "ui.morphological.payload": {
+    "cell": "ui.morphological.payload",
+    "code_hash": "7ba0376e84edfaf5d73451e3356915a52219cefbc5ccf6492bcad2667ec561e9",
+    "duration_s": 0.542715,
+    "inputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=morphological/stage=master/genre_metrics_wide.parquet": "d160abf0fb40f6bb75243edea46887bfb9d467d6054c4794f7e3879f96f8ada1",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=morphological/stage=raw/baseline.csv": "1872149e58685faa708b65bf6dccaf5f98f6d152667d91efdfab823da484d9a7",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=morphological/stage=raw/by_genre.csv": "35ed96a0f132e6a0990024d93ff5649e8bf6408d0ba695b1fde21801d10c0d31",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=morphological/stage=master/genre_metrics_wide.parquet": "8c5473e0a1beda2e131f0bc606a621ce3da8148aca66f284a71325034c971e3c",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=morphological/stage=raw/baseline.csv": "85bda81274c7a27868c5b7c131c50d16e682337efc70250a78b7b8ba1c23b2d9",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=morphological/stage=raw/by_genre.csv": "55447ff82776d9bae49d94641254c08ff6d40a095c5e30722173ea5681c6959a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=morphological/stage=master/genre_metrics_wide.parquet": "233cf039431f9f6e082f4520bec55ef4d13a17f96ebbcd41ea17464add3d876e",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=morphological/stage=raw/baseline.csv": "423e48d95980cfb78adca4f8750e4df7f31acd9748dcab1b988937125f93ebcd",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=morphological/stage=raw/by_genre.csv": "f36e8478b1c1d60a4032af6b16e723728665e081f015d895e1d9f8941b90a769",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=morphological/stage=master/genre_metrics_wide.parquet": "fadd4ae4aa7098701ebe2db3773a4c94c23e3576ca8d7636b921eb3fc56def85",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=morphological/stage=raw/baseline.csv": "71898e264a20b3ed96b33ccf13dba9f420182b0289dc1e9384aaf0fce7c3ae5a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=morphological/stage=raw/by_genre.csv": "f5f8d8c1b8b1131da69f4b08bc6495041f7e147d5b6a89709f1b8dbddb96425e",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological/stage=master/model_metrics_by_type.parquet": "02887a1f99eddf60dfbbf5f3bb2368b1b43efc4da938a037e97d86b687722ea2",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological/stage=master/model_metrics_overall.parquet": "53acacf923b9b4277add898d4983460a80f1e327770d4fa54fac2281270b4a83",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows.json": "766b3562b4d7e08ee06162f7ceda54a7fa99a5c39c656c418f5e11111ae9ef80",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows_by_genre.json": "65536eb553616490f17c9606639613845905d737d2814c3b4e1c16fe26a34834"
+    },
+    "outputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological.json": "cfc68fb76681bced9f58de7121f53e21ad3aaca81c3d6dd255e21419ebde6fc5",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_genre_gunkel_song.json": "92790a8a6bcd56233733543a1a34060fba52bebebdd480c5cf8ca392c08b0b2b",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_genre_gunkel_song_component.json": "254d57ca1b872c596033aeeb3bb76539fdb4045ebb83c43b606e6480d5560f62",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_genre_gunkel_song_component_motif.json": "f934f44f5407686c6acc69fa5c5dfb987c83db5671be24eac4cfcee108035a74",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_genre_logos.json": "0e63283955e6249f63453368fd2f5dbd038e25e55d58498d310b1f24fb940e62",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_adjacent_similarity_distance.json": "d9dd4a8c0aa5fee82089e7c3f9a0008fb96c7ec87ed381f48a8bb78ce882384c",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_content_distance.json": "1817f1dd7a5c364071f676e2678d2018ddb278a3face4d74a9128e4e2659812f",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_step_magnitude_distance.json": "602536cc7d32295ef247fa27e326d9a20ad694686b93d593e0b7d06a302f0cd4",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_structural_distance.json": "6f47ddc94bffba6a7c6ef66c3ec2b41669c87d0974ccba1f389d4417ebffc6d7",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological_trajectory_turning_angle_distance.json": "e3b92f99c6d31dfce21231942e6547193ce82ddeb661ca4e8dcdf76f493cfbbe"
+    },
+    "parameters": {
+      "args": "morphological --parallelism-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=morphological --data-root /Users/rdtaylorjr/Developer/tehillim/tehillim-data --trajectory-ui-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows.json --trajectory-by-genre-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=morphological/stage=ui/ui_rows_by_genre.json --output /Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_morphological.json"
+    },
+    "repository_revision": "c9fd0ce441cef769764b7b12a87b28489fb37fb0",
+    "rule": "cell__ui_morphological_payload",
+    "started": "2026-09-17T23:51:09.207729+00:00"
+  },
+  "ui.semantic.payload": {
+    "cell": "ui.semantic.payload",
+    "code_hash": "7ba0376e84edfaf5d73451e3356915a52219cefbc5ccf6492bcad2667ec561e9",
+    "duration_s": 0.365879,
+    "inputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=semantic/stage=master/genre_metrics_wide.parquet": "d8a1be9ee6bdb5ee87ef55c4196bba6151edcc4ce04c81f45b51d4ecec41f67f",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=semantic/stage=raw/baseline.csv": "1872149e58685faa708b65bf6dccaf5f98f6d152667d91efdfab823da484d9a7",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=semantic/stage=raw/by_genre.csv": "a2955c7fdc3a294ed1a58291e2ae0f0137add5f0eba5644d5be2a873d59eb042",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=semantic/stage=master/genre_metrics_wide.parquet": "8429311b4f0d296082c43cab8e8fa2773aa60fbabebfd9266ceab94ee80f107c",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=semantic/stage=raw/baseline.csv": "85bda81274c7a27868c5b7c131c50d16e682337efc70250a78b7b8ba1c23b2d9",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=semantic/stage=raw/by_genre.csv": "35f90e939ad317b3156d15d245ba8b97f7d36c9c87efa0164cee85294d604135",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=semantic/stage=master/genre_metrics_wide.parquet": "0b8ba457f885530d0e9d73bda5de3eee7c979dd97c2351a7a7c825cac8cf2718",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=semantic/stage=raw/baseline.csv": "423e48d95980cfb78adca4f8750e4df7f31acd9748dcab1b988937125f93ebcd",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=semantic/stage=raw/by_genre.csv": "894f2e26962d145f355a205408fb63a00d5042c76ac543a7c893dbc4a6e0fd8d",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=semantic/stage=master/genre_metrics_wide.parquet": "c360457f25eda5daf81ebe81094045efb25ef53f61046268c0772c68ccc205f4",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=semantic/stage=raw/baseline.csv": "71898e264a20b3ed96b33ccf13dba9f420182b0289dc1e9384aaf0fce7c3ae5a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=semantic/stage=raw/by_genre.csv": "a702ff7ccc388ed3b9287104c40924c1a05707f40ce794f6f5b87963b63f5788",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=semantic/stage=master/model_metrics_by_type.parquet": "30d3105000e6fd3dc7f076fc844119d393484d6b47673619154678268131c424",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=semantic/stage=master/model_metrics_overall.parquet": "be65f65b2f2a76b35d33aced1f0a871c230a07933370b4e7c7d3e6969293db0a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=semantic/stage=ui/ui_rows.json": "350ed31f18876aa328c4dff2b4037ef99f484fcc8f262108e6fd1d398eee86aa",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=semantic/stage=ui/ui_rows_by_genre.json": "a41c4300b339f2690f654e419fe79f25b6b246d208ee4940e395449c3e12f608"
+    },
+    "outputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic.json": "97d69f3dec195b36ae6d71412526fc9699b1ce88199825a79515db50da8bc518",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_genre_gunkel_song.json": "ab262c0f00c003bd29a32bda3801a965c507f5408b5a67fac4cb0e8336b16584",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_genre_gunkel_song_component.json": "2fa7a6ce232dc171068514e78bc60fd0f3f654f480fe8a6ff3a95af7c193d88a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_genre_gunkel_song_component_motif.json": "d69728eef51624b0e56224194cbc420f36c1ccd93bbb8d3175eb0e6a185a79a0",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_genre_logos.json": "7f55c13b5e5ba5a0256490fccf8ef75add49c4a9bedba4a6db21c342b14f6020",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_trajectory_adjacent_similarity_distance.json": "cac0d1ca67e1028bb08f99d423fe9518bb3413ddc892489d3a6448814e96fb38",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_trajectory_content_distance.json": "aa1d6153487334df9bdc9fc13b634f26dd3dcc21703c4813184cda3863a1c49e",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_trajectory_step_magnitude_distance.json": "ec3b361d92fb77a18bf70f94f5d3ea1dfccb4a9595c20e2ad1f4b40a36ef413d",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_trajectory_structural_distance.json": "60251bbccf8e918ca3f0b420ad6c65c8e24b9dade8539072f8fed94648c4f6b6",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic_trajectory_turning_angle_distance.json": "5d63abbfe0a84fefb9728f038ad77799f4185517636ba12e5187c5f5ca25823d"
+    },
+    "parameters": {
+      "args": "semantic --parallelism-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=semantic --data-root /Users/rdtaylorjr/Developer/tehillim/tehillim-data --trajectory-ui-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=semantic/stage=ui/ui_rows.json --trajectory-by-genre-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=semantic/stage=ui/ui_rows_by_genre.json --output /Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_semantic.json"
+    },
+    "repository_revision": "c9fd0ce441cef769764b7b12a87b28489fb37fb0",
+    "rule": "cell__ui_semantic_payload",
+    "started": "2026-09-17T23:51:09.259504+00:00"
+  },
+  "ui.syntactic.payload": {
+    "cell": "ui.syntactic.payload",
+    "code_hash": "7ba0376e84edfaf5d73451e3356915a52219cefbc5ccf6492bcad2667ec561e9",
+    "duration_s": 0.472302,
+    "inputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=syntactic/stage=master/genre_metrics_wide.parquet": "4cd5caa391f91bed1df023eb4419b4bb465424e41ae9b2356435a96340d879b2",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=syntactic/stage=raw/baseline.csv": "1872149e58685faa708b65bf6dccaf5f98f6d152667d91efdfab823da484d9a7",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song/domain=syntactic/stage=raw/by_genre.csv": "76df6d1a1884e43ab5baba05ca8688051dda6075a72ad42f8f060dc4c44cbbcc",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=syntactic/stage=master/genre_metrics_wide.parquet": "75be09b9324e1a76d786964949d11609e581bb46d07f3344c26a146220f2de8a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=syntactic/stage=raw/baseline.csv": "85bda81274c7a27868c5b7c131c50d16e682337efc70250a78b7b8ba1c23b2d9",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component/domain=syntactic/stage=raw/by_genre.csv": "5034882f798540a055efd8221f4f6fa37636e2f6ec614a5048754cb7798e1ca7",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=syntactic/stage=master/genre_metrics_wide.parquet": "bd9286df5b5aa380e61ae1f4c10adc63b727a46cf6112843d16e30c840fd704b",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=syntactic/stage=raw/baseline.csv": "423e48d95980cfb78adca4f8750e4df7f31acd9748dcab1b988937125f93ebcd",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=gunkel/unit=song_component_motif/domain=syntactic/stage=raw/by_genre.csv": "c3f085eba6741cc61aa92308aee3bff88d5937fc3914ac3a42bbc00f43729e7f",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=syntactic/stage=master/genre_metrics_wide.parquet": "474f735bf3b715facb5c9ed5ac8a75ff046e593ef8a8b14948daf94fd208196b",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=syntactic/stage=raw/baseline.csv": "71898e264a20b3ed96b33ccf13dba9f420182b0289dc1e9384aaf0fce7c3ae5a",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=genre/taxonomy=logos/domain=syntactic/stage=raw/by_genre.csv": "096897a6673a33c312e0bfcc20fb5098fa8d73fa7ff07b94dacc354cf1fa2802",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic/stage=master/model_metrics_by_type.parquet": "e05be05b31e40da0013f320da03b8cee60790d44fd1b9ccedda3e85c0316379d",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic/stage=master/model_metrics_overall.parquet": "f5c8431c7edb33c4ca949657b9ca15b6c581d8c952eacd10c5cee0e9b4a02e99",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows.json": "4eccf2efbe53f68e1066a4c762054de808a3f5378fd9defdafb8ef859771bba1",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows_by_genre.json": "871d8d37c72dc73c7bce91649c29e866781883191074d8af35ecbf4dc7f31bea"
+    },
+    "outputs": {
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic.json": "bb75abb274445edf4d3213de2350658908857725edda57755e4b1265bbcd614c",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_genre_gunkel_song.json": "2bed412b0916a40ff0c8a33ca0b3f7525c8fc7f22581a890b798ddd1b7dd695d",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_genre_gunkel_song_component.json": "e8fcc5d3fdea32df9f237614693ce11dea2918b3a1b8d310be2c13c152c85353",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_genre_gunkel_song_component_motif.json": "b49d2e50cceb4ec36165e452e0aca988d596326ab4370fe1ac526af3327aad64",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_genre_logos.json": "a935b867a47b2eace7e5d470930dbe33dfe8651d6ba78cad8cdc91352c16d130",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_adjacent_similarity_distance.json": "a95670e39a29e3b1a1448c738d1161ea5a61fcb462ce00dd6b76e23c512d5f70",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_content_distance.json": "03901247641d10cde8c89f0c99da5851030903a1e0d1f7bd7acb1a6d2bd5d7eb",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_step_magnitude_distance.json": "b943fdb988966baa96650a82f11e9e784eccd076835713553d802f233c6b22b0",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_structural_distance.json": "ddfa56ec6d698f7de2c58a460914d41d5ee2cd571eff8077eb42e228a532a60c",
+      "/Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic_trajectory_turning_angle_distance.json": "d0ecaf438e45b71056cb3d1410e83a2aa36fcaf9f2998fa20acf4af0be814232"
+    },
+    "parameters": {
+      "args": "syntactic --parallelism-dir /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=parallelism/domain=syntactic --data-root /Users/rdtaylorjr/Developer/tehillim/tehillim-data --trajectory-ui-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows.json --trajectory-by-genre-rows /Users/rdtaylorjr/Developer/tehillim/tehillim-data/analysis=benchmark/benchmark=trajectory/domain=syntactic/stage=ui/ui_rows_by_genre.json --output /Users/rdtaylorjr/Developer/tehillim/tehillim/public/data/ui_syntactic.json"
+    },
+    "repository_revision": "c9fd0ce441cef769764b7b12a87b28489fb37fb0",
+    "rule": "cell__ui_syntactic_payload",
+    "started": "2026-09-17T23:51:09.262360+00:00"
   }
 }

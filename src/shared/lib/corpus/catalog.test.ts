@@ -2,14 +2,15 @@ import { describe, expect, it } from "vitest";
 import {
   facetOf,
   BENCHMARKS,
-  GENRES,
   MODEL_FAMILIES,
   PARALLELISM_TYPES,
+  SOURCES,
   TEXT_VARIANTS,
-  TRAJECTORY_METRICS,
   facetFor,
   familyFor,
   sentenceCase,
+  sourceFor,
+  unitLabel,
 } from "./catalog";
 
 describe("MODEL_FAMILIES", () => {
@@ -30,9 +31,9 @@ describe("MODEL_FAMILIES", () => {
 });
 
 describe("facetFor", () => {
-  it("gives lexical a Unit facet of homograph, lexeme, and word", () => {
+  it("gives lexical a Type facet of homograph, lexeme, and word", () => {
     expect(facetFor("lexical")).toEqual({
-      label: "Unit",
+      label: "Type",
       values: ["homograph", "lexeme", "word"],
     });
   });
@@ -65,17 +66,7 @@ describe("fixed option lists", () => {
     ]);
   });
 
-  it("offers the four trajectory metrics alongside genre discrimination", () => {
-    expect(TRAJECTORY_METRICS).toEqual([
-      "content_distance",
-      "structural_distance",
-      "step_magnitude_distance",
-      "turning_angle_distance",
-    ]);
-  });
-
-  it("lists the seven genres and the three text variants", () => {
-    expect(GENRES).toHaveLength(7);
+  it("lists the three text variants", () => {
     expect(TEXT_VARIANTS).toEqual(["consonantal", "vocalized", "cantillation"]);
   });
 
@@ -95,21 +86,38 @@ describe("sentenceCase", () => {
 });
 
 describe("facetOf", () => {
-  const units = ["homograph", "lexeme", "word"];
+  const types = ["homograph", "lexeme", "word"];
 
   it("matches a model named exactly for its facet", () => {
-    expect(facetOf("word", units)).toBe("word");
+    expect(facetOf("word", types)).toBe("word");
   });
 
   it("matches a model prefixed with its facet", () => {
-    expect(facetOf("lexeme_tfidf", units)).toBe("lexeme");
+    expect(facetOf("lexeme_tfidf", types)).toBe("lexeme");
   });
 
   it("does not match a name that merely starts with the same letters", () => {
-    expect(facetOf("wordnet", units)).toBeNull();
+    expect(facetOf("wordnet", types)).toBeNull();
   });
 
   it("returns null for a model in no facet", () => {
-    expect(facetOf("bge_m3", units)).toBeNull();
+    expect(facetOf("bge_m3", types)).toBeNull();
+  });
+});
+
+describe("sources", () => {
+  it("offers Gunkel first, the primary source, then Logos", () => {
+    expect(SOURCES.map((s) => s.id)).toEqual(["gunkel", "logos"]);
+  });
+
+  it("names each source and the word it uses for a class", () => {
+    expect(sourceFor("logos")).toEqual({ id: "logos", label: "Logos", category: "Genre" });
+    expect(sourceFor("gunkel").category).toBe("Gattung");
+  });
+
+  it("reads a unit register as the list of units it counts, in Gunkel's words", () => {
+    expect(unitLabel("song")).toBe("Lied");
+    expect(unitLabel("song_component")).toBe("Lied, Stück");
+    expect(unitLabel("song_component_motif")).toBe("Lied, Stück, Motiv");
   });
 });

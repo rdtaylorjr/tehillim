@@ -670,17 +670,17 @@ exports[`chart output is stable > the pairwise heatmap hands Plotly an unchangin
         "text": [
           [
             "Psalm 1",
-            "Psalm 1 vs 2<br>z: 0.400",
-            "Psalm 1 vs 3<br>z: 0.900",
+            "Psalm 1 vs Psalm 2<br>z: 0.400",
+            "Psalm 1 vs Psalm 3<br>z: 0.900",
           ],
           [
-            "Psalm 1 vs 2<br>z: 0.400",
+            "Psalm 1 vs Psalm 2<br>z: 0.400",
             "Psalm 2",
-            "Psalm 2 vs 3<br>z: -0.200",
+            "Psalm 2 vs Psalm 3<br>z: -0.200",
           ],
           [
-            "Psalm 1 vs 3<br>z: 0.900",
-            "Psalm 2 vs 3<br>z: -0.200",
+            "Psalm 1 vs Psalm 3<br>z: 0.900",
+            "Psalm 2 vs Psalm 3<br>z: -0.200",
             "Psalm 3",
           ],
         ],

@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { mountRainclouds } from "./rainclouds";
 import { mountMultiCurve } from "./curves";
-import { mountHeatmap, mountGenreMeanMatrix } from "./heatmap";
+import { matrixMargin, mountHeatmap, mountGenreMeanMatrix } from "./heatmap";
 import type { PlotFn } from "../../../shared/charts";
 import type {
   CurveSeries,
   GenreMeanCell,
-  HeatmapCell,
-  PsalmOrderEntry,
+  AxisEntry,
+  PairCell,
   RaincloudGroup,
 } from "../model/types";
 
@@ -49,15 +49,15 @@ const SERIES: CurveSeries[] = [
     ],
   },
 ];
-const ORDER: PsalmOrderEntry[] = [
-  { psalm: 1, genre: "Wisdom" },
-  { psalm: 2, genre: "Royal" },
-  { psalm: 3, genre: "Royal" },
+const ORDER: AxisEntry[] = [
+  { key: "1", label: "Psalm 1", genre: "Wisdom" },
+  { key: "2", label: "Psalm 2", genre: "Royal" },
+  { key: "3", label: "Psalm 3", genre: "Royal" },
 ];
-const CELLS: HeatmapCell[] = [
-  { psalm_a: 1, psalm_b: 2, value: 0.4 },
-  { psalm_a: 2, psalm_b: 3, value: -0.2 },
-  { psalm_a: 1, psalm_b: 3, value: 0.9 },
+const CELLS: PairCell[] = [
+  { a: "1", b: "2", value: 0.4 },
+  { a: "2", b: "3", value: -0.2 },
+  { a: "1", b: "3", value: 0.9 },
 ];
 const MEANS: GenreMeanCell[] = [
   { genre_a: "Wisdom", genre_b: "Royal", value: 0.3 },
@@ -123,5 +123,19 @@ describe("chart output is stable", () => {
     const { plot, calls } = capture();
     mountGenreMeanMatrix(el(), MEANS, ["Wisdom", "Royal"], "mean z", plot);
     expect(calls).toMatchSnapshot();
+  });
+});
+
+describe("matrixMargin", () => {
+  it("keeps the default face for short class names", () => {
+    expect(matrixMargin(["Hymn", "Wisdom"]).l).toBe(90);
+  });
+
+  it("widens both label faces for a long class name, leaving the other sides alone", () => {
+    const margin = matrixMargin(["Prophetic Reproach, Threat, and Admonition"]);
+    expect(margin.l).toBeGreaterThan(200);
+    expect(margin.b).toBeGreaterThan(150);
+    expect(margin.b).toBeLessThan(margin.l);
+    expect([margin.r, margin.t]).toEqual([130, 10]);
   });
 });

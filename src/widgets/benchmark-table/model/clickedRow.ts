@@ -8,16 +8,9 @@ export interface ClickedRow {
 }
 
 /** The row the reader opened, with the columns it was shown in, so the detail view can restate it. */
-export function clickedRow(
-  data: DomainData,
-  selection: Selection,
-  sliceRows: readonly unknown[],
-): ClickedRow | null {
+export function clickedRow(data: DomainData, selection: Selection): ClickedRow | null {
   if (selection.model === null) return null;
-  const view = resolveTableView(
-    { ...data, trajectory_by_genre: sliceRows as never },
-    selection,
-  );
+  const view = resolveTableView(data, selection);
   const row = (view.rows as Record<string, unknown>[]).find(
     (r) => r["model"] === selection.model,
   );

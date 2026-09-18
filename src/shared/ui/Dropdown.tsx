@@ -10,8 +10,9 @@ export interface DropdownRowProps {
 /** One axis inside a menu. */
 export function DropdownRow({ label, children }: DropdownRowProps): React.ReactElement {
   const id = useId();
+  const className = label === undefined ? `${styles.row} ${styles.rowUnlabelled}` : styles.row;
   return (
-    <div className={styles.row}>
+    <div className={className}>
       {label === undefined ? null : (
         <span className={styles.rowLabel} id={id}>
           {label}

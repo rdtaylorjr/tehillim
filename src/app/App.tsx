@@ -10,12 +10,12 @@ import {
 } from "react";
 import styles from "./App.module.css";
 import { Message } from "../shared/ui/Message";
-import { INITIAL_SELECTION, selectionReducer } from "../shared/lib/navigation";
+import { INITIAL_SELECTION, selectionReducer, sliceFor } from "../shared/lib/navigation";
 import type { Selection } from "../shared/lib/navigation";
-import { createDomainCache, createTrajectorySliceCache } from "../shared/api";
-import type { DomainLoad, TrajectorySliceLoader } from "../shared/api";
-import { listsModel } from "../shared/lib/results";
-import type { DomainData } from "../shared/lib/results";
+import { createDomainCache, createSliceCache } from "../shared/api";
+import type { DomainLoad, SliceLoader } from "../shared/api";
+import { listsModel, withSlice } from "../shared/lib/results";
+import type { DomainData, LoadedSlice } from "../shared/lib/results";
 import { MODEL_FAMILIES, familyFor } from "../shared/lib/corpus";
 import type { FamilyId } from "../shared/lib/corpus";
 import { Toolbar } from "../widgets/toolbar";
@@ -45,21 +45,14 @@ export interface AppProps {
   readonly onOpenModel?: (model: string | null) => void;
   /** Injected in tests so the page can be driven without a server. */
   readonly load?: (family: FamilyId) => Promise<DomainLoad>;
-  readonly loadSlice?: TrajectorySliceLoader;
+  readonly loadSlice?: SliceLoader;
   readonly loadDetail?: DetailLoader;
-}
-
-/** Only the per-genre trajectory view reads the rows that ship separately. */
-function needsTrajectorySlice(selection: Selection): boolean {
-  return (
-    selection.benchmark === "genre" && selection.metric !== "genre" && selection.genre !== "all"
-  );
 }
 
 interface ResultsPaneProps {
   readonly result: DomainLoad | null;
-  /** Fetched apart from the rest of the family, so it arrives on a separate schedule. */
-  readonly trajectoryByGenre: DomainData["trajectory_by_genre"];
+  /** The family's rows with the slice the view reads merged in, or null while loading. */
+  readonly data: DomainData | null;
   readonly selection: Selection;
   readonly onOpenModel: (model: string) => void;
 }
@@ -67,7 +60,7 @@ interface ResultsPaneProps {
 /** What sits under the toolbar: the results, or the reason there are none. */
 function ResultsPane({
   result,
-  trajectoryByGenre,
+  data,
   selection,
   onOpenModel,
 }: ResultsPaneProps): React.ReactElement {
@@ -87,7 +80,7 @@ function ResultsPane({
       </p>
     );
   }
-  const data = { ...result.data, trajectory_by_genre: trajectoryByGenre };
+  if (data === null) return <Message>Loading results\u2026</Message>;
   return <BenchmarkTable selection={selection} data={data} onOpenModel={onOpenModel} />;
 }
 
@@ -129,13 +122,10 @@ export function App({
   );
   // One cache per mounted page rather than a module-level singleton outliving it.
   const [fallbackLoad] = useState(() => createDomainCache());
-  const [fallbackSlice] = useState(() => createTrajectorySliceCache());
+  const [fallbackSlice] = useState(() => createSliceCache());
   const loadFamily = load ?? fallbackLoad;
-  const loadTrajectory = loadSlice ?? fallbackSlice;
-  const [slice, setSlice] = useState<{
-    key: string;
-    rows: DomainData["trajectory_by_genre"];
-  } | null>(null);
+  const loadSliceRows = loadSlice ?? fallbackSlice;
+  const [slice, setSlice] = useState<LoadedSlice | null>(null);
   const [loaded, setLoaded] = useState<{ family: FamilyId; result: DomainLoad } | null>(null);
 
   useEffect(() => {
@@ -149,19 +139,24 @@ export function App({
     };
   }, [loadFamily, selection.family]);
 
-  const sliceKey = `${selection.family}/${selection.metric}`;
-  const wantsSlice = needsTrajectorySlice(selection);
+  // Carrying the family with its result makes a previous family's rows unusable rather than stale.
+  const result = loaded?.family === selection.family ? loaded.result : null;
+  const wanted = useMemo(
+    () => sliceFor(selection, result?.status === "loaded" ? result.data.genre_registers : []),
+    [selection, result],
+  );
+  const sliceKey = wanted === null ? null : `${selection.family}/${wanted.name}`;
 
   useEffect(() => {
-    if (!wantsSlice) return undefined;
+    if (wanted === null || sliceKey === null) return undefined;
     let current = true;
-    void loadTrajectory(selection.family, selection.metric).then((rows) => {
-      if (current) setSlice({ key: sliceKey, rows });
+    void loadSliceRows(selection.family, wanted.table, wanted.name).then((rows) => {
+      if (current) setSlice({ key: sliceKey, table: wanted.table, rows });
     });
     return () => {
       current = false;
     };
-  }, [loadTrajectory, selection.family, selection.metric, sliceKey, wantsSlice]);
+  }, [loadSliceRows, selection.family, wanted, sliceKey]);
 
   // The charts weigh far more than the table, so they are fetched while the reader reads the table.
   useEffect(() => {
@@ -181,26 +176,28 @@ export function App({
     };
   }, []);
 
-  // Carrying the family with its result makes a previous family's rows unusable rather than stale.
-  const result = loaded?.family === selection.family ? loaded.result : null;
-  const sliceRows = useMemo(
-    () => (slice?.key === sliceKey ? slice.rows : []),
-    [slice, sliceKey],
+  const landed = slice?.key === sliceKey ? slice : null;
+  //: The family's rows with the slice the view reads merged in, once both have arrived.
+  const data = useMemo(
+    () =>
+      result?.status === "loaded" && (wanted === null || landed !== null)
+        ? withSlice(result.data, landed)
+        : null,
+    [result, wanted, landed],
   );
   // The detail view restates the row's numbers, so they are derived here rather than duplicated in state.
-  const opened =
-    result?.status === "loaded" ? clickedRow(result.data, selection, sliceRows) : null;
+  const opened = data === null ? null : clickedRow(data, selection);
   // The rung below the group, for the toolbar's Model control on a detail page.
   const models = useMemo(
-    () => (result?.status === "loaded" ? modelNames(result.data, selection, sliceRows) : []),
-    [result, selection, sliceRows],
+    () => (data === null ? [] : modelNames(data, selection)),
+    [data, selection],
   );
   const firstModel = models[0];
   //: What matters is whether the selection still holds the model, not whether it was cleared.
   const openStillListed = selection.model !== null && models.includes(selection.model);
 
   //: Which models a selection holds is unknown until its rows are in.
-  const settled = result !== null && (!wantsSlice || sliceRows.length > 0);
+  const settled = result !== null && (result.status !== "loaded" || data !== null);
 
   //: A model URL names no family, so a direct load searches the others for the one listing it.
   //: Held in a ref: writing it as state would re-run this effect and cancel its own search.
@@ -253,6 +250,7 @@ export function App({
             selection={selection}
             dispatch={dispatch}
             models={models}
+            registers={result?.status === "loaded" ? result.data.genre_registers : []}
             onView={(view) => {
               //: The effect above opens the first model the selection holds.
               dispatch({ type: "view/selected", view });
@@ -266,13 +264,14 @@ export function App({
                 model={selection.model}
                 row={opened?.row ?? null}
                 columns={opened?.columns ?? []}
+                registers={data?.genre_registers ?? []}
                 {...(loadDetail === undefined ? {} : { load: loadDetail })}
               />
             </Suspense>
           ) : (
             <ResultsPane
               result={result}
-              trajectoryByGenre={sliceRows}
+              data={data}
               selection={selection}
               onOpenModel={openModel}
             />

@@ -4,16 +4,16 @@ import field from "../../../shared/ui/Field.module.css";
 import band from "../../../shared/ui/controlBand.module.css";
 import {
   BENCHMARKS,
-  GENRES,
   PARALLELISM_TYPES,
-  TRAJECTORY_CONTROLS,
-  TRAJECTORY_METRICS,
-  controlLabel,
+  SOURCES,
   sentenceCase,
-  titleCase,
+  sourceFor,
+  unitLabel,
 } from "../../../shared/lib/corpus";
-import { ALL, headCrumbs, showsControl } from "../../../shared/lib/navigation";
+import type { SourceId } from "../../../shared/lib/corpus";
+import { ALL, headCrumbs, resolveRegister } from "../../../shared/lib/navigation";
 import type { Selection, SelectionAction } from "../../../shared/lib/navigation";
+import type { GenreRegister } from "../../../shared/lib/results";
 import { Dropdown, DropdownPills, DropdownRow } from "../../../shared/ui/Dropdown";
 import { PillGroup } from "../../../shared/ui/PillGroup";
 import type { PillOption } from "../../../shared/ui/PillGroup";
@@ -26,6 +26,8 @@ export interface ToolbarProps {
   readonly dispatch: (action: SelectionAction) => void;
   /** Every model the selection holds, for the rung below the group. */
   readonly models?: readonly string[];
+  /** Every source and unit register the family's results hold, with the classes each assigns. */
+  readonly registers?: readonly GenreRegister[];
   /** Switching view is the page's to carry out, since entering detail navigates. */
   readonly onView?: (view: Selection["view"]) => void;
   /** Choosing a different model within the detail view, likewise. */
@@ -48,22 +50,26 @@ export function Toolbar({
   selection,
   dispatch,
   models = [],
+  registers = [],
   onView,
   onOpenModel,
 }: ToolbarProps): React.ReactElement {
   const filterId = useId();
   const isDetail = selection.view === "detail";
   const benchmark = BENCHMARKS.find((b) => b.id === selection.benchmark);
+  const source = sourceFor(selection.source);
+  //: The register in view: the source's units to offer, and the classes it assigns.
+  const register = resolveRegister(registers, selection);
+  const units = registers.filter((r) => r.taxonomy === selection.source).map((r) => r.unit);
+  const showsUnit = units.some((unit) => unit !== null);
 
   //: With the menu shut the toggle is the only place the choice is legible.
   const named = (value: string): string | null => (value === ALL ? null : sentenceCase(value));
   const benchmarkState = [
     benchmark?.label ?? "",
-    selection.benchmark === "parallelism"
-      ? named(selection.parallelismType)
-      : named(selection.genre),
-    showsControl(selection) ? titleCase(selection.metric) : null,
-    showsControl(selection) ? controlLabel(selection.control) : null,
+    selection.benchmark === "parallelism" ? named(selection.parallelismType) : source.label,
+    selection.benchmark === "genre" && register?.unit ? unitLabel(register.unit) : null,
+    selection.benchmark === "genre" && selection.genre !== ALL ? selection.genre : null,
   ]
     .filter(Boolean)
     .join(" / ");
@@ -137,65 +143,60 @@ export function Toolbar({
             </DropdownRow>
           ) : (
             <>
-              <DropdownRow label="Genre">
+              <DropdownRow label="Source">
                 <select
-                  aria-label="Genre"
-                  value={selection.genre}
+                  aria-label="Source"
+                  value={selection.source}
                   onChange={(event) => {
                     dispatch({
-                      type: "genre/selected",
-                      genre: event.target.value as Selection["genre"],
+                      type: "source/selected",
+                      source: event.target.value as SourceId,
                     });
                   }}
                 >
-                  {[ALL_OPTION, ...asOptions(GENRES, (v) => v)].map((option) => (
-                    <option key={option.value} value={option.value}>
+                  {SOURCES.map((option) => (
+                    <option key={option.id} value={option.id}>
                       {option.label}
                     </option>
                   ))}
                 </select>
               </DropdownRow>
-              <DropdownRow label="Metric">
-                <select
-                  aria-label="Metric"
-                  value={selection.metric}
-                  onChange={(event) => {
-                    dispatch({
-                      type: "metric/selected",
-                      metric: event.target.value as Selection["metric"],
-                    });
-                  }}
-                >
-                  {[
-                    { value: "genre", label: "Genre Discrimination" } as const,
-                    ...asOptions(TRAJECTORY_METRICS, titleCase),
-                  ].map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </DropdownRow>
-              {showsControl(selection) ? (
-                <DropdownRow label="Control">
+              {showsUnit ? (
+                <DropdownRow label="Unit">
                   <select
-                    aria-label="Control"
-                    value={selection.control}
+                    aria-label="Unit"
+                    value={register?.unit ?? ""}
                     onChange={(event) => {
-                      dispatch({
-                        type: "control/selected",
-                        control: event.target.value as Selection["control"],
-                      });
+                      dispatch({ type: "unit/selected", unit: event.target.value });
                     }}
                   >
-                    {TRAJECTORY_CONTROLS.map((control) => (
-                      <option key={control.id} value={control.id}>
-                        {control.label}
-                      </option>
-                    ))}
+                    {units
+                      .filter((unit): unit is string => unit !== null)
+                      .map((unit) => (
+                        <option key={unit} value={unit}>
+                          {unitLabel(unit)}
+                        </option>
+                      ))}
                   </select>
                 </DropdownRow>
               ) : null}
+              <DropdownRow label={source.category}>
+                <select
+                  aria-label={source.category}
+                  value={selection.genre}
+                  onChange={(event) => {
+                    dispatch({ type: "genre/selected", genre: event.target.value });
+                  }}
+                >
+                  {[ALL_OPTION, ...asOptions(register?.genres ?? [], (v) => v)].map(
+                    (option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ),
+                  )}
+                </select>
+              </DropdownRow>
             </>
           )}
         </Dropdown>

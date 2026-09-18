@@ -17,16 +17,16 @@ const DATA: DomainData = {
 
 describe("clickedRow", () => {
   it("finds the opened model's row and the columns the table showed it in", () => {
-    const found = clickedRow(DATA, at({ model: "berel" }), []);
+    const found = clickedRow(DATA, at({ model: "berel" }));
     expect(found?.row).toEqual({ model: "berel", separation_auc: 0.84 });
     expect(found?.columns.some((c) => c.label === "Separation AUC")).toBe(true);
   });
 
   it("yields nothing when no model is open", () => {
-    expect(clickedRow(DATA, INITIAL_SELECTION, [])).toBeNull();
+    expect(clickedRow(DATA, INITIAL_SELECTION)).toBeNull();
   });
 
   it("yields nothing when the open model is not among the rows", () => {
-    expect(clickedRow(DATA, at({ model: "absent" }), [])).toBeNull();
+    expect(clickedRow(DATA, at({ model: "absent" }))).toBeNull();
   });
 });

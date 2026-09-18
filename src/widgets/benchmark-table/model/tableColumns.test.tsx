@@ -5,45 +5,13 @@ import {
   genreOverallColumns,
   parallelismByTypeColumns,
   parallelismOverallColumns,
-  trajectoryByGenreColumns,
-  trajectoryOverallColumns,
 } from "./tableColumns";
-import type { TrajectoryOverallRow } from "../../../shared/lib/results";
 
 /** The CI cells render React nodes now, so assertions read the produced DOM. */
 function cell(node: React.ReactNode): HTMLElement {
   cleanup();
   render(<div data-testid="cell">{node}</div>);
   return screen.getByTestId("cell");
-}
-
-function makeValidationRow(
-  overrides: Partial<TrajectoryOverallRow> = {},
-): TrajectoryOverallRow {
-  return {
-    model: "bge_m3_vocalized",
-    model_base: "bge_m3",
-    text_variant: "vocalized",
-    metric: "content_distance",
-    n_pairs_total: 100,
-    n_pairs_valid: 100,
-    raw_gap: 0.1,
-    raw_p: 0.01,
-    raw_effect_size: 1.0,
-    raw_q: 0.02,
-    raw_q_by: 0.03,
-    length_controlled_gap: 0.05,
-    length_controlled_p: 0.03,
-    length_controlled_effect_size: 0.5,
-    length_controlled_q: 0.04,
-    length_controlled_q_by: 0.05,
-    length_and_content_controlled_gap: NaN,
-    length_and_content_controlled_p: NaN,
-    length_and_content_controlled_effect_size: NaN,
-    length_and_content_controlled_q: NaN,
-    length_and_content_controlled_q_by: NaN,
-    ...overrides,
-  };
 }
 
 describe("parallelismOverallColumns", () => {
@@ -102,7 +70,7 @@ describe("parallelismByTypeColumns", () => {
 
 describe("genreOverallColumns", () => {
   it("matches ui_export.export's _GENRE_OVERALL_COLUMNS field set, sample sizes trailing", () => {
-    expect(genreOverallColumns().map((c) => c.key)).toEqual([
+    expect(genreOverallColumns("Genre").map((c) => c.key)).toEqual([
       "model_base",
       "separation_auc",
       "auc_ci",
@@ -117,6 +85,8 @@ describe("genreOverallColumns", () => {
     model: "m",
     model_base: "m",
     text_variant: "unknown",
+    taxonomy: "logos",
+    unit: null,
     separation_auc: 0.6,
     auc_ci_low: 0.55,
     auc_ci_high: 0.65,
@@ -129,7 +99,7 @@ describe("genreOverallColumns", () => {
   };
 
   it("renders the AUC confidence interval as a colored pill against the 0.5 chance level", () => {
-    const column = genreOverallColumns().find((c) => c.key === "auc_ci");
+    const column = genreOverallColumns("Genre").find((c) => c.key === "auc_ci");
     expect(cell(column?.render?.(baseRow)).querySelector(".pill")).toHaveClass("good");
     expect(cell(column?.render?.(baseRow))).toHaveTextContent("[0.5500, 0.6500]");
     expect(
@@ -138,7 +108,7 @@ describe("genreOverallColumns", () => {
   });
 
   it("renders the AP confidence interval as a colored pill against that row's own prevalence", () => {
-    const column = genreOverallColumns().find((c) => c.key === "ap_ci");
+    const column = genreOverallColumns("Genre").find((c) => c.key === "ap_ci");
     expect(cell(column?.render?.(baseRow)).querySelector(".pill")).toHaveClass("good");
     expect(
       cell(column?.render?.({ ...baseRow, prevalence: 0.4 })).querySelector(".pill"),
@@ -146,20 +116,27 @@ describe("genreOverallColumns", () => {
   });
 
   it("carries no separate q pill for a metric that already has a CI pill", () => {
-    const columns = genreOverallColumns();
+    const columns = genreOverallColumns("Genre");
     const qKeys = ["separation_p_q", "perm_q", "maxT_q"];
     expect(columns.some((c) => qKeys.includes(c.key))).toBe(false);
   });
 
   it("shows the different-genre population size alongside the same-genre one", () => {
-    const columns = genreOverallColumns();
+    const columns = genreOverallColumns("Genre");
     expect(columns.some((c) => c.key === "n_different_genre")).toBe(true);
+  });
+
+  it("heads the pair counts with the source's word for a class", () => {
+    const labels = genreOverallColumns("Gattung").map((c) => c.label);
+    expect(labels).toContain("n same-gattung");
+    expect(labels).toContain("n different-gattung");
+    expect(genreByGenreColumns("Gattung").map((c) => c.label)).toContain("n same-gattung");
   });
 });
 
 describe("genreByGenreColumns", () => {
   it("matches ui_export.export's _GENRE_BY_GENRE_COLUMNS field set, sample sizes trailing", () => {
-    expect(genreByGenreColumns().map((c) => c.key)).toEqual([
+    expect(genreByGenreColumns("Genre").map((c) => c.key)).toEqual([
       "model",
       "separation_auc",
       "auc_ci",
@@ -171,7 +148,7 @@ describe("genreByGenreColumns", () => {
   });
 
   it("carries no separate q pill for a metric that already has a CI pill", () => {
-    const columns = genreByGenreColumns();
+    const columns = genreByGenreColumns("Genre");
     const qKeys = ["separation_p_q", "perm_q", "maxT_q"];
     expect(columns.some((c) => qKeys.includes(c.key))).toBe(false);
   });
@@ -180,6 +157,8 @@ describe("genreByGenreColumns", () => {
     model: "m",
     model_base: "m",
     text_variant: "unknown",
+    taxonomy: "logos",
+    unit: null,
     genre: "Wisdom",
     separation_auc: 0.6,
     auc_ci_low: 0.5,
@@ -193,47 +172,13 @@ describe("genreByGenreColumns", () => {
   };
 
   it("renders the per-genre AUC confidence interval as a colored pill", () => {
-    const column = genreByGenreColumns().find((c) => c.key === "auc_ci");
+    const column = genreByGenreColumns("Genre").find((c) => c.key === "auc_ci");
     expect(cell(column?.render?.(byGenreRow))).toHaveTextContent("[0.5000, 0.7000]");
   });
 
   it("renders the per-genre AP confidence interval as a colored pill against that row's own prevalence", () => {
-    const column = genreByGenreColumns().find((c) => c.key === "ap_ci");
+    const column = genreByGenreColumns("Genre").find((c) => c.key === "ap_ci");
     expect(cell(column?.render?.(byGenreRow)).querySelector(".pill")).toHaveClass("good");
     expect(cell(column?.render?.(byGenreRow))).toHaveTextContent("[0.2700, 0.3700]");
-  });
-});
-
-describe("trajectoryOverallColumns", () => {
-  it("prepends a Name column ahead of the chosen control's stat columns", () => {
-    const columns = trajectoryOverallColumns([makeValidationRow()], "length_controlled");
-    expect(columns[0]!.key).toBe("model_base");
-    expect(columns[0]!.label).toBe("Name");
-  });
-
-  it("shows the valid-pair sample size last, after the stats it supports", () => {
-    const columns = trajectoryOverallColumns([makeValidationRow()], "length_controlled");
-    expect(columns.at(-1)!.key).toBe("n_pairs_valid");
-  });
-
-  it("omits the content control's columns when no row in the group has them", () => {
-    const columns = trajectoryOverallColumns(
-      [makeValidationRow()],
-      "length_and_content_controlled",
-    );
-    expect(columns.map((c) => c.key)).toEqual(["model_base", "n_pairs_valid"]);
-  });
-});
-
-describe("trajectoryByGenreColumns", () => {
-  it("matches the by-genre trajectory field set, the control named above the table", () => {
-    const columns = trajectoryByGenreColumns();
-    expect(columns.map((c) => c.key)).toEqual([
-      "model_base",
-      "gap",
-      "p_perm",
-      "perm_q",
-      "maxT_q",
-    ]);
   });
 });

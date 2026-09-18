@@ -1,5 +1,5 @@
 import { EMPTY_DOMAIN_DATA } from "../lib/results";
-import type { DomainData } from "../lib/results";
+import type { DomainData, LoadedSlice } from "../lib/results";
 import { familyFor } from "../lib/corpus";
 import type { FamilyId } from "../lib/corpus";
 
@@ -15,21 +15,22 @@ export type DomainLoad =
 export const dataUrl = (family: FamilyId): string =>
   `${import.meta.env.BASE_URL}data/ui_${family}.json`;
 
-/** The per-genre trajectory rows for one metric, fetched when that view opens. */
-export const trajectorySliceUrl = (family: FamilyId, metric: string): string =>
-  `${import.meta.env.BASE_URL}data/ui_${family}_trajectory_${metric}.json`;
+/** The rows of one sliced table, fetched when the view that reads them opens. */
+export const sliceUrl = (family: FamilyId, name: string): string =>
+  `${import.meta.env.BASE_URL}data/ui_${family}_${name}.json`;
 
-/** One metric's per-genre trajectory rows, or none where the export holds no such slice. */
-export async function loadTrajectorySlice(
+/** One slice's rows, or none where the export holds no such slice. */
+export async function loadSlice(
   family: FamilyId,
-  metric: string,
+  table: LoadedSlice["table"],
+  name: string,
   fetcher: Fetcher = fetch,
-): Promise<DomainData["trajectory_by_genre"]> {
+): Promise<LoadedSlice["rows"]> {
   try {
-    const response = await fetcher(trajectorySliceUrl(family, metric));
+    const response = await fetcher(sliceUrl(family, name));
     if (!response.ok) return [];
     const payload = (await response.json()) as Record<string, Partial<DomainData> | undefined>;
-    return payload[family]?.trajectory_by_genre ?? [];
+    return payload[family]?.[table] ?? [];
   } catch {
     return [];
   }

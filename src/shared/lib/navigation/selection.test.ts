@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  INITIAL_SELECTION,
-  selectionReducer,
-  showsControl,
-  showsFacet,
-  showsText,
-} from "./selection";
+import { INITIAL_SELECTION, selectionReducer, showsFacet, showsText } from "./selection";
 import type { Selection } from "./selection";
 
 function reduce(
@@ -105,9 +99,9 @@ describe("selectionReducer identity", () => {
       { type: "family/selected", family: "semantic" },
       { type: "benchmark/selected", benchmark: "parallelism" },
       { type: "parallelismType/selected", parallelismType: "all" },
+      { type: "source/selected", source: "gunkel" },
+      { type: "unit/selected", unit: null },
       { type: "genre/selected", genre: "all" },
-      { type: "metric/selected", metric: "genre" },
-      { type: "control/selected", control: "length_controlled" },
       { type: "facet/selected", facet: "all" },
       { type: "text/selected", text: "all" },
       { type: "query/changed", query: "" },
@@ -132,21 +126,30 @@ describe("selectionReducer identity", () => {
     expect(
       selectionReducer(INITIAL_SELECTION, { type: "query/changed", query: "bge" }).query,
     ).toBe("bge");
-    expect(
-      selectionReducer(INITIAL_SELECTION, {
-        type: "control/selected",
-        control: "length_and_content_controlled",
-      }).control,
-    ).toBe("length_and_content_controlled");
   });
 });
 
-describe("showsControl", () => {
-  it("offers a control only under a trajectory metric of the genre benchmark", () => {
-    expect(showsControl({ benchmark: "genre", metric: "structural_distance" })).toBe(true);
-    expect(showsControl({ benchmark: "genre", metric: "genre" })).toBe(false);
-    expect(showsControl({ benchmark: "parallelism", metric: "structural_distance" })).toBe(
-      false,
-    );
+describe("source and unit", () => {
+  it("resets the register and the class when the source changes", () => {
+    const chosen: Selection = {
+      ...INITIAL_SELECTION,
+      source: "gunkel",
+      unit: "song",
+      genre: "Hymnus",
+    };
+    const next = selectionReducer(chosen, { type: "source/selected", source: "logos" });
+    expect((next.source, next.unit, next.genre)).toBe("all");
+    expect(next.unit).toBeNull();
+  });
+
+  it("resets the class when the register changes, and keeps the source", () => {
+    const chosen: Selection = {
+      ...INITIAL_SELECTION,
+      source: "gunkel",
+      unit: "song",
+      genre: "Hymnus",
+    };
+    const next = selectionReducer(chosen, { type: "unit/selected", unit: "song_component" });
+    expect(next).toMatchObject({ source: "gunkel", unit: "song_component", genre: "all" });
   });
 });

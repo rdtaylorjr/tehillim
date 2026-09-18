@@ -149,43 +149,43 @@ describe("ResultsTable", () => {
     expect(screen.getAllByText("[0.5500, 0.6500]").length).toBe(2);
   });
 
-  it("keeps rows distinct when one model repeats across sources", () => {
+  it("keeps rows distinct when one model repeats across scopes", () => {
     const repeated = [
-      { model: "voyage_4", source: "raw", gap: 0.003 },
-      { model: "voyage_4", source: "length_controlled", gap: 0.002 },
-      { model: "voyage_4", source: "length_and_content_controlled", gap: 0.001 },
+      { model: "voyage_4", scope: "Synonymous", gap: 0.003 },
+      { model: "voyage_4", scope: "Antithetic", gap: 0.002 },
+      { model: "voyage_4", scope: "Staircase", gap: 0.001 },
     ] as unknown as Row[];
     renderTable({
       rows: repeated,
       columns: [
         { key: "model", label: "Name", type: "text" },
-        { key: "source", label: "Source", type: "text" },
+        { key: "scope", label: "Scope", type: "text" },
         { key: "gap", label: "Gap", type: "num", digits: 5 },
       ],
       sortKey: "gap",
     });
     expect(bodyRows()).toHaveLength(3);
     expect(bodyRows().map((r) => r.textContent)).toEqual([
-      "voyage_4raw0.00300",
-      "voyage_4length_controlled0.00200",
-      "voyage_4length_and_content_controlled0.00100",
+      "voyage_4Synonymous0.00300",
+      "voyage_4Antithetic0.00200",
+      "voyage_4Staircase0.00100",
     ]);
   });
 
   it("swaps every cell when the column set changes under the same models", () => {
-    const trajectory = [{ model: "voyage_4", source: "raw", gap: 0.003 }] as unknown as Row[];
+    const byType = [{ model: "voyage_4", scope: "Synonymous", gap: 0.003 }] as unknown as Row[];
     const genre = [{ model: "voyage_4", separation_auc: 0.66 }] as unknown as Row[];
 
     renderTable({
-      rows: trajectory,
+      rows: byType,
       columns: [
         { key: "model", label: "Name", type: "text" },
-        { key: "source", label: "Source", type: "text" },
+        { key: "scope", label: "Scope", type: "text" },
         { key: "gap", label: "Gap", type: "num", digits: 5 },
       ],
       sortKey: "gap",
     });
-    expect(bodyRows()[0]).toHaveTextContent("raw");
+    expect(bodyRows()[0]).toHaveTextContent("Synonymous");
 
     renderTable({
       rows: genre,

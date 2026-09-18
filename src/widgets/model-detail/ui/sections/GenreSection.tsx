@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import styles from "../ModelDetail.module.css";
 import { Card } from "./Card";
 import { SeriesKey } from "../SeriesKey";
 import { PlotMount } from "../../../../shared/ui";
-import { GENRE_COLORS, TOKENS } from "../../../../shared/charts";
+import { TOKENS, genreColors } from "../../../../shared/charts";
 import type { PlotFn } from "../../../../shared/charts";
 import { ScaledPlot } from "../ScaledPlot";
 import { ScalarStat } from "../StatLine";
@@ -11,29 +11,40 @@ import { mountMultiCurve } from "../../charts/curves";
 import { mountRainclouds } from "../../charts/rainclouds";
 import { mountGenreMeanMatrix, mountHeatmap } from "../../charts/heatmap";
 import { orderGroups, seriesColor } from "../../lib/curveStyle";
+import { passageAxis } from "../../lib/pairAxis";
 import { computePrevalence } from "../../lib/prevalence";
 import type { GenreSection as Section } from "../../model/types";
 
-const GENRE_LIST = Object.keys(GENRE_COLORS);
-
-const groupColor = (key: string): string => {
-  if (key === "different") return TOKENS.inkFaint;
-  if (key === "combined") return TOKENS.ink;
-  return GENRE_COLORS[key] ?? TOKENS.inkDim;
-};
-
-/** Same- against different-genre separation, then the full pairwise structure behind it. */
+/** Same- against different-class separation, then the full pairwise structure behind it. */
 export function GenreSection({
   section,
+  genres,
+  category,
+  itemName,
   plot,
 }: {
   readonly section: Section;
+  /** The register's classes in the order its matrices read them, each keeping one colour. */
+  readonly genres: readonly string[];
+  /** The register's word for a class, Genre or Gattung, in lower case for the headings. */
+  readonly category: string;
+  /** What the register's items are, psalm or passage, for the matrix heading. */
+  readonly itemName: string;
   /** Injected in tests so a section renders without a real Plotly canvas. */
   readonly plot?: PlotFn;
 }): React.ReactElement {
+  const palette = useMemo(() => genreColors(genres), [genres]);
   const curveColor = useCallback(
-    (name: string): string => seriesColor(name, GENRE_COLORS, TOKENS.ink, TOKENS.inkFaint),
-    [],
+    (name: string): string => seriesColor(name, palette, TOKENS.ink, TOKENS.inkFaint),
+    [palette],
+  );
+  const groupColor = useCallback(
+    (key: string): string => {
+      if (key === "different") return TOKENS.inkFaint;
+      if (key === "combined") return TOKENS.ink;
+      return palette[key] ?? TOKENS.inkDim;
+    },
+    [palette],
   );
 
   const drawRoc = useCallback(
@@ -93,19 +104,20 @@ export function GenreSection({
       );
       mountRainclouds(el, groups, groupColor, "calibrated_z", plot);
     },
-    [section.raincloud_groups, section.series, plot],
+    [section.raincloud_groups, section.series, groupColor, plot],
   );
 
   const drawMean = useCallback(
     (el: HTMLElement) => {
-      mountGenreMeanMatrix(el, section.heatmap_genre_mean, GENRE_LIST, "calibrated_z", plot);
+      mountGenreMeanMatrix(el, section.heatmap_genre_mean, [...genres], "calibrated_z", plot);
     },
-    [section.heatmap_genre_mean, plot],
+    [section.heatmap_genre_mean, genres, plot],
   );
 
   const drawFull = useCallback(
     (el: HTMLElement) => {
-      mountHeatmap(el, section.heatmap, section.genre_order, "calibrated_z", plot);
+      const axis = passageAxis(section.genre_order, section.heatmap);
+      mountHeatmap(el, axis.cells, axis.order, "calibrated_z", plot);
     },
     [section.heatmap, section.genre_order, plot],
   );
@@ -141,10 +153,10 @@ export function GenreSection({
         >
           <PlotMount draw={drawPr} />
         </Card>
-        <Card title="Calibrated score by genre" wide>
+        <Card title={`Calibrated score by ${category.toLowerCase()}`} wide>
           <PlotMount draw={drawRaincloud} />
         </Card>
-        <Card title="Pairwise similarity by psalm" wide>
+        <Card title={`Pairwise similarity by ${itemName}`} wide>
           <div className={styles.heatmapPair}>
             <ScaledPlot draw={drawMean} />
             <ScaledPlot draw={drawFull} />

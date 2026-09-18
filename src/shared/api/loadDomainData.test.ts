@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { dataUrl, loadDomainData } from "./loadDomainData";
+import { dataUrl, loadDomainData, loadSlice, sliceUrl } from "./loadDomainData";
 
 const ok = (body: unknown): Response =>
   ({ ok: true, status: 200, json: () => Promise.resolve(body) }) as Response;
@@ -77,10 +77,12 @@ describe("loadDomainData", () => {
   it("carries a null statistic through, the exporter's own mark for one it could not compute", async () => {
     const fetcher = vi
       .fn()
-      .mockResolvedValue(ok({ semantic: { trajectory: [{ model: "a", raw_gap: null }] } }));
+      .mockResolvedValue(
+        ok({ semantic: { genre_overall: [{ model: "a", ap_ci_low: null }] } }),
+      );
     const result = await loadDomainData("semantic", fetcher);
-    expect(result.status === "loaded" && result.data.trajectory[0]).toMatchObject({
-      raw_gap: null,
+    expect(result.status === "loaded" && result.data.genre_overall[0]).toMatchObject({
+      ap_ci_low: null,
     });
   });
 
@@ -88,5 +90,42 @@ describe("loadDomainData", () => {
     const fetcher = vi.fn().mockResolvedValue(ok({ syntactic: {} }));
     await loadDomainData("syntactic", fetcher);
     expect(fetcher).toHaveBeenCalledWith(dataUrl("syntactic"));
+  });
+});
+
+describe("loadSlice", () => {
+  it("names the file by the family and the slice, and unwraps the table it asked for", async () => {
+    const fetcher = vi.fn().mockResolvedValue(
+      ok({
+        semantic: { genre_by_genre: [{ model: "a", taxonomy: "gunkel", unit: "song" }] },
+      }),
+    );
+
+    const rows = await loadSlice("semantic", "genre_by_genre", "genre_gunkel_song", fetcher);
+
+    expect(fetcher).toHaveBeenCalledWith(sliceUrl("semantic", "genre_gunkel_song"));
+    expect(sliceUrl("semantic", "genre_gunkel_song")).toMatch(
+      /ui_semantic_genre_gunkel_song\.json$/,
+    );
+    expect(rows).toEqual([{ model: "a", taxonomy: "gunkel", unit: "song" }]);
+  });
+
+  it("yields no rows where the file is missing or unreadable", async () => {
+    await expect(
+      loadSlice(
+        "semantic",
+        "genre_by_genre",
+        "genre_logos",
+        vi.fn().mockResolvedValue(status(404)),
+      ),
+    ).resolves.toEqual([]);
+    await expect(
+      loadSlice(
+        "semantic",
+        "genre_by_genre",
+        "genre_logos",
+        vi.fn().mockRejectedValue(new Error()),
+      ),
+    ).resolves.toEqual([]);
   });
 });

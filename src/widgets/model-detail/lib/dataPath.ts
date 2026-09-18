@@ -1,5 +1,5 @@
 /** The section the toolbar already chose, so a click never downloads the sections it will not draw. */
-export type DetailSection = "parallelism" | "genre" | "trajectory";
+export type DetailSection = "parallelism" | `genre_${string}`;
 
 /** Where one model's detail payload for one section is served from.
  *  The version rides in the query: the Worker keys R2 on the path alone, while caches

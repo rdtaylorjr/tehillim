@@ -1,6 +1,6 @@
-import { loadDomainData, loadTrajectorySlice } from "./loadDomainData";
+import { loadDomainData, loadSlice } from "./loadDomainData";
 import type { DomainLoad, Fetcher } from "./loadDomainData";
-import type { DomainData } from "../lib/results";
+import type { LoadedSlice } from "../lib/results";
 import type { FamilyId } from "../lib/corpus";
 
 /** Remembers each family's outcome, so moving between families does not refetch megabytes. */
@@ -21,19 +21,20 @@ export function createDomainCache(
   };
 }
 
-export type TrajectorySliceLoader = (
+export type SliceLoader = (
   family: FamilyId,
-  metric: string,
-) => Promise<DomainData["trajectory_by_genre"]>;
+  table: LoadedSlice["table"],
+  name: string,
+) => Promise<LoadedSlice["rows"]>;
 
-/** The same remembering, for the per-metric slices a drill-down needs. */
-export function createTrajectorySliceCache(fetcher?: Fetcher): TrajectorySliceLoader {
-  const inFlight = new Map<string, Promise<DomainData["trajectory_by_genre"]>>();
-  return (family, metric) => {
-    const key = `${family}/${metric}`;
+/** The same remembering, for the sliced tables a drill-down needs. */
+export function createSliceCache(fetcher?: Fetcher): SliceLoader {
+  const inFlight = new Map<string, Promise<LoadedSlice["rows"]>>();
+  return (family, table, name) => {
+    const key = `${family}/${name}`;
     const cached = inFlight.get(key);
     if (cached) return cached;
-    const pending = loadTrajectorySlice(family, metric, fetcher);
+    const pending = loadSlice(family, table, name, fetcher);
     inFlight.set(key, pending);
     return pending;
   };

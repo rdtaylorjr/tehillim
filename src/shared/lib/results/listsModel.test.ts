@@ -17,8 +17,8 @@ describe("listsModel", () => {
     expect(listsModel(withRows("genre_overall", ["only_genre"]), "only_genre")).toBe(true);
   });
 
-  it("finds a model that only the trajectory table names", () => {
-    expect(listsModel(withRows("trajectory", ["only_traj"]), "only_traj")).toBe(true);
+  it("finds a model that only the genre table names", () => {
+    expect(listsModel(withRows("genre_overall", ["only_genre"]), "only_genre")).toBe(true);
   });
 
   it("does not find a model the payload never names", () => {

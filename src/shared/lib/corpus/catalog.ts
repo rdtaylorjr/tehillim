@@ -46,41 +46,31 @@ export const PARALLELISM_TYPES = [
   "Staircase",
 ] as const;
 
-export type TrajectoryMetric = (typeof TRAJECTORY_METRICS)[number];
+export type SourceId = (typeof SOURCES)[number]["id"];
 
-export const TRAJECTORY_METRICS = [
-  "content_distance",
-  "structural_distance",
-  "step_magnitude_distance",
-  "turning_angle_distance",
+/** Whose classification a genre benchmark scores against, and what that source calls a class. */
+export const SOURCES = [
+  { id: "gunkel", label: "Gunkel", category: "Gattung" },
+  { id: "logos", label: "Logos", category: "Genre" },
 ] as const;
 
-export type TrajectoryControl = (typeof TRAJECTORY_CONTROLS)[number]["id"];
-
-/** The confounds partialled out of a trajectory distance before genres are compared. */
-export const TRAJECTORY_CONTROLS = [
-  { id: "length_controlled", label: "Length" },
-  { id: "length_and_content_controlled", label: "Length + Content" },
-] as const;
-
-/** The label a control is read under, the same wherever it is named. */
-export function controlLabel(control: TrajectoryControl): string {
-  const found = TRAJECTORY_CONTROLS.find((c) => c.id === control);
-  if (!found) throw new Error(`Unknown trajectory control: ${control}`);
-  return found.label;
+/** The source record for an id, which the SourceId union guarantees exists. */
+export function sourceFor(source: SourceId): (typeof SOURCES)[number] {
+  const found = SOURCES.find((s) => s.id === source);
+  if (!found) throw new Error(`Unknown source: ${source}`);
+  return found;
 }
 
-export type Genre = (typeof GENRES)[number];
+/** Gunkel's words for the units of assignment, keyed as the export names them. */
+const UNIT_NAMES: Record<string, string> = { song: "Lied", component: "Stück", motif: "Motiv" };
 
-export const GENRES = [
-  "Hymn",
-  "Lament",
-  "Praise",
-  "Royal",
-  "Thanksgiving",
-  "Trust",
-  "Wisdom",
-] as const;
+/** A unit register as the site names it: the units it counts, in Gunkel's words, as a list. */
+export function unitLabel(unit: string): string {
+  return unit
+    .split("_")
+    .map((part) => UNIT_NAMES[part] ?? sentenceCase(part))
+    .join(", ");
+}
 
 export type TextVariant = (typeof TEXT_VARIANTS)[number];
 

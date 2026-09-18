@@ -37,10 +37,24 @@ export interface AucApStats {
   ap_ci_high: number;
 }
 
-/** One psalm-pair cell of a full pairwise matrix. */
-export interface HeatmapCell {
-  psalm_a: number;
-  psalm_b: number;
+/** One passage-pair cell of a full pairwise matrix, the passages named by their export ids. */
+export interface ItemPairCell {
+  item_a: string;
+  item_b: string;
+  value: number;
+}
+
+/** One position on a class-grouped matrix axis, whatever the export names its items by. */
+export interface AxisEntry {
+  key: string;
+  label: string;
+  genre: string;
+}
+
+/** One cell of a full pairwise matrix, both ends keyed as the axis is. */
+export interface PairCell {
+  a: string;
+  b: string;
   value: number;
 }
 
@@ -51,17 +65,12 @@ export interface GenreMeanCell {
   value: number;
 }
 
-/** One psalm's position in the genre-grouped matrix axis order. */
-export interface PsalmOrderEntry {
+/** One passage's position in the class-grouped matrix axis order, with the psalm it sits in. */
+export interface GenreOrderEntry {
+  item: string;
   psalm: number;
+  label: string;
   genre: string;
-}
-
-/** A permutation-test gap statistic between within-genre and across-genre pairwise distance. */
-export interface GapStats {
-  gap: number;
-  p: number;
-  effect_size: number;
 }
 
 /** The parallelism domain's detail data: marked-parallel vs. baseline separation. */
@@ -71,39 +80,20 @@ export interface ParallelismSection {
   auc_ap_stats: AucApStats;
 }
 
-/** The genre domain's detail data: same- vs. different-genre separation, plus the full pairwise matrix. */
+/** One register's detail data: same- vs. different-class separation, plus the full pairwise matrix. */
 export interface GenreSection {
-  genre_order: PsalmOrderEntry[];
+  genre_order: GenreOrderEntry[];
   raincloud_groups: RaincloudGroup[];
   series: CurveSeries[];
-  heatmap: HeatmapCell[];
+  heatmap: ItemPairCell[];
   heatmap_genre_mean: GenreMeanCell[];
   auc_ap_stats: AucApStats;
 }
 
-/** One trajectory source's (length-controlled or length-and-content-controlled) detail data. */
-export interface TrajectorySourceData {
-  raincloud: { same: RaincloudGroup; different: RaincloudGroup };
-  heatmap: HeatmapCell[];
-  heatmap_genre_mean: GenreMeanCell[];
-  gap_stats: GapStats;
-}
-
-/** The trajectory domain's detail data for one metric, across both controlled sources. */
-export interface TrajectorySection {
-  metric: string;
-  order: PsalmOrderEntry[];
-  sources: {
-    length_controlled: TrajectorySourceData;
-    length_and_content_controlled: TrajectorySourceData;
-  };
-}
-
-/** One model's full stopgap detail export: whichever domain sections apply to it. */
+/** One model's detail export: the section the file was cut for, keyed as the export names it. */
 export interface DetailData {
   model: string;
   domain: string;
   parallelism?: ParallelismSection;
-  genre?: GenreSection;
-  trajectory?: TrajectorySection;
+  [register: `genre_${string}`]: GenreSection | undefined;
 }

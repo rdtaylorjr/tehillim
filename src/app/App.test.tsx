@@ -140,8 +140,8 @@ describe("App", () => {
     expect(
       within(screen.getByLabelText("Benchmark")).queryByLabelText("Type"),
     ).not.toBeInTheDocument();
-    expect(screen.getByLabelText("Genre")).toBeInTheDocument();
-    expect(screen.getByLabelText("Metric")).toBeInTheDocument();
+    expect(screen.getByLabelText("Source")).toBeInTheDocument();
+    expect(screen.getByLabelText("Gattung")).toBeInTheDocument();
   });
 
   it("heads the page with the project name and the phrase explaining it", async () => {

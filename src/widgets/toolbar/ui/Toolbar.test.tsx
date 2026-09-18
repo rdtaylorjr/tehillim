@@ -4,6 +4,13 @@ import userEvent from "@testing-library/user-event";
 import { Toolbar } from "./Toolbar";
 import { INITIAL_SELECTION } from "../../../shared/lib/navigation";
 import type { Selection } from "../../../shared/lib/navigation";
+import type { GenreRegister } from "../../../shared/lib/results";
+
+const REGISTERS: readonly GenreRegister[] = [
+  { taxonomy: "logos", unit: null, genres: ["Hymn", "Lament"] },
+  { taxonomy: "gunkel", unit: "song", genres: ["Klagelied"] },
+  { taxonomy: "gunkel", unit: "song_component", genres: ["Klagelied", "Hymnus"] },
+];
 
 /** Cleans up first so a test may render several selections without duplicate matches. */
 function renderToolbar(overrides: Partial<Selection> = {}): {
@@ -12,7 +19,7 @@ function renderToolbar(overrides: Partial<Selection> = {}): {
   cleanup();
   const dispatch = vi.fn();
   const selection = { ...INITIAL_SELECTION, ...overrides };
-  render(<Toolbar selection={selection} dispatch={dispatch} />);
+  render(<Toolbar selection={selection} dispatch={dispatch} registers={REGISTERS} />);
   return { dispatch };
 }
 
@@ -52,14 +59,47 @@ describe("Toolbar model families", () => {
 });
 
 describe("Toolbar dependent filters", () => {
-  it("shows Type under parallelism and Genre plus Metric under genre", () => {
+  it("shows Type under parallelism and Source plus Genre under Logos, with no metric", () => {
     renderToolbar();
     expect(within(benchmarkMenu()).getByLabelText("Type")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Source")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Genre")).not.toBeInTheDocument();
 
-    renderToolbar({ benchmark: "genre" });
+    renderToolbar({ benchmark: "genre", source: "logos" });
+    expect(screen.getByLabelText("Source")).toBeInTheDocument();
     expect(screen.getByLabelText("Genre")).toBeInTheDocument();
-    expect(screen.getByLabelText("Metric")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Unit")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Metric")).not.toBeInTheDocument();
+  });
+
+  it("offers Gunkel first and opens on it", () => {
+    renderToolbar({ benchmark: "genre" });
+    const options = within(screen.getByLabelText("Source")).getAllByRole("option");
+    expect(options.map((o) => o.textContent)).toEqual(["Gunkel", "Logos"]);
+    expect(screen.getByLabelText("Source")).toHaveValue("gunkel");
+  });
+
+  it("offers a Unit and calls the class a Gattung under Gunkel", async () => {
+    const { dispatch } = renderToolbar({ benchmark: "genre" });
+    expect(screen.queryByLabelText("Genre")).not.toBeInTheDocument();
+    const units = within(screen.getByLabelText("Unit")).getAllByRole("option");
+    expect(units.map((o) => o.textContent)).toEqual(["Lied", "Lied, Stück"]);
+    expect(screen.getByRole("button", { name: "Genre / Gunkel / Lied" })).toBeInTheDocument();
+
+    await userEvent.selectOptions(screen.getByLabelText("Unit"), "song_component");
+    expect(dispatch).toHaveBeenCalledWith({ type: "unit/selected", unit: "song_component" });
+  });
+
+  it("lists the classes of the register in view", () => {
+    renderToolbar({ benchmark: "genre", unit: "song_component" });
+    const options = within(screen.getByLabelText("Gattung")).getAllByRole("option");
+    expect(options.map((o) => o.textContent)).toEqual(["All", "Klagelied", "Hymnus"]);
+  });
+
+  it("dispatches a source change", async () => {
+    const { dispatch } = renderToolbar({ benchmark: "genre" });
+    await userEvent.selectOptions(screen.getByLabelText("Source"), "logos");
+    expect(dispatch).toHaveBeenCalledWith({ type: "source/selected", source: "logos" });
   });
 
   it("shows Type for lexical and Level for syntactic, and neither for semantic", () => {
@@ -85,37 +125,11 @@ describe("Toolbar dependent filters", () => {
     expect(screen.queryByLabelText("Text")).not.toBeInTheDocument();
   });
 
-  it("offers a Control only once a trajectory metric is chosen, and dispatches it", async () => {
-    renderToolbar({ benchmark: "genre" });
-    expect(screen.queryByLabelText("Control")).not.toBeInTheDocument();
-
-    const { dispatch } = renderToolbar({ benchmark: "genre", metric: "structural_distance" });
-    expect(
-      screen.getByRole("button", {
-        name: "Genre / Structural Distance / Length",
-      }),
-    ).toBeInTheDocument();
-    await userEvent.selectOptions(
-      screen.getByLabelText("Control"),
-      "length_and_content_controlled",
-    );
-    expect(dispatch).toHaveBeenCalledWith({
-      type: "control/selected",
-      control: "length_and_content_controlled",
-    });
-  });
-
-  it("dispatches genre and metric choices under the genre benchmark", async () => {
-    const { dispatch } = renderToolbar({ benchmark: "genre" });
+  it("dispatches a class choice under the genre benchmark", async () => {
+    const { dispatch } = renderToolbar({ benchmark: "genre", source: "logos" });
 
     await userEvent.selectOptions(screen.getByLabelText("Genre"), "Lament");
     expect(dispatch).toHaveBeenCalledWith({ type: "genre/selected", genre: "Lament" });
-
-    await userEvent.selectOptions(screen.getByLabelText("Metric"), "structural_distance");
-    expect(dispatch).toHaveBeenCalledWith({
-      type: "metric/selected",
-      metric: "structural_distance",
-    });
   });
 
   it("dispatches facet and text choices under a family that offers them", async () => {

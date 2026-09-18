@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   DIVERGING_COLORSCALE,
   GENRE_COLORS,
+  genreColors,
   HEATMAP_STEPS,
   PARALLELISM_TYPE_COLORS,
   steppedColorFn,
@@ -116,5 +117,36 @@ describe("categorical palettes", () => {
   it("gives every genre a distinct hue", () => {
     const hues = Object.values(GENRE_COLORS);
     expect(new Set(hues).size).toBe(hues.length);
+  });
+});
+
+describe("genreColors", () => {
+  it("keeps the Logos genres on the hues they already wear", () => {
+    expect(genreColors(Object.keys(GENRE_COLORS))).toEqual(GENRE_COLORS);
+  });
+
+  it("gives a Gattung list distinct colours, a named hue staying with its name", () => {
+    const gattungen = [
+      "Individual Lament",
+      "Hymn",
+      "Liturgy",
+      "Individual Thanksgiving",
+      "Wisdom Poem",
+      "Royal Psalm",
+      "Mixed Poem",
+      "Communal Lament",
+      "Zion Song",
+      "Enthronement Song",
+      "Thanksgiving of Israel",
+      "Prophetic Reproach, Threat, and Admonition",
+      "Prophetic Judgment Speech",
+      "Prophetic Torah",
+      "Pilgrimage Song",
+      "Curse",
+    ];
+    const colors = genreColors(gattungen);
+    expect(colors["Hymn"]).toBe(GENRE_COLORS["Hymn"]);
+    expect(new Set(Object.values(colors)).size).toBe(gattungen.length);
+    for (const hue of Object.values(colors)) expect(hue).toMatch(/^(#[0-9a-f]{6}|rgb\(.*\))$/);
   });
 });

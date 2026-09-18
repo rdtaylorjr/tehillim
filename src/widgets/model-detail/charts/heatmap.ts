@@ -18,13 +18,31 @@ import {
   genreTickAnchors,
   robustAbsClip,
 } from "../lib/heatmapGrid";
-import type { GenreMeanCell, HeatmapCell, PsalmOrderEntry } from "../model/types";
+import type { AxisEntry, GenreMeanCell, PairCell } from "../model/types";
 
 /** The rules between genres and the diagonal, in the panel's gray so both read as ground rather than value. */
 const STRUCTURE_COLOR = TOKENS.bgPanel;
 
 /** Every label around a matrix wears the face the table hangs a model's text variant off. */
 const LABEL_FONT = { family: TOKENS.mono, size: 10.5, color: TOKENS.inkFaint };
+
+/** Room for the longest class name on both label faces, the lower one carrying it at 40 degrees. */
+export function matrixMargin(labels: readonly string[]): {
+  l: number;
+  r: number;
+  t: number;
+  b: number;
+} {
+  const longest = Math.max(0, ...labels.map((label) => label.length));
+  const glyph = LABEL_FONT.size * 0.62;
+  const width = Math.ceil(longest * glyph);
+  return {
+    l: Math.max(90, width + 12),
+    r: 130,
+    t: 10,
+    b: Math.max(70, Math.ceil(width * Math.sin((40 * Math.PI) / 180)) + 24),
+  };
+}
 
 const AXIS_COMMON = {
   tickfont: LABEL_FONT,
@@ -33,11 +51,11 @@ const AXIS_COMMON = {
   fixedrange: true,
 };
 
-/** Mounts the full n x n pairwise psalm matrix, genre-grouped, with quadrant-fade + single-cell-border hover. */
+/** Mounts the full n x n pairwise matrix, class-grouped, with quadrant-fade + single-cell-border hover. */
 export function mountHeatmap(
   mount: HTMLElement,
-  cells: HeatmapCell[],
-  order: PsalmOrderEntry[],
+  cells: readonly PairCell[],
+  order: readonly AxisEntry[],
   valueTitle: string,
   plot: PlotFn = plotly,
 ): void {
@@ -71,7 +89,7 @@ export function mountHeatmap(
     range: [-0.65, n - 0.35],
   };
   const gridSize = 800;
-  const margin = { l: 90, r: 130, t: 10, b: 70 };
+  const margin = matrixMargin(anchors.map((a) => a.genre));
   const rules = boundaryShapes(labelBoundaries(genreOf), n, STRUCTURE_COLOR);
   const layout = baseLayout({
     xaxis: { ...axisCommon, tickangle: -40 },
@@ -173,7 +191,7 @@ export function mountGenreMeanMatrix(
     range: [-0.65, n - 0.35],
   };
   const gridSize = 280;
-  const margin = { l: 90, r: 130, t: 10, b: 70 };
+  const margin = matrixMargin(genreList);
   const layout = baseLayout({
     xaxis: { ...axisCommon, tickangle: -40 },
     yaxis: { ...axisCommon, autorange: "reversed" },

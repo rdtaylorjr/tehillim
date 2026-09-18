@@ -4,9 +4,11 @@ import { pathSentence } from "../../../shared/lib/navigation";
 import type { SortDir } from "../../../shared/lib/results";
 import { applyFacetFilter, applyNameFilter, applyTextFilter } from "../model/rowFilters";
 import type { DomainData } from "../../../shared/lib/results";
+import { baselineLine, lengthBaseline } from "../model/lengthBaseline";
 import { resolveTableView } from "../model/tableView";
 import { Message } from "../../../shared/ui/Message";
 import { ResultsTable } from "./ResultsTable";
+import styles from "./ResultsTable.module.css";
 
 export interface BenchmarkTableProps {
   readonly selection: Selection;
@@ -21,6 +23,7 @@ export function BenchmarkTable({
   onOpenModel,
 }: BenchmarkTableProps): React.ReactElement {
   const view = useMemo(() => resolveTableView(data, selection), [data, selection]);
+  const baseline = useMemo(() => lengthBaseline(data, selection), [data, selection]);
   const [sort, setSort] = useState<{ key: string; dir: SortDir } | null>(null);
 
   const rows = useMemo(() => {
@@ -44,19 +47,26 @@ export function BenchmarkTable({
   }
 
   return (
-    <ResultsTable
-      caption={`${pathSentence(selection)}: ${String(rows.length)} rows`}
-      rows={rows}
-      columns={view.columns}
-      sortKey={active.key}
-      sortDir={active.dir}
-      onSort={(key) => {
-        setSort({
-          key,
-          dir: key === active.key && active.dir === "desc" ? "asc" : "desc",
-        });
-      }}
-      onOpenModel={onOpenModel}
-    />
+    <>
+      {baseline.map((row) => (
+        <p key={row.predictor} className={styles.baseline}>
+          {baselineLine(row)}
+        </p>
+      ))}
+      <ResultsTable
+        caption={`${pathSentence(selection)}: ${String(rows.length)} rows`}
+        rows={rows}
+        columns={view.columns}
+        sortKey={active.key}
+        sortDir={active.dir}
+        onSort={(key) => {
+          setSort({
+            key,
+            dir: key === active.key && active.dir === "desc" ? "asc" : "desc",
+          });
+        }}
+        onOpenModel={onOpenModel}
+      />
+    </>
   );
 }

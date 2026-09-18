@@ -1,3 +1,5 @@
+import { sourceFor } from "../../../shared/lib/corpus";
+import { resolveRegister } from "../../../shared/lib/navigation";
 import type { Selection } from "../../../shared/lib/navigation";
 import type { TableColumn } from "../../../shared/lib/results";
 import {
@@ -5,8 +7,6 @@ import {
   genreOverallColumns,
   parallelismByTypeColumns,
   parallelismOverallColumns,
-  trajectoryByGenreColumns,
-  trajectoryOverallColumns,
 } from "./tableColumns";
 import type { DomainData, ResultRow } from "../../../shared/lib/results";
 
@@ -38,24 +38,15 @@ export function resolveTableView(data: DomainData, selection: Selection): TableV
     return view(rows, parallelismByTypeColumns(), "separation_auc");
   }
 
-  if (selection.metric === "genre") {
-    if (selection.genre === "all") {
-      return view(data.genre_overall, genreOverallColumns(), "separation_auc");
-    }
-    const rows = data.genre_by_genre.filter((r) => r.genre === selection.genre);
-    return view(rows, genreByGenreColumns(), "separation_auc");
-  }
-
+  const register = resolveRegister(data.genre_registers, selection);
+  const category = sourceFor(selection.source).category;
+  //: The register in view, and no model scored under another source or unit.
+  const inRegister = (r: { taxonomy: string; unit: string | null }): boolean =>
+    register !== null && r.taxonomy === register.taxonomy && r.unit === register.unit;
   if (selection.genre === "all") {
-    const rows = data.trajectory.filter((r) => r.metric === selection.metric);
-    const columns = trajectoryOverallColumns(rows, selection.control);
-    return view(rows, columns, `${selection.control}_effect_size`);
+    const rows = data.genre_overall.filter(inRegister);
+    return view(rows, genreOverallColumns(category), "separation_auc");
   }
-  const rows = data.trajectory_by_genre.filter(
-    (r) =>
-      r.metric === selection.metric &&
-      r.genre === selection.genre &&
-      r.source === selection.control,
-  );
-  return view(rows, trajectoryByGenreColumns(), "gap");
+  const rows = data.genre_by_genre.filter((r) => inRegister(r) && r.genre === selection.genre);
+  return view(rows, genreByGenreColumns(category), "separation_auc");
 }

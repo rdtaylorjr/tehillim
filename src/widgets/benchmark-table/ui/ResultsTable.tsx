@@ -24,8 +24,8 @@ function headerClass<T>(column: TableColumn<T>, sortKey: string, sortDir: SortDi
 
 const isModelColumn = (key: string): boolean => key === "model" || key === "model_base";
 
-/** Rows are keyed by more than model, which repeats per source and per scope. */
-const IDENTITY = ["model", "source", "scope", "genre", "metric"] as const;
+/** Rows are keyed by more than model, which repeats per scope and per class. */
+const IDENTITY = ["model", "scope", "genre"] as const;
 
 function rowKey(row: Record<string, unknown>, index: number): string {
   const parts = IDENTITY.map((field) => row[field]).filter(

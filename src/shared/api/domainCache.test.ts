@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createDomainCache, createTrajectorySliceCache } from "./domainCache";
+import { createDomainCache, createSliceCache } from "./domainCache";
 
 const ok = (body: unknown): Response =>
   ({ ok: true, status: 200, json: () => Promise.resolve(body) }) as Response;
@@ -60,38 +60,37 @@ describe("createDomainCache", () => {
   });
 });
 
-describe("createTrajectorySliceCache", () => {
-  const sliceBody = (metric: string): Response =>
+describe("createSliceCache", () => {
+  const sliceBody = (genre: string): Response =>
     ({
       ok: true,
       status: 200,
-      json: () =>
-        Promise.resolve({ semantic: { trajectory_by_genre: [{ model: "a", metric }] } }),
+      json: () => Promise.resolve({ semantic: { genre_by_genre: [{ model: "a", genre }] } }),
     }) as Response;
 
-  it("fetches one family and metric once", async () => {
-    const fetcher = vi.fn().mockResolvedValue(sliceBody("structural_distance"));
-    const load = createTrajectorySliceCache(fetcher);
+  it("fetches one family and slice once", async () => {
+    const fetcher = vi.fn().mockResolvedValue(sliceBody("Hymnus"));
+    const load = createSliceCache(fetcher);
 
-    await load("semantic", "structural_distance");
-    await load("semantic", "structural_distance");
+    await load("semantic", "genre_by_genre", "genre_gunkel_song");
+    await load("semantic", "genre_by_genre", "genre_gunkel_song");
 
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
-  it("keeps metrics of one family apart", async () => {
-    const fetcher = vi.fn().mockResolvedValue(sliceBody("structural_distance"));
-    const load = createTrajectorySliceCache(fetcher);
+  it("keeps slices of one family apart", async () => {
+    const fetcher = vi.fn().mockResolvedValue(sliceBody("Hymnus"));
+    const load = createSliceCache(fetcher);
 
-    await load("semantic", "structural_distance");
-    await load("semantic", "turning_angle_distance");
+    await load("semantic", "genre_by_genre", "genre_logos");
+    await load("semantic", "genre_by_genre", "genre_gunkel_song");
 
     expect(fetcher).toHaveBeenCalledTimes(2);
   });
 
   it("yields no rows where the export holds no such slice", async () => {
     const fetcher = vi.fn().mockResolvedValue(status(404));
-    const load = createTrajectorySliceCache(fetcher);
-    await expect(load("syntactic", "content_distance")).resolves.toEqual([]);
+    const load = createSliceCache(fetcher);
+    await expect(load("syntactic", "genre_by_genre", "genre_gunkel_song")).resolves.toEqual([]);
   });
 });

@@ -1,16 +1,12 @@
-import { trajectoryColumns } from "./trajectoryColumns";
 import { variantLabel } from "./variantLabel";
 import type {
   GenreByGenreRow,
   GenreOverallRow,
   ParallelismByTypeRow,
   ParallelismOverallRow,
-  TrajectoryByGenreRow,
-  TrajectoryOverallRow,
 } from "../../../shared/lib/results";
 import { ciPill } from "../../../shared/ui/Pill";
 import type { TableColumn } from "../../../shared/lib/results";
-import type { TrajectoryControl } from "../../../shared/lib/corpus";
 
 /** AUC's chance level is fixed at 0.5, and AP's varies per row with prevalence. */
 const AUC_CHANCE_LEVEL = 0.5;
@@ -89,7 +85,7 @@ export function parallelismByTypeColumns(): TableColumn<ParallelismByTypeRow>[] 
   ];
 }
 
-export function genreOverallColumns(): TableColumn<GenreOverallRow>[] {
+export function genreOverallColumns(category: string): TableColumn<GenreOverallRow>[] {
   return [
     nameColumn<GenreOverallRow>(),
     { key: "separation_auc", label: "Separation AUC", type: "num", digits: 4 },
@@ -106,17 +102,17 @@ export function genreOverallColumns(): TableColumn<GenreOverallRow>[] {
       type: "pill",
       render: (r) => ciPill(r.ap_ci_low, r.ap_ci_high, r.prevalence),
     },
-    { key: "n_same_genre", label: "n same-genre", type: "num", digits: 0 },
+    { key: "n_same_genre", label: `n same-${category.toLowerCase()}`, type: "num", digits: 0 },
     {
       key: "n_different_genre",
-      label: "n different-genre",
+      label: `n different-${category.toLowerCase()}`,
       type: "num",
       digits: 0,
     },
   ];
 }
 
-export function genreByGenreColumns(): TableColumn<GenreByGenreRow>[] {
+export function genreByGenreColumns(category: string): TableColumn<GenreByGenreRow>[] {
   return [
     { key: "model", label: "Name", type: "text" },
     { key: "separation_auc", label: "Separation AUC", type: "num", digits: 4 },
@@ -133,39 +129,12 @@ export function genreByGenreColumns(): TableColumn<GenreByGenreRow>[] {
       type: "pill",
       render: (r) => ciPill(r.ap_ci_low, r.ap_ci_high, r.prevalence),
     },
-    { key: "n_same_genre", label: "n same-genre", type: "num", digits: 0 },
+    { key: "n_same_genre", label: `n same-${category.toLowerCase()}`, type: "num", digits: 0 },
     {
       key: "n_different_genre",
-      label: "n different-genre",
+      label: `n different-${category.toLowerCase()}`,
       type: "num",
       digits: 0,
     },
-  ];
-}
-
-export function trajectoryOverallColumns(
-  rows: TrajectoryOverallRow[],
-  control: TrajectoryControl,
-): TableColumn<TrajectoryOverallRow>[] {
-  return [
-    nameColumn<TrajectoryOverallRow>(),
-    ...trajectoryColumns(rows, control),
-    { key: "n_pairs_valid", label: "n pairs", type: "num", digits: 0 },
-  ];
-}
-
-/** The rows are already one control's, named above the table, so no column restates it. */
-export function trajectoryByGenreColumns(): TableColumn<TrajectoryByGenreRow>[] {
-  return [
-    nameColumn<TrajectoryByGenreRow>(),
-    { key: "gap", label: "Gap", type: "num", digits: 5 },
-    { key: "p_perm", label: "p (perm)", type: "pill", pillPrefix: "p" },
-    {
-      key: "perm_q",
-      label: "q (perm)",
-      type: "pill",
-      pillPrefix: "q",
-    },
-    { key: "maxT_q", label: "q (maxT)", type: "pill", pillPrefix: "q" },
   ];
 }

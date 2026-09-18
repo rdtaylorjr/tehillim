@@ -25,7 +25,7 @@ const CARDS: readonly Card[] = [
     name: "Benchmark",
     what: "Model evaluation",
     blurb:
-      "Evaluate each representation against three bounded questions: annotated parallelism, received genre labels, and within-psalm trajectory. Inspect effect measures, confidence intervals, multiplicity-adjusted p-values, and model-level diagnostic charts.",
+      "Evaluate each representation against two bounded questions: annotated parallelism and received genre labels. Inspect effect measures, confidence intervals, multiplicity-adjusted p-values, and model-level diagnostic charts.",
     figure: BenchmarkFigure,
   },
   {

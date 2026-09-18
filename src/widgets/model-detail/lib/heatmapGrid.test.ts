@@ -6,13 +6,15 @@ import {
   genreTickAnchors,
   robustAbsClip,
 } from "./heatmapGrid";
-import type { PsalmOrderEntry } from "../model/types";
+import type { AxisEntry } from "../model/types";
 
-const order: PsalmOrderEntry[] = [
-  { psalm: 1, genre: "Hymn" },
-  { psalm: 2, genre: "Hymn" },
-  { psalm: 3, genre: "Lament" },
-];
+const entry = (psalm: number, genre: string): AxisEntry => ({
+  key: String(psalm),
+  label: `Psalm ${String(psalm)}`,
+  genre,
+});
+
+const order: AxisEntry[] = [entry(1, "Hymn"), entry(2, "Hymn"), entry(3, "Lament")];
 
 describe("genreTickAnchors", () => {
   it("places one tick at the midpoint index of each contiguous genre run", () => {
@@ -23,12 +25,7 @@ describe("genreTickAnchors", () => {
   });
 
   it("rounds down for an even-length run", () => {
-    const fourHymns: PsalmOrderEntry[] = [
-      { psalm: 1, genre: "Hymn" },
-      { psalm: 2, genre: "Hymn" },
-      { psalm: 3, genre: "Hymn" },
-      { psalm: 4, genre: "Hymn" },
-    ];
+    const fourHymns = [1, 2, 3, 4].map((psalm) => entry(psalm, "Hymn"));
     expect(genreTickAnchors(fourHymns)).toEqual([{ index: 1, genre: "Hymn" }]);
   });
 });
@@ -58,11 +55,7 @@ describe("robustAbsClip", () => {
 
 describe("buildHeatmapGrid", () => {
   // Psalm 3 (index 2) has no cell at all, mirroring Psalm 117's real zero-pairs case.
-  const grid = buildHeatmapGrid(
-    [{ psalm_a: 1, psalm_b: 2, value: 0.5 }],
-    order,
-    "calibrated_z",
-  );
+  const grid = buildHeatmapGrid([{ a: "1", b: "2", value: 0.5 }], order, "calibrated_z");
 
   it("leaves the diagonal empty so it renders as background, keeping its Psalm-N hover label", () => {
     expect(grid.z[0]![0]).toBeNull();
@@ -75,14 +68,14 @@ describe("buildHeatmapGrid", () => {
   });
 
   it("writes a psalm-pair hover label with the value for a real pair", () => {
-    expect(grid.text[0]![1]).toBe("Psalm 1 vs 2<br>calibrated_z: 0.500");
+    expect(grid.text[0]![1]).toBe("Psalm 1 vs Psalm 2<br>calibrated_z: 0.500");
   });
 
   it("leaves a psalm with zero pairs anywhere empty, with an explicit no-data hover label", () => {
     expect(grid.z[2]![0]).toBeNull();
     expect(grid.z[0]![2]).toBeNull();
-    expect(grid.text[2]![0]).toBe("Psalm 3 vs 1<br>no data");
-    expect(grid.text[2]![1]).toBe("Psalm 3 vs 2<br>no data");
+    expect(grid.text[2]![0]).toBe("Psalm 3 vs Psalm 1<br>no data");
+    expect(grid.text[2]![1]).toBe("Psalm 3 vs Psalm 2<br>no data");
   });
 
   it("computes the 90th-percentile absolute clip from the real cell values", () => {
@@ -92,8 +85,8 @@ describe("buildHeatmapGrid", () => {
   it("silently skips a cell referencing a psalm absent from the axis order, rather than throwing", () => {
     const withBadCell = buildHeatmapGrid(
       [
-        { psalm_a: 1, psalm_b: 2, value: 0.5 },
-        { psalm_a: 1, psalm_b: 999, value: 0.9 },
+        { a: "1", b: "2", value: 0.5 },
+        { a: "1", b: "999", value: 0.9 },
       ],
       order,
       "calibrated_z",

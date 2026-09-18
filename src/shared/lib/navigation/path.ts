@@ -1,5 +1,5 @@
-import { controlLabel, familyFor, sentenceCase } from "../corpus";
-import { showsControl, showsText } from "./selection";
+import { familyFor, sentenceCase, sourceFor, unitLabel } from "../corpus";
+import { showsText } from "./selection";
 import type { Selection } from "./selection";
 
 /** Majors are the crossed trees, minors the filters, model the open row. */
@@ -26,10 +26,11 @@ export function selectionPath(selection: Selection): Crumb[] {
   }
   if (selection.benchmark === "parallelism") {
     if (selection.parallelismType !== "all") minor(selection.parallelismType);
-  } else if (selection.genre !== "all") {
-    minor(selection.genre);
+  } else {
+    minor(sourceFor(selection.source).label);
+    if (selection.unit !== null) minor(unitLabel(selection.unit));
+    if (selection.genre !== "all") minor(selection.genre);
   }
-  if (showsControl(selection)) minor(controlLabel(selection.control));
 
   if (selection.model !== null) path.push({ kind: "model", label: selection.model });
   return path;

@@ -1,30 +1,21 @@
 import { facetFor } from "../corpus";
-import type {
-  BenchmarkId,
-  FamilyId,
-  Genre,
-  ParallelismType,
-  TextVariant,
-  TrajectoryControl,
-  TrajectoryMetric,
-} from "../corpus";
+import type { BenchmarkId, FamilyId, ParallelismType, SourceId, TextVariant } from "../corpus";
 
 /** "all" is the unset state of every filter, distinct from any value it could take. */
 export const ALL = "all";
 export type All = typeof ALL;
-
-/** The genre benchmark reports discrimination, or one of the trajectory metrics. */
-export type Metric = "genre" | TrajectoryMetric;
 
 /** Everything the toolbar controls, in one serializable shape. */
 export interface Selection {
   readonly family: FamilyId;
   readonly benchmark: BenchmarkId;
   readonly parallelismType: ParallelismType | All;
-  readonly genre: Genre | All;
-  readonly metric: Metric;
-  /** Which confounds a trajectory metric is read net of, moot under any other metric. */
-  readonly control: TrajectoryControl;
+  /** Whose classification the genre benchmark is read against. */
+  readonly source: SourceId;
+  /** The source's unit register, or null for a source that classifies whole psalms. */
+  readonly unit: string | null;
+  /** One class of the register in view, or ALL. */
+  readonly genre: string;
   readonly facet: string;
   readonly text: TextVariant | All;
   readonly query: string;
@@ -38,9 +29,9 @@ export type SelectionAction =
   | { type: "family/selected"; family: FamilyId }
   | { type: "benchmark/selected"; benchmark: BenchmarkId }
   | { type: "parallelismType/selected"; parallelismType: ParallelismType | All }
-  | { type: "genre/selected"; genre: Genre | All }
-  | { type: "metric/selected"; metric: Metric }
-  | { type: "control/selected"; control: TrajectoryControl }
+  | { type: "source/selected"; source: SourceId }
+  | { type: "unit/selected"; unit: string | null }
+  | { type: "genre/selected"; genre: string }
   | { type: "facet/selected"; facet: string }
   | { type: "text/selected"; text: TextVariant | All }
   | { type: "query/changed"; query: string }
@@ -51,20 +42,15 @@ export const INITIAL_SELECTION: Selection = {
   family: "semantic",
   benchmark: "parallelism",
   parallelismType: "all",
+  source: "gunkel",
+  unit: null,
   genre: "all",
-  metric: "genre",
-  control: "length_controlled",
   facet: "all",
   text: "all",
   query: "",
   model: null,
   view: "table",
 };
-
-/** A trajectory metric is read net of a control, where genre discrimination has none. */
-export function showsControl(selection: Pick<Selection, "benchmark" | "metric">): boolean {
-  return selection.benchmark === "genre" && selection.metric !== "genre";
-}
 
 /** Families divided into units or levels get an extra selector for that division. */
 export function showsFacet(family: FamilyId): boolean {
@@ -100,17 +86,19 @@ export function selectionReducer(state: Selection, action: SelectionAction): Sel
       if (action.parallelismType === state.parallelismType) return state;
       return { ...state, parallelismType: action.parallelismType };
     }
+    case "source/selected": {
+      if (action.source === state.source) return state;
+      //: A class and a register belong to the outgoing source.
+      return { ...state, source: action.source, unit: null, genre: "all" };
+    }
+    case "unit/selected": {
+      if (action.unit === state.unit) return state;
+      //: A class belongs to the register it was chosen under.
+      return { ...state, unit: action.unit, genre: "all" };
+    }
     case "genre/selected": {
       if (action.genre === state.genre) return state;
       return { ...state, genre: action.genre };
-    }
-    case "metric/selected": {
-      if (action.metric === state.metric) return state;
-      return { ...state, metric: action.metric };
-    }
-    case "control/selected": {
-      if (action.control === state.control) return state;
-      return { ...state, control: action.control };
     }
     case "facet/selected": {
       if (action.facet === state.facet) return state;

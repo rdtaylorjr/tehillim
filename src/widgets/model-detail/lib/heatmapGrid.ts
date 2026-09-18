@@ -1,4 +1,4 @@
-import type { HeatmapCell, PsalmOrderEntry } from "../model/types";
+import type { AxisEntry, PairCell } from "../model/types";
 
 /** One tick position (the midpoint index of a contiguous genre run) and its genre label. */
 export interface GenreTickAnchor {
@@ -8,7 +8,7 @@ export interface GenreTickAnchor {
 
 /** The [start, end) index range each genre occupies in a genre-grouped axis order. */
 export function genreIndexRanges(
-  order: PsalmOrderEntry[],
+  order: readonly AxisEntry[],
 ): Map<string, { start: number; end: number }> {
   const ranges = new Map<string, { start: number; end: number }>();
   let i = 0;
@@ -25,7 +25,7 @@ export function genreIndexRanges(
 }
 
 /** One axis tick per genre, placed at that genre's contiguous run's midpoint index. */
-export function genreTickAnchors(order: PsalmOrderEntry[]): GenreTickAnchor[] {
+export function genreTickAnchors(order: readonly AxisEntry[]): GenreTickAnchor[] {
   const ranges = genreIndexRanges(order);
   const anchors: GenreTickAnchor[] = [];
   for (const [genre, { start, end }] of ranges) {
@@ -43,13 +43,13 @@ export function robustAbsClip(values: number[]): number {
 
 /** The z/text grids for a full pairwise heatmap: symmetric values, a self-labeled diagonal, explicit no-data cells. */
 export function buildHeatmapGrid(
-  cells: HeatmapCell[],
-  order: PsalmOrderEntry[],
+  cells: readonly PairCell[],
+  order: readonly AxisEntry[],
   valueTitle: string,
 ): { z: (number | null)[][]; text: string[][]; clipAbs: number } {
   const n = order.length;
-  const psalmOf = order.map((o) => o.psalm);
-  const psalmToIndex = new Map(order.map((o, i) => [o.psalm, i]));
+  const labelOf = order.map((o) => o.label);
+  const indexOf = new Map(order.map((o, i) => [o.key, i]));
 
   //: Null rather than zero, so a cell without a value shows the background instead of a banded color.
   const z: (number | null)[][] = Array.from({ length: n }, () =>
@@ -67,28 +67,27 @@ export function buildHeatmapGrid(
 
   for (let i = 0; i < n; i++) {
     const row = text[i];
-    if (row !== undefined) row[i] = `Psalm ${String(psalmOf[i])}`;
+    const label = labelOf[i];
+    if (row !== undefined && label !== undefined) row[i] = label;
   }
 
   const covered = new Set<number>();
   for (const c of cells) {
-    const ia = psalmToIndex.get(c.psalm_a);
-    const ib = psalmToIndex.get(c.psalm_b);
+    const ia = indexOf.get(c.a);
+    const ib = indexOf.get(c.b);
     if (ia === undefined || ib === undefined) continue;
-    const line = `Psalm ${String(c.psalm_a)} vs ${String(c.psalm_b)}<br>${valueTitle}: ${c.value.toFixed(3)}`;
+    const line = `${String(labelOf[ia])} vs ${String(labelOf[ib])}<br>${valueTitle}: ${c.value.toFixed(3)}`;
     putSymmetric(z, ia, ib, c.value);
     putSymmetric(text, ia, ib, line);
-    covered.add(c.psalm_a);
-    covered.add(c.psalm_b);
+    covered.add(ia);
+    covered.add(ib);
   }
 
-  const missingPsalms = order.filter((o) => !covered.has(o.psalm));
-  for (const o of missingPsalms) {
-    const i = psalmToIndex.get(o.psalm);
-    if (i === undefined) continue;
+  for (let i = 0; i < n; i++) {
+    if (covered.has(i)) continue;
     for (let k = 0; k < n; k++) {
       if (k === i) continue;
-      putSymmetric(text, i, k, `Psalm ${String(o.psalm)} vs ${String(psalmOf[k])}<br>no data`);
+      putSymmetric(text, i, k, `${String(labelOf[i])} vs ${String(labelOf[k])}<br>no data`);
     }
   }
 
